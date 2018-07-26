@@ -1,0 +1,11 @@
+AddDefaultCharset UTF-8
+
+Options -Indexes
+
+RewriteEngine On
+
+RewriteCond %{REQUEST_URI} ^/(boss)
+RewriteRule ^boss(\/?.*)$ yii/backend/web/$1 [L]
+
+RewriteCond %{REQUEST_URI} ^/
+RewriteRule ^(\/?.*)$ yii/frontend/web/$1 [L]
