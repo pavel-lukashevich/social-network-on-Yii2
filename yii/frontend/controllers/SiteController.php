@@ -13,6 +13,7 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use common\models\User;
 
 /**
  * Site controller
@@ -73,7 +74,18 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        if (Yii::$app->user->isGuest) {
+
+            $count = User::find()->count();
+            $user = User::find()->select('id, username')->limit(12)->orderBy('rand()')->all();
+            return $this->render('index', [
+                'user' => $user,
+                'count' => $count,
+            ]);
+        } else {
+            return $this->redirect('news');
+        }
+
     }
 
     /**

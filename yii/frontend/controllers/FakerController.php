@@ -1,71 +1,17 @@
 <?php
+
 namespace frontend\controllers;
 
-use Yii;
-use yii\base\InvalidParamException;
-use yii\web\BadRequestHttpException;
-use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\User;
-use common\models\LoginForm;
-use frontend\models\PasswordResetRequestForm;
-use frontend\models\ResetPasswordForm;
-use frontend\models\SignupForm;
-use frontend\models\ContactForm;
+use yii\web\Controller;
 
 /**
  * Site controller
  */
 class FakerController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
-                'rules' => [
-                    [
-                        'actions' => ['signup'],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-            'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ],
-        ];
-    }
-
     /**
      * Displays homepage.
      *
@@ -83,10 +29,11 @@ class FakerController extends Controller
      */
     public function actionSignup()
     {
-        $y = 10;
+        $y = 10000;
+        //снимаем ограничение с времени выполнения скрипта
+        set_time_limit(0);
 
         $strfaker = 0;
-
 
         for ($i = 0; $i < $y; $i++) {
             $faker = \Faker\Factory::create('ru_RU');
@@ -97,10 +44,15 @@ class FakerController extends Controller
             $user->setPassword("123456789");
             $user->generateAuthKey();
 
+            if (User::find()->where(["username" => $user->username, "email" => $user->email]) != 0) {
+                $user->username .= " " . mt_rand();
+            }
+            if (User::find()->where(["username" => $user->email, "email" => $user->email]) != 0) {
+                $user->email = mt_rand() . $user->email;
+            }
             if ($user->save()) $strfaker++;
         }
 
-        $user = new User();
         $countId = User::find()->count();
 
         return $this->render('signup', [
