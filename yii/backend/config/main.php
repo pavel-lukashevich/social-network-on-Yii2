@@ -14,7 +14,7 @@ return [
     'modules' => [],
     'components' => [
         'request' => [
-            'baseUrl' => '',
+      //      'baseUrl' => '',
             'csrfParam' => '_csrf-backend',
         ],
         'user' => [
