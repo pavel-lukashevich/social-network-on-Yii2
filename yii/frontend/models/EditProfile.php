@@ -5,6 +5,8 @@ namespace frontend\models;
 use Yii;
 use yii\base\Model;
 use common\models\User;
+use yii\validators\ImageValidator;
+use yii\web\UploadedFile;
 
 /**
  * Signup form
@@ -31,10 +33,11 @@ class EditProfile extends Model
     public function rules()
     {
         return [
-//            ['username', 'trim'],
-//            ['username', 'required'],
-//            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
-//            ['username', 'string', 'min' => 2, 'max' => 255],
+            ['username', 'trim'],
+            ['username', 'required'],
+            // сделать свою проверку на уник и id
+            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'пользователь с таким ником уже есть.'],
+            ['username', 'string', 'min' => 2, 'max' => 255],
 
             [['email', 'username', 'firstname', 'lastname', 'about'], 'safe'],
             [['email', 'username', 'firstname', 'lastname', 'about'], 'string', 'max' => 255],
@@ -62,12 +65,10 @@ class EditProfile extends Model
         if (!$this->validate()) {
             return null;
         }
-/*
-//        $user = User::find()->where([\'id\' => Yii::$app->user->id])->one();
-//        if ($_REQUEST['username'] != false) {
-//            $user->username = $_REQUEST['username'];
-*/
+
         $user = User::findOne(Yii::$app->user->id);
+
+        //заполнить по всем полям формы редактирования
         if ($this->username != false) {
             $user->username = $this->username;
         }

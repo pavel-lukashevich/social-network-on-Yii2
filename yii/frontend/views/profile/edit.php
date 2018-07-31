@@ -19,33 +19,37 @@ $this->title = 'My Yii Application';
             <div class="row">
 
 
-
                 <?php $form = ActiveForm::begin([
                     'id' => 'profile-edit',
                     'options' => [
-                            'class' => 'form-group row',
-                            'method' => 'post',
-                            'enctype' => 'multipart/form-data',
+                        'class' => 'form-group row',
+                        'method' => 'post',
+                        'enctype' => 'multipart/form-data',
                     ],
                 ]) ?>
 
-                    <?php foreach ($model as $key => $param): ?>
-                       <div class="form-group row">
+<!--                ///////////////////////////////////////////////////////////////-->
+<!--                // расписать все инпуты отдельно-->
+                <?php foreach ($model as $key => $param): ?>
+                    <div class="form-group row">
+                        <?php if ($key != 'avatar'): ?>
 
-                        <?php echo $form->field($model, $key)->textInput(['value' => $key])->input('string', ['class' => 'col-sm-7 col-form-label'])->label($key, ['class' => 'col-sm-5 col-form-label']); ?>
-<!--                        --><?//= $form->field($profile, $key)->hint('Пожалуйста, заполните это')->label($key); ?>
+                            <?= $form->field($model, $key)->textInput(['autofocus' => true]) ?>
 
-                       </div>
-                    <?php endforeach; ?>
+<!--                            --><?php //echo $form->field($model, $key)->label($key, ['class' => 'col-sm-5 col-form-label'])->
+//                            textInput(['value' => $param, 'class' => 'col-sm-7']); ?>
 
-
-                    <div class="form-group">
-                        <div class="col-lg-offset-1 col-lg-11">
-                            <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary']) ?>
-                        </div>
+                        <?php endif; ?>
                     </div>
+                <?php endforeach; ?>
+<!--                ///////////////////////////////////////////////////////////////-->
+
+                <div class="form-group">
+                    <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary']) ?>
+                </div>
+
                 <?php ActiveForm::end() ?>
 
+            </div>
         </div>
     </div>
-</div>

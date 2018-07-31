@@ -44,9 +44,13 @@ return [
             'rules' => [
                 'profile/edit\w+' => 'profile/index',
                 'profile/edit' => 'profile/edit',
+                'profile/upload' => 'profile/upload',
                 'profile/<username:\w+>' => 'profile/index',
                 'profile\w+' => 'profile/index',
             ],
+        ],
+        'storage' => [
+            'class' => 'frontend\components\Storage',
         ],
     ],
     'params' => $params,

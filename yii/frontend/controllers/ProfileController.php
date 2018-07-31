@@ -4,10 +4,14 @@ namespace frontend\controllers;
 
 use Yii;
 use yii\web\Controller;
-use frontend\assets\AppAsset;
 use common\models\User;
 use frontend\models\EditProfile;
+use yii\web\UploadedFile;
+use yii\web\Response;
+use frontend\models\AvatarLoader;
 
+use frontend\models\UploadForm;
+use frontend\assets\AppAsset;
 use yii\web\BadRequestHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -35,12 +39,16 @@ class ProfileController extends Controller
         if (Yii::$app->user->isGuest) {
             return $this->redirect('site');
         }
+
+        $modelAvatar = new AvatarLoader();
+
         $username = ($username !== null) ? $username : Yii::$app->user->id;
 
         $user = User::find()->where(["id" => $username])->one();
 
-        return $this->render('index',[
+        return $this->render('index', [
             'user' => $user,
+            'modelAvatar' => $modelAvatar,
         ]);
     }
 
@@ -54,14 +62,8 @@ class ProfileController extends Controller
         }
 
         $model = new EditProfile();
+
         if ($model->load(Yii::$app->request->post(), 'User')) {
-//        /////////////////////////////////////////////////////
-//        if (Yii::$app->request->post()) {
-//            echo "<pre>";
-//            var_dump(Yii::$app->request->post());
-//            die;
-//        }
-//        ///////////////////////////////////////////////////
             if ($model->editProfileInfo()) {
                 return $this->redirect('/profile');
             }
@@ -72,5 +74,59 @@ class ProfileController extends Controller
         return $this->render('edit', [
             'model' => $model,
         ]);
+    }
+
+    /**
+     * заггрузка изображений, из учебника
+     *
+     * @return string|\yii\web\Response
+     */
+//    public function actionUpload()
+//    {
+//        $model = new UploadForm();
+//
+//        if (Yii::$app->request->isPost) {
+//            $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
+//            if ($model->upload()) {
+//                // file is uploaded successfully
+//                return $this->redirect('/profile');
+//            }
+//        }
+//
+//        return $this->render('upload', ['model' => $model]);
+//    }
+
+    public function actionUploadPicture()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $model = new AvatarLoader();
+
+      $model->picture = UploadedFile::getInstance($model, "picture");
+
+
+
+
+        if ($model->validate()) {
+
+            $user = User::find()->where(["id" => Yii::$app->user->id])->one();
+
+            $user->avatar = Yii::$app->storage->saveUploadedFile($model->picture); // 15/27/30/379e706840f951d22de02458a4788eb55f.jpg
+
+            if ($user->save(false, ['avatar'])) {
+
+                return [
+                    'success' => true,
+                    'pictureUri' => Yii::$app->storage->getFile($user->avatar),
+                ];
+            }
+        }
+        return ['success' => false, 'errors' => $model->getErrors()];
+
+//            ///////////////////////////////
+//           echo "<pre>";
+//           echo '+++';var_dump($user->save(false, ['avatar'])); die('++++');
+//            ///////////////////////////////
+
     }
 }
