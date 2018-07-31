@@ -42,6 +42,10 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'profile/edit\w+' => 'profile/index',
+                'profile/edit' => 'profile/edit',
+                'profile/<username:\w+>' => 'profile/index',
+                'profile\w+' => 'profile/index',
             ],
         ],
     ],

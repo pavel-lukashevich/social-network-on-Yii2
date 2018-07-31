@@ -45,7 +45,7 @@ AppAsset::register($this);
             ['label' => 'Новости', 'url' => ['/news/index']],
             ['label' => 'Друзья', 'url' => ['/friends/about']],
             ['label' => 'Сообщения', 'url' => ['/message/contact']],
-            ['label' => 'Профиль', 'url' => ['/profile/contact']],
+            ['label' => 'Профиль', 'url' => ['/profile']],
         ];
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
