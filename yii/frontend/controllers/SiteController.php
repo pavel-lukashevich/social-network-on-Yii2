@@ -77,7 +77,7 @@ class SiteController extends Controller
         if (Yii::$app->user->isGuest) {
 
             $count = User::find()->count();
-            $user = User::find()->select('id, username')->limit(12)->orderBy('rand()')->all();
+            $user = User::find()->select('id, username, avatar')->limit(12)->orderBy('rand()')->all();
             return $this->render('index', [
                 'user' => $user,
                 'count' => $count,

@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 
-$this->title = 'My Yii Application';
+$this->title = 'Редактирование профиля';
 ?>
 <div class="site-index">
 

@@ -42,6 +42,8 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'friends/all' => 'profile/index',
+                'profile/edit' => 'profile/edit',
                 'profile/edit\w+' => 'profile/index',
                 'profile/edit' => 'profile/edit',
                 'profile/upload' => 'profile/upload',

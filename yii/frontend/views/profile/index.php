@@ -9,7 +9,7 @@ use yii\helpers\Html;
 use yii\helpers\HtmlPurifier;
 use dosamigos\fileupload\FileUpload;
 
-$this->title = 'My Yii Application';
+$this->title = 'Просмотр профиля ' . $user->id;
 ?>
 <div class="site-index">
 
@@ -20,7 +20,8 @@ $this->title = 'My Yii Application';
         <p><?php echo HtmlPurifier::process($user->about); ?></p>
         <hr>
 
-        <img src="<?php echo $user->getPicture(); ?>" id="profile-picture"/>
+        <img src="<?= $user->getPicture(); ?>"/>
+<!--        <img src="--><?//= $user->getPicture(); ?><!--" id="profile-picture"/>-->
 
 
         <!-- если на своей странице, то показываем кнопки-->

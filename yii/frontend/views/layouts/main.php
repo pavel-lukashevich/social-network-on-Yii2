@@ -43,8 +43,8 @@ AppAsset::register($this);
     } else {
         $menuItems = [
             ['label' => 'Новости', 'url' => ['/news/index']],
-            ['label' => 'Друзья', 'url' => ['/friends/about']],
-            ['label' => 'Сообщения', 'url' => ['/message/contact']],
+            ['label' => 'Друзья', 'url' => ['/friends']],
+            ['label' => 'Сообщения', 'url' => ['/message']],
             ['label' => 'Профиль', 'url' => ['/profile']],
         ];
         $menuItems[] = '<li>'

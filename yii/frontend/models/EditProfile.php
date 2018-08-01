@@ -69,10 +69,14 @@ class EditProfile extends Model
         $user = User::findOne(Yii::$app->user->id);
 
         //заполнить по всем полям формы редактирования
-        if ($this->username != false) {
-            $user->username = $this->username;
-        }
+        if ($this->username != false) {$user->username = $this->username; }
+        if ($this->about != false) {$user->about = $this->about;}
+        if ($this->firstname != false) {$user->firstname = $this->firstname;}
+        if ($this->lastname != false) {$user->lastname = $this->lastname;}
 
-        return $user->save() ? $user : null;
+
+        if ($user->save(false, ['username', 'about', 'firstname', 'lastname'])) {
+            return $user;
+        }else return null;
     }
 }
