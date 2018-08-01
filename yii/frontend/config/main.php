@@ -13,6 +13,7 @@ return [
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
         'request' => [
+            'baseUrl' => '',
             'csrfParam' => '_csrf-frontend',
         ],
         'user' => [
@@ -36,14 +37,23 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
+
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'friends/all' => 'profile/index',
+                'profile/edit' => 'profile/edit',
+                'profile/edit\w+' => 'profile/index',
+                'profile/edit' => 'profile/edit',
+                'profile/upload' => 'profile/upload',
+                'profile/<username:\w+>' => 'profile/index',
+                'profile\w+' => 'profile/index',
             ],
         ],
-        */
+        'storage' => [
+            'class' => 'frontend\components\Storage',
+        ],
     ],
     'params' => $params,
 ];
