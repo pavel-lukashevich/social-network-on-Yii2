@@ -42,8 +42,16 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                'friends/all' => 'profile/index',
-                'profile/edit' => 'profile/edit',
+                'friends/mutuality' => 'friends/mutuality',
+                'friends/follower/<userId:\w+>' => 'friends/follower',
+                'friends/follower' => 'friends/follower',
+                'friends/add-subscribe/follow_id=<follower_id:\d+>' => 'friends/add-subscribe',
+                'friends/all/p-<pageNum:\d+>' => 'friends/all',
+                'friends/all' => 'friends/all',
+                'friends/<userId:\w+>' => 'friends/index',
+                'friends' => 'friends/index',
+//                'friends\w+' => 'friends/index',
+
                 'profile/edit\w+' => 'profile/index',
                 'profile/edit' => 'profile/edit',
                 'profile/upload' => 'profile/upload',
