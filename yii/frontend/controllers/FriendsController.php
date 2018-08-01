@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use Yii;
+use frontend\models\Friends;
 
 class FriendsController extends \yii\web\Controller
 {
@@ -14,10 +15,11 @@ class FriendsController extends \yii\web\Controller
 
         $userId = ($userId !== null) ? $userId : Yii::$app->user->id;
 
-//        $user = Friends::find()->where(["user_id" => $userId])->one();
+        $friends = Friends::find()->where(["user_id" => $userId])->one();
 
         return $this->render('index', [
             'userId' => $userId,
+            'friends' => $friends,
         ]);
     }
 
