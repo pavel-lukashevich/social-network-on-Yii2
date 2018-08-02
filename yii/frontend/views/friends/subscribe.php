@@ -10,10 +10,10 @@ $this->title = 'друзьяшки';
 
 <div class="body-content">
 
+    <!--<h1>друзья пользавателя --><? //= $userId ?><!--</h1>-->
     <?php \frontend\components\SudscribeButton::run() ?>
 
-    <h2>взаимные подписки</h2>
-
+    <h2>вы подписаны на </h2>
     <hr>
 
     <?php \frontend\components\SudscribeButton::list($friend, 'delete') ?>

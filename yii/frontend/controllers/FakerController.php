@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use frontend\models\Friends;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\User;
@@ -61,9 +62,9 @@ class FakerController extends Controller
         ]);
     }
 
-    public function actionFriends()
+    public function actionUser()
     {
-        $y = 1200;
+        $y = 150;
         //снимаем ограничение с времени выполнения скрипта
         set_time_limit(0);
 
@@ -92,6 +93,45 @@ class FakerController extends Controller
         return $this->render('signup', [
             'strfaker' => $strfaker,
             'countId' => $countId,
+        ]);
+    }
+
+    public function actionFriends()
+    {
+        $y = 110;
+        //снимаем ограничение с времени выполнения скрипта
+        set_time_limit(0);
+
+//        $column = User::find()->select('id')->limit($y)->asArray()->all();
+        $column = User::find()->select('id')->asArray()->all();
+        shuffle($column);
+        $num = 0;
+        $new = [];
+
+        foreach ($column as $user) {
+        $new[] =$user['id'];
+
+        }
+
+        foreach ($column as $user) {
+
+            $fr = Friends::find()->where(['user_id' => $user['id']])->one();
+            if ($fr == null) {
+                $fr = new Friends();
+                $fr->user_id = $user['id'];
+            }
+            $fr->subscribe = json_encode(array_flip(array_rand(array_flip($new), mt_rand(2, 9))));
+            $fr->follower = json_encode(array_flip(array_rand(array_flip($new), mt_rand(2, 9))));
+
+            if ($fr->save()) $num++;
+        }
+
+//            echo "<pre>";
+//            var_dump($fr->follower);
+//            die;
+
+        return $this->render('friends', [
+            'num' => $num,
         ]);
     }
 }

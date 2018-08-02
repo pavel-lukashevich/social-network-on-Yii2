@@ -42,15 +42,20 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                'friends/mutuality' => 'friends/mutuality',
-                'friends/follower/<userId:\w+>' => 'friends/follower',
-                'friends/follower' => 'friends/follower',
                 'friends/delete-subscribe/follow_id=<follower_id:\d+>' => 'friends/delete-subscribe',
                 'friends/add-subscribe/follow_id=<follower_id:\d+>' => 'friends/add-subscribe',
                 'friends/all/p-<pageNum:\d+>' => 'friends/all',
                 'friends/all' => 'friends/all',
                 'friends/<userId:\w+>' => 'friends/index',
-                'friends' => 'friends/index',
+
+                'friends/mutuality' => 'friends/mutuality',
+
+                'friends/follower/id=<userId:\d+>' => 'friends/follower',
+                'friends/follower' => 'friends/follower',
+
+                'friends/subscribe/id=<userId:\d+>' => 'friends/subscribe',
+                'friends/subscribe' => 'friends/subscribe',
+                'friends' => 'friends/subscribe',
 //                'friends\w+' => 'friends/index',
 
                 'profile/edit\w+' => 'profile/index',

@@ -8,6 +8,7 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\helpers\HtmlPurifier;
 use dosamigos\fileupload\FileUpload;
+use frontend\models\Friends;
 
 $this->title = 'Просмотр профиля ' . $user->id;
 ?>
@@ -70,11 +71,24 @@ $this->title = 'Просмотр профиля ' . $user->id;
 
 
 
-
-    <a class="btn btn-lg btn-info" href="/friends/add-subscribe/follow_id=<?= $user->id; ?>">подписаться</a>
-    <a class="btn btn-lg btn-info" href="/friends/delete-subscribe/follow_id=<?= $user->id; ?>">отписаться</a>
-
+<?php if ($user->id != Yii::$app->user->id):?>
+    <?php if (Friends::isSubscribe($user->id)):?>
+        <a class="btn btn-lg btn-info" href="/friends/delete-subscribe/follow_id=<?= $user->id; ?>">отписаться</a>
+    <?php else: ?>
+        <a class="btn btn-lg btn-info" href="/friends/add-subscribe/follow_id=<?= $user->id; ?>">подписаться</a>
+    <?php endif;?>
     <hr>
+<?php endif;?>
+
+
+
+    <h4>подписки и подписчики</h4>
+        <a class="btn btn-lg btn-info" href="/friends/subscribe/id=<?= $user->id; ?>">подписки <?= Friends::countSubscribe($user->id);?></a>
+        <a class="btn btn-lg btn-info" href="/friends/follower/id=<?= $user->id; ?>">подписчики <?= Friends::countFollower($user->id);?></a>
+    <hr>
+
+
+
 
     <div class="jumbotron">
 

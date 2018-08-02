@@ -8,19 +8,24 @@ $this->title = 'My Yii Application';
 
     <div class="text-center">
 
-        <h3>ищи знакомых, добавляй в подписки!</h3>
+        <?php \frontend\components\SudscribeButton::run()?>
+
+        <br>
+        <br>
         <p class="lead">Нас <?= $count ?> человек.</p>
+        <?php echo $pagin->get();?>
+
     </div>
     <div class="jumbotron">
-    <?php echo $pagin->get();?>
+
 
         <div class="body-content">
             <?php foreach ($user as $show): ?>
                 <?php $div = empty($div) ? 0 : $div; ?>
 
-                <?php if ($div++ % 3 == 0) echo '<div class="row">'; ?>
+                <?php if ($div++ % 4 == 0) echo '<div class="row">'; ?>
 
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <div class="container__wrapper">
                         <div class="container__content">
                             <a href="/profile/<?= $show->id; ?>" >
@@ -31,21 +36,13 @@ $this->title = 'My Yii Application';
                     </div>
                 </div>
 
-                <?php if ($div % 3 == 0 || $div == count($user)) echo '</div >'; ?>
+                <?php if ($div % 4 == 0 || $div == count($user)) echo '</div >'; ?>
             <?php endforeach; ?>
 
 
         </div>
-    <?php echo $pagin->get();?>
-    </div>
-
-
-    <div class="text-center">
         <h3>Присоединяйся к нам!</h3>
-<!--        <p>-->
-<!--            <a class="btn btn-lg btn-info" href="/site/login">Войти</a>-->
-<!--            <a class="btn btn-lg btn-success" href="/site/signup">Зарегистрироваться</a>-->
-<!--        </p>-->
+    <?php echo $pagin->get();?>
     </div>
 
 </div>

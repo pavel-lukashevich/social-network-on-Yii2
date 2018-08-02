@@ -8,25 +8,12 @@ use dosamigos\fileupload\FileUpload;
 $this->title = 'друзьяшки';
 ?>
 
-<!--<h1>друзья пользавателя --><?//= $userId ?><!--</h1>-->
-
-<a class="btn btn-lg btn-info" href="/friends/all">Все пользатели</a>
-<a class="btn btn-lg btn-info" href="/friends">я подписан</a>
-<a class="btn btn-lg btn-info" href="/friends/follower">на меня подписаны</a>
-<a class="btn btn-lg btn-info" href="/friends/mutuality">взаимные подписки</a>
-
+<?php \frontend\components\SudscribeButton::run() ?>
 
 <h2>на вас подписаны</h2>
+<hr>
 
-<?php foreach ($friends->getFollower() as $fol): ?>
-    <?php if ($fol != 0): ?>
-        <a href="/profile/<?= $fol->id; ?>" class="btn">
-            <img src="<?= $fol->getPicture(); ?>" class="img-circle" width="60px"/>
-            <?= $fol->username; ?>
-        </a><br>
-        <hr>
-    <?php endif; ?>
-<?php endforeach; ?>
+<?php \frontend\components\SudscribeButton::list($friend, 'add') ?>
 
 
 <p>

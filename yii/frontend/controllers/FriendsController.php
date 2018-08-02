@@ -9,7 +9,7 @@ use common\models\Pagination;
 
 class FriendsController extends \yii\web\Controller
 {
-    public function actionIndex($userId = null)
+    public function actionSubscribe($userId = null)
     {
         if (Yii::$app->user->isGuest) {
             return $this->redirect('site');
@@ -22,10 +22,11 @@ class FriendsController extends \yii\web\Controller
             return $this->redirect('/friends/all');
         };
 
+        $friend = $friends->getSubscribe();
 
-        return $this->render('index', [
+        return $this->render('subscribe', [
             'userId' => $userId,
-            'friends' => $friends,
+            'friend' => $friend,
         ]);
     }
 
@@ -42,10 +43,11 @@ class FriendsController extends \yii\web\Controller
             return $this->redirect('/friends/all');
         };
 
+        $friend = $friends->getFollower();
 
         return $this->render('follower', [
             'userId' => $userId,
-            'friends' => $friends,
+            'friend' => $friend,
         ]);
     }
 
