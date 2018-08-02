@@ -7,10 +7,8 @@ $this->title = 'My Yii Application';
 <div class="site-index">
 
     <div class="text-center">
-        <a class="btn btn-lg btn-info" href="/friends/all/">Все пользатели</a>
-        <a class="btn btn-lg btn-info" href="/friends/subscribe/">я подписан</a>
-        <a class="btn btn-lg btn-info" href="/friends/follower/">на меня подписаны</a>
-        <a class="btn btn-lg btn-info" href="/friends/mutuality/">взаимные подписки</a>
+
+        <?php \frontend\components\SudscribeButton::run()?>
 
         <br>
         <br>
@@ -25,9 +23,9 @@ $this->title = 'My Yii Application';
             <?php foreach ($user as $show): ?>
                 <?php $div = empty($div) ? 0 : $div; ?>
 
-                <?php if ($div++ % 3 == 0) echo '<div class="row">'; ?>
+                <?php if ($div++ % 4 == 0) echo '<div class="row">'; ?>
 
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <div class="container__wrapper">
                         <div class="container__content">
                             <a href="/profile/<?= $show->id; ?>" >
@@ -38,7 +36,7 @@ $this->title = 'My Yii Application';
                     </div>
                 </div>
 
-                <?php if ($div % 3 == 0 || $div == count($user)) echo '</div >'; ?>
+                <?php if ($div % 4 == 0 || $div == count($user)) echo '</div >'; ?>
             <?php endforeach; ?>
 
 

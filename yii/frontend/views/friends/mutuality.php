@@ -8,28 +8,19 @@ use dosamigos\fileupload\FileUpload;
 $this->title = 'друзьяшки';
 ?>
 
-<!--<h1>друзья пользавателя --><?//= $userId ?><!--</h1>-->
+<div class="body-content">
 
-<a class="btn btn-lg btn-info" href="/friends/all/">Все пользатели</a>
-<a class="btn btn-lg btn-info" href="/friends/subscribe/">я подписан</a>
-<a class="btn btn-lg btn-info" href="/friends/follower/">на меня подписаны</a>
-<a class="btn btn-lg btn-info" href="/friends/mutuality/">взаимные подписки</a>
+    <?php \frontend\components\SudscribeButton::run() ?>
 
+    <h2>взаимные подписки</h2>
 
-<h2>взаимные подписки</h2>
+    <hr>
 
-<?php foreach ($friend as $fol): ?>
-    <?php if ($fol != 0): ?>
-        <a href="/profile/<?= $fol->id; ?>" class="btn">
-            <img src="<?= $fol->getPicture(); ?>" class="img-circle" width="60px"/>
-            <?= $fol->username; ?>
-            <a class="btn btn-lg btn-info" href="/friends/delete-subscribe/follow_id=<?= $sub->id; ?>">отписаться</a>
-        </a><br>
-        <hr>
-    <?php endif; ?>
-<?php endforeach; ?>
+    <?php \frontend\components\SudscribeButton::list($friend, 'delete') ?>
 
-
-<p>
-    You may change the content of this page by modifying
-</p>
+    <br>
+    <br>
+    <p>
+        You may change the content of this page by modifying
+    </p>
+</div>

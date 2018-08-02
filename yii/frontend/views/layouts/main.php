@@ -33,7 +33,9 @@ AppAsset::register($this);
         'brandLabel' => 'social-3AX-xyz',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
+//            'class' => 'navbar-inverse navbar-fixed-top',
+            'class' => 'navbar navbar-light navbar-fixed-top',
+            'style' => 'background-color: #eaf6ff',
         ],
     ]);
 

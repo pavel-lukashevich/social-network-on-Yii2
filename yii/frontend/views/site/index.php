@@ -22,13 +22,13 @@ $this->title = 'My Yii Application';
                     <div class="container__wrapper">
                         <div class="container__content">
                             <img src="<?= $show->getPicture(); ?>" alt="..."
-                                 class="center-block img-circle" width="60%">
-                        <h2 class="text-center"><?= $show->username ?></h2>
+                                 class="center-block img-circle" width="70%">
+                        <h4 class="text-center"><?= $show->username ?></h4>
                         </div>
                     </div>
                 </div>
 
-                <?php if ($div % 3 == 0 || $div == count($user)) echo '</div >'; ?>
+                <?php if ($div % 4 == 0 || $div == count($user)) echo '</div >'; ?>
             <?php endforeach; ?>
 
         </div>
