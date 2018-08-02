@@ -74,7 +74,6 @@ class EditProfile extends Model
         if ($this->firstname != false) {$user->firstname = $this->firstname;}
         if ($this->lastname != false) {$user->lastname = $this->lastname;}
 
-
         if ($user->save(false, ['username', 'about', 'firstname', 'lastname'])) {
             return $user;
         }else return null;

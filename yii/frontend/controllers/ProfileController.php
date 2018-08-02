@@ -46,6 +46,10 @@ class ProfileController extends Controller
 
         $user = User::find()->where(["id" => $username])->one();
 
+        if ($user == null) {
+            return $this->redirect('/profile');
+        }
+
         return $this->render('index', [
             'user' => $user,
             'modelAvatar' => $modelAvatar,
@@ -103,9 +107,6 @@ class ProfileController extends Controller
         $model = new AvatarLoader();
 
       $model->picture = UploadedFile::getInstance($model, "picture");
-
-
-
 
         if ($model->validate()) {
 

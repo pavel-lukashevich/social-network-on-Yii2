@@ -194,7 +194,7 @@ class User extends ActiveRecord implements IdentityInterface
         if ($this->avatar !== null) {
             return Yii::$app->storage->getFile($this->avatar);
         }
-//        return null;
+
         return self::DEFAULT_IMAGE;
     }
 }

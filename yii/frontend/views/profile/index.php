@@ -68,8 +68,11 @@ $this->title = 'Просмотр профиля ' . $user->id;
 
     <hr>
 
+
+
+
     <a class="btn btn-lg btn-info" href="/friends/add-subscribe/follow_id=<?= $user->id; ?>">подписаться</a>
-    <a class="btn btn-lg btn-info" href="/profile/edit">отписаться</a>
+    <a class="btn btn-lg btn-info" href="/friends/delete-subscribe/follow_id=<?= $user->id; ?>">отписаться</a>
 
     <hr>
 

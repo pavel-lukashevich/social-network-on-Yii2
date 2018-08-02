@@ -18,7 +18,7 @@ class FriendsController extends \yii\web\Controller
         $userId = ($userId !== null) ? $userId : Yii::$app->user->id;
         $friends = Friends::find('subscribe')->where(["user_id" => $userId])->one();
 
-        if ($friends == null){
+        if ($friends == null) {
             return $this->redirect('/friends/all');
         };
 
@@ -38,7 +38,7 @@ class FriendsController extends \yii\web\Controller
         $userId = ($userId !== null) ? $userId : Yii::$app->user->id;
         $friends = Friends::find('follower')->where(["user_id" => $userId])->one();
 
-        if ($friends == null){
+        if ($friends == null) {
             return $this->redirect('/friends/all');
         };
 
@@ -56,11 +56,14 @@ class FriendsController extends \yii\web\Controller
         }
 
         $userId = ($userId !== null) ? $userId : Yii::$app->user->id;
-        $friends = Friends::find()->where(["user_id" => $userId])->one();
+
+        $friends = Friends::find()->where(["user_id" => [$userId]])->one();
+
+        $friend = $friends->getMutuality();
 
         return $this->render('mutuality', [
             'userId' => $userId,
-            'friends' => $friends,
+            'friend' => $friend,
         ]);
     }
 
@@ -82,21 +85,50 @@ class FriendsController extends \yii\web\Controller
         ]);
     }
 
-    //return $this->redirect(Yii::$app->request->referrer);
-    public function actionAddSubscribe($follower_id = null)
+    public function actionAddSubscribe($follower_id)
     {
         if (Yii::$app->user->isGuest) {
             return $this->redirect('site');
         }
-
         $follower_id = ($follower_id !== null) ? $follower_id : Yii::$app->user->id;
 
-        $subs = Friends::findOne(['user_id' => Yii::$app->user->id]);
-        if ($subs->addSubscribe($follower_id)) {
-            return $this->redirect(Yii::$app->request->referrer);
+        $subs = Friends::find()->where(['user_id' => Yii::$app->user->id])->one();
+        if ($subs == null) $subs = new Friends();
+
+        if ($subs->addSubscribers($follower_id)) {
+            $subs->user_id = Yii::$app->user->id;
+            if ($subs->save()) {
+
+                return $this->redirect(Yii::$app->request->referrer);
+            }
         }
 
-        return $this->redirect('friends/all');
+        return $this->redirect('/friends/all');
     }
 
+    public function actionDeleteSubscribe($follower_id)
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect('site');
+        }
+        $follower_id = ($follower_id !== null) ? $follower_id : Yii::$app->user->id;
+
+        $subs = Friends::find()->where(['user_id' => Yii::$app->user->id])->one();
+        if ($subs == null) $subs = new Friends();
+
+        if ($subs->deleteSubscribe($follower_id) || $subs->deleteSubscribe($follower_id) === null) {
+            $subs->user_id = Yii::$app->user->id;
+            if ($subs->save()) {
+
+                return $this->redirect(Yii::$app->request->referrer);
+            }
+        }
+
+        return $this->redirect('/friends/all');
+    }
 }
+
+
+//echo "<pre>";
+//echo Yii::$app->user->id;
+//var_dump($subs->subscribe); die;

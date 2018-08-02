@@ -18,11 +18,12 @@ $this->title = 'друзьяшки';
 
 <h2>на вас подписаны</h2>
 
-<?php foreach ($friends->getMutuality() as $fol): ?>
+<?php foreach ($friend as $fol): ?>
     <?php if ($fol != 0): ?>
         <a href="/profile/<?= $fol->id; ?>" class="btn">
             <img src="<?= $fol->getPicture(); ?>" class="img-circle" width="60px"/>
             <?= $fol->username; ?>
+            <a class="btn btn-lg btn-info" href="/friends/delete-subscribe/follow_id=<?= $sub->id; ?>">отписаться</a>
         </a><br>
         <hr>
     <?php endif; ?>

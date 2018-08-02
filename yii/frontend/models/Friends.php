@@ -52,52 +52,28 @@ class Friends extends \yii\db\ActiveRecord
         ];
     }
 
-
-    public function getMutuality()
+    public function getMySubscribersList()
     {
-        $s_arr = json_decode($this->subscribe, true);
-        $f_arr = json_decode($this->follower, true);
-        if ($s_arr == null || $f_arr == null)
-        {
-            return [];
-        }
-//        echo $users = implode(',', array_intersect_key(array_keys($s_arr), array_keys($f_arr)));
-        $users = implode(',', array_keys(array_intersect_key($s_arr, $f_arr)));
-        $subscribe = User::find('id', 'username', 'avatar')->where("id IN($users)")->all();
-        return $subscribe;
+        if ($this->subscribe != null) {
+            $s_arr = json_decode($this->subscribe, true);
+        } else $s_arr = null;
+        return $s_arr;
+    }
+
+    public function getMyFollowerList()
+    {
+        if ($this->subscribe != null) {
+            $f_arr = json_decode($this->follower, true);
+        } else $f_arr = null;
+        return $f_arr;
     }
 
     public function getSubscribe()
     {
-        $s_arr = json_decode($this->subscribe, true);
-        if ($s_arr == null)
-        {
-            return [];
-        }
-        $users = implode(',', array_keys($s_arr));
-        $subscribe = User::find('id', 'username', 'avatar')->where("id IN($users)")->all();
-        return $subscribe;
-    }
+        $s_arr = $this->getMySubscribersList();
 
-    public function addSubscribe($follower_id)
-    {
-        $s_arr = json_decode($this->subscribe, true);
-        $s_arr[$follower_id] = 1; //волшебная цифра статуса отображения (которого ещё нет)
-        $this->subscribe = json_encode($s_arr);
-        if ($this->save(false,['subscribe'])) {
-//        if ($this->save(false,['subscribe' => $this->subscribe])->where("user_id = $this->id")) {
+        if ($s_arr == null) return [];
 
-//            $friend = Friends::find('follower')->where(['id' => $follower_id])->all();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    public function deleteSubscribe()
-    {
-        $s_arr = json_decode($this->subscribe, true);
         $users = implode(',', array_keys($s_arr));
         $subscribe = User::find('id', 'username', 'avatar')->where("id IN($users)")->all();
         return $subscribe;
@@ -106,12 +82,82 @@ class Friends extends \yii\db\ActiveRecord
     public function getFollower()
     {
         $f_arr = json_decode($this->follower, true);
-        if ($f_arr == null)
-        {
+        if ($f_arr == null) {
             return [];
         }
         $users = implode(',', array_keys($f_arr));
         $follower = User::find('id', 'username', 'avatar')->where("id IN($users)")->all();
         return $follower;
     }
+
+    public function getMutuality()
+    {
+        $s_arr = $this->getMySubscribersList();
+        $f_arr = $this->getMyFollowerList();
+
+        if ($s_arr == null || $f_arr == null) return [];
+
+       $users = implode(',', array_keys(array_intersect_key($s_arr, $f_arr)));
+
+       if ($users == null) return [];
+
+        $subscribe = User::find('id', 'username', 'avatar')->where("id IN($users)")->all();
+
+        return $subscribe;
+    }
+
+    public function addSubscribers($follower_id)
+    {
+        $s_arr = $this->getMySubscribersList();
+
+        $s_arr[$follower_id] = 1; //волшебная цифра статуса отображения (которого ещё нет)
+        $this->subscribe = json_encode($s_arr);
+
+        if ($this->addFollower($follower_id)) {
+            return $this->subscribe;
+        }
+        return false;
+    }
+
+    public function addFollower($follower_id)
+    {
+        $follower = Friends::find()->where(['user_id' => $follower_id])->one();
+        $f_arr = $follower->getMyFollowerList();
+
+        $f_arr[Yii::$app->user->id] = 1; //волшебная цифра статуса отображения (которого ещё нет)
+        $follower->follower = json_encode($f_arr);
+        if ($follower->save()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function deleteSubscribe($follower_id)
+    {
+        $s_arr = $this->getMySubscribersList();
+
+        unset($s_arr[$follower_id]);
+        $this->subscribe = $s_arr == null ? null : json_encode($s_arr);
+
+        if ($this->deleteFollower($follower_id)) {
+            return $this->subscribe;
+        }
+        return false;
+    }
+
+    public function deleteFollower($follower_id)
+    {
+        $follower = Friends::find()->where(['user_id' => $follower_id])->one();
+        $f_arr = $follower->getMyFollowerList();
+
+        unset($f_arr[Yii::$app->user->id]);
+        $follower->follower = $f_arr == null ? null : json_encode($f_arr);
+
+        if ($follower->save()) {
+            return true;
+        }
+        return false;
+    }
+
+
 }

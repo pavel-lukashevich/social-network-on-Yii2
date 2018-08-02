@@ -45,6 +45,7 @@ return [
                 'friends/mutuality' => 'friends/mutuality',
                 'friends/follower/<userId:\w+>' => 'friends/follower',
                 'friends/follower' => 'friends/follower',
+                'friends/delete-subscribe/follow_id=<follower_id:\d+>' => 'friends/delete-subscribe',
                 'friends/add-subscribe/follow_id=<follower_id:\d+>' => 'friends/add-subscribe',
                 'friends/all/p-<pageNum:\d+>' => 'friends/all',
                 'friends/all' => 'friends/all',
@@ -56,7 +57,7 @@ return [
                 'profile/edit' => 'profile/edit',
                 'profile/upload' => 'profile/upload',
                 'profile/<username:\w+>' => 'profile/index',
-                'profile\w+' => 'profile/index',
+//                'profile\w+' => 'profile/index',
             ],
         ],
         'storage' => [

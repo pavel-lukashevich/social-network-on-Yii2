@@ -8,7 +8,7 @@ use dosamigos\fileupload\FileUpload;
 $this->title = 'друзьяшки';
 ?>
 
-<!--<h1>друзья пользавателя --><?//= $userId ?><!--</h1>-->
+<!--<h1>друзья пользавателя --><? //= $userId ?><!--</h1>-->
 
 <a class="btn btn-lg btn-info" href="/friends/all">Все пользатели</a>
 <a class="btn btn-lg btn-info" href="/friends">я подписан</a>
@@ -23,6 +23,7 @@ $this->title = 'друзьяшки';
         <a href="/profile/<?= $sub->id; ?>" class="btn">
             <img src="<?= $sub->getPicture(); ?>" class="img-circle" width="60px"/>
             <?= $sub->username; ?>
+            <a class="btn btn-lg btn-info" href="/friends/delete-subscribe/follow_id=<?= $sub->id; ?>">отписаться</a>
         </a><br>
         <hr>
     <?php endif; ?>

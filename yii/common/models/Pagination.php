@@ -58,17 +58,6 @@ class Pagination {
 		*/	
 		$htmlString = "<center><nav><ul class='pagination'>";
 
-        // если сейчас первая, вторая или третья страница,
-        // или общее количество страниц меньше пяти,
-        // то кнокпа "предыдущая" не ставится
-        // если нет - добавляем
-        if ($this->page < 2 || $this->countPages <= 5) $htmlString .= "<li class='hidden'></li>";
-        else {
-            $htmlString .= "<li><a href='"  . $path . $this->index . ($this->page - 1) ."'  aria-label='Previous'>
-				<span aria-hidden='true'>предыдущая  &laquo;</span></a></li>";
-        }
-
-
         // если больше 5 страниц
 	if ($this->countPages >= 5) {
 
@@ -82,6 +71,16 @@ class Pagination {
         if ($this->page == 2) $htmlString .= " class='active'";
         $htmlString .= "><a href='" . $path . $this->index . "2'>2</a></li>";
 
+        // если сейчас первая, вторая или третья страница,
+        // или общее количество страниц меньше пяти,
+        // то кнокпа "предыдущая" не ставится
+        // если нет - добавляем
+        if ($this->page <= 3 || $this->countPages <= 5) $htmlString .= "<li class='hidden'></li>";
+        else {
+            $htmlString .= "<li><a href='"  . $path . $this->index . ($this->page - 1) ."'  aria-label='Previous'>
+				<span aria-hidden='true'>предыдущая  &laquo;</span></a></li>";
+        }
+
         //от третьей до предпредпоследней
 //        $htmlString .= "<li><a  style='background: #337ab7;'><select onchange='window.location.href=this.options[this.selectedIndex].value'>";
         $htmlString .= "<li><a";
@@ -93,6 +92,17 @@ class Pagination {
             $htmlString .= ">$z</option>";
         }
         $htmlString .= "</select></a></li>";
+
+        // если последняя
+        // или общее количество страниц меньше пяти,
+        // то кнокпа "следующая" не ставится
+        // если нет - добавляем
+        if ($this->page >= ($this->countPages-2)  || $this->countPages <= 5) $htmlString .= "<li class='hidden'></li>";
+        else {
+            $htmlString .= "<li><a href='"  . $path . $this->index . ($this->page + 1) . "'  aria-label='Next'>
+					<span aria-hidden='true'>&raquo; следующая</span>
+				</a></li>";
+        }
 
         //предпоследная страница
         $htmlString .= "<li";
@@ -112,18 +122,6 @@ class Pagination {
              $htmlString .= "><a href='"  . $path . $this->index . $i . "'>" . $i . "</a></li>";
 		}
 	}//если всего одна страница, то ничего не происходит и не выводится
-
-
-        // если последняя
-        // или общее количество страниц меньше пяти,
-        // то кнокпа "следующая" не ставится
-        // если нет - добавляем
-        if ($this->page > ($this->countPages-1)  || $this->countPages <= 5) $htmlString .= "<li class='hidden'></li>";
-        else {
-            $htmlString .= "<li><a href='"  . $path . $this->index . ($this->page + 1) . "'  aria-label='Next'>
-					<span aria-hidden='true'>&raquo; следующая</span>
-				</a></li>";
-        }
 
 	$htmlString .= "</ul></nav></center>";
        
