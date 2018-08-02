@@ -10,13 +10,13 @@ $this->title = 'друзьяшки';
 
 <!--<h1>друзья пользавателя --><?//= $userId ?><!--</h1>-->
 
-<a class="btn btn-lg btn-info" href="/friends/all">Все пользатели</a>
-<a class="btn btn-lg btn-info" href="/friends">я подписан</a>
-<a class="btn btn-lg btn-info" href="/friends/follower">на меня подписаны</a>
-<a class="btn btn-lg btn-info" href="/friends/mutuality">взаимные подписки</a>
+<a class="btn btn-lg btn-info" href="/friends/all/">Все пользатели</a>
+<a class="btn btn-lg btn-info" href="/friends/subscribe/">я подписан</a>
+<a class="btn btn-lg btn-info" href="/friends/follower/">на меня подписаны</a>
+<a class="btn btn-lg btn-info" href="/friends/mutuality/">взаимные подписки</a>
 
 
-<h2>на вас подписаны</h2>
+<h2>взаимные подписки</h2>
 
 <?php foreach ($friend as $fol): ?>
     <?php if ($fol != 0): ?>

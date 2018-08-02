@@ -7,12 +7,19 @@ $this->title = 'My Yii Application';
 <div class="site-index">
 
     <div class="text-center">
+        <a class="btn btn-lg btn-info" href="/friends/all/">Все пользатели</a>
+        <a class="btn btn-lg btn-info" href="/friends/subscribe/">я подписан</a>
+        <a class="btn btn-lg btn-info" href="/friends/follower/">на меня подписаны</a>
+        <a class="btn btn-lg btn-info" href="/friends/mutuality/">взаимные подписки</a>
 
-        <h3>ищи знакомых, добавляй в подписки!</h3>
+        <br>
+        <br>
         <p class="lead">Нас <?= $count ?> человек.</p>
+        <?php echo $pagin->get();?>
+
     </div>
     <div class="jumbotron">
-    <?php echo $pagin->get();?>
+
 
         <div class="body-content">
             <?php foreach ($user as $show): ?>
@@ -36,16 +43,8 @@ $this->title = 'My Yii Application';
 
 
         </div>
-    <?php echo $pagin->get();?>
-    </div>
-
-
-    <div class="text-center">
         <h3>Присоединяйся к нам!</h3>
-<!--        <p>-->
-<!--            <a class="btn btn-lg btn-info" href="/site/login">Войти</a>-->
-<!--            <a class="btn btn-lg btn-success" href="/site/signup">Зарегистрироваться</a>-->
-<!--        </p>-->
+    <?php echo $pagin->get();?>
     </div>
 
 </div>

@@ -82,9 +82,9 @@ class Friends extends \yii\db\ActiveRecord
     public function getFollower()
     {
         $f_arr = json_decode($this->follower, true);
-        if ($f_arr == null) {
-            return [];
-        }
+
+        if ($f_arr == null) return [];
+
         $users = implode(',', array_keys($f_arr));
         $follower = User::find('id', 'username', 'avatar')->where("id IN($users)")->all();
         return $follower;
@@ -159,5 +159,35 @@ class Friends extends \yii\db\ActiveRecord
         return false;
     }
 
+    public static function isSubscribe($user_id)
+    {
+        $user = Friends::find()->where(['user_id' => Yii::$app->user->id])->one();
+        if ($user == null) return false;
 
+        $s_arr = $user->getMySubscribersList();
+        $i[$user_id] = 1;
+        $equals = array_intersect_key($s_arr, $i);
+
+        if ($equals != null) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function countSubscribe($user_id)
+    {
+        $user = Friends::find()->where(['user_id' => $user_id])->one();
+        if ($user == null) return '';
+        $s_arr = $user->getMySubscribersList();
+        return count($s_arr);
+    }
+
+    public static function countFollower($user_id)
+    {
+        $user = Friends::find()->where(['user_id' => $user_id])->one();
+        if ($user == null) return '';
+        $f_arr = $user->getMyFollowerList();
+        return count($f_arr);
+    }
 }

@@ -10,15 +10,15 @@ $this->title = 'друзьяшки';
 
 <!--<h1>друзья пользавателя --><?//= $userId ?><!--</h1>-->
 
-<a class="btn btn-lg btn-info" href="/friends/all">Все пользатели</a>
-<a class="btn btn-lg btn-info" href="/friends">я подписан</a>
-<a class="btn btn-lg btn-info" href="/friends/follower">на меня подписаны</a>
-<a class="btn btn-lg btn-info" href="/friends/mutuality">взаимные подписки</a>
+<a class="btn btn-lg btn-info" href="/friends/all/">Все пользатели</a>
+<a class="btn btn-lg btn-info" href="/friends/subscribe/">я подписан</a>
+<a class="btn btn-lg btn-info" href="/friends/follower/">на меня подписаны</a>
+<a class="btn btn-lg btn-info" href="/friends/mutuality/">взаимные подписки</a>
 
 
 <h2>на вас подписаны</h2>
 
-<?php foreach ($friends->getFollower() as $fol): ?>
+<?php foreach ($friend as $fol): ?>
     <?php if ($fol != 0): ?>
         <a href="/profile/<?= $fol->id; ?>" class="btn">
             <img src="<?= $fol->getPicture(); ?>" class="img-circle" width="60px"/>
