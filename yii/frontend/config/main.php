@@ -62,7 +62,7 @@ return [
                 'friends/subscribe/id=<userId:\d+>/p-<pageNum:\d+>' => 'friends/subscribe',
                 'friends/subscribe/id=<userId:\d+>' => 'friends/subscribe',
                 'friends/subscribe' => 'friends/subscribe',
-                'friends' => 'friends/subscribe',
+//                'friends' => 'friends/subscribe',
 //                'friends\w+' => 'friends/index',
 
                 'profile/edit\w+' => 'profile/index',

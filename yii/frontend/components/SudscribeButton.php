@@ -47,7 +47,7 @@ class SudscribeButton
             echo "<div class='col-sm-6'>
                 <div class='col-sm-4'>
                     <a href='/profile/" . $sub->id ."' class='btn'>
-                        <img src='" . $sub->getPicture() ."' class='img-circle' width='70px'/>
+                        <img src='" . $sub->getPicture() ."' class='img-rounded' width='70px'/>
                     </a>
                 </div>
                 <div class='col-sm-8'>

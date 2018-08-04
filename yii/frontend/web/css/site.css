@@ -140,6 +140,7 @@ a.desc:after {
 }
 
 #profile-picture {
-    width: 600px;
-    height: 400px;
+    min-width: 350px;
+    max-width: 450px;
+
 }

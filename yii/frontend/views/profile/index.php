@@ -21,7 +21,7 @@ $this->title = 'Просмотр профиля ' . $user->id;
         <p><?php echo HtmlPurifier::process($user->about); ?></p>
         <hr>
 
-        <img src="<?= $user->getPicture(); ?>" id="profile-picture"/>
+        <img src="<?= $user->getPicture(); ?>" class="img-rounded" id="profile-picture"/>
 <!--        <img src="--><?//= $user->getPicture(); ?><!--" id="profile-picture"/>-->
 
 
