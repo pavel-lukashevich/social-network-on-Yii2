@@ -138,3 +138,8 @@ a.desc:after {
     height: 100%;
     /*background-color: #f00;*/
 }
+
+#profile-picture {
+    width: 600px;
+    height: 400px;
+}

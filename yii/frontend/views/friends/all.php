@@ -8,7 +8,7 @@ $this->title = 'My Yii Application';
 
     <div class="text-center">
 
-        <?php \frontend\components\SudscribeButton::run()?>
+        <?php \frontend\components\SudscribeButton::run(Yii::$app->user->id)?>
 
         <br>
         <br>

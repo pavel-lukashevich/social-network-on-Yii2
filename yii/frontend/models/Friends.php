@@ -56,41 +56,55 @@ class Friends extends \yii\db\ActiveRecord
     {
         if ($this->subscribe != null) {
             $s_arr = json_decode($this->subscribe, true);
-        } else $s_arr = null;
+        } else $s_arr = [];
         return $s_arr;
     }
 
     public function getMyFollowerList()
     {
-        if ($this->subscribe != null) {
+        if ($this->follower != null) {
             $f_arr = json_decode($this->follower, true);
-        } else $f_arr = null;
+        } else $f_arr = [];
         return $f_arr;
     }
 
-    public function getSubscribe()
+    public function getSubscribe($offset)
     {
         $s_arr = $this->getMySubscribersList();
 
         if ($s_arr == null) return [];
 
         $users = implode(',', array_keys($s_arr));
-        $subscribe = User::find('id', 'username', 'avatar')->where("id IN($users)")->all();
+
+
+        $subscribe = User::find()->select(['id', 'username', 'avatar'])
+            ->where("id IN($users)")
+            ->limit(Friends::FRIEND_FOR_PAGE)
+            ->offset($offset)
+            ->orderBy(['id' => SORT_DESC])
+            ->all();
+
         return $subscribe;
     }
 
-    public function getFollower()
+    public function getFollower($offset)
     {
         $f_arr = json_decode($this->follower, true);
 
         if ($f_arr == null) return [];
 
         $users = implode(',', array_keys($f_arr));
-        $follower = User::find('id', 'username', 'avatar')->where("id IN($users)")->all();
+
+        $follower = User::find()->select(['id', 'username', 'avatar'])
+            ->where("id IN($users)")
+            ->limit(Friends::FRIEND_FOR_PAGE)
+            ->offset($offset)
+            ->orderBy(['id' => SORT_DESC])
+            ->all();
         return $follower;
     }
 
-    public function getMutuality()
+    public function getMutuality($offset)
     {
         $s_arr = $this->getMySubscribersList();
         $f_arr = $this->getMyFollowerList();
@@ -101,7 +115,12 @@ class Friends extends \yii\db\ActiveRecord
 
        if ($users == null) return [];
 
-        $subscribe = User::find('id', 'username', 'avatar')->where("id IN($users)")->all();
+        $subscribe = User::find()->select(['id', 'username', 'avatar'])
+            ->where("id IN($users)")
+            ->limit(Friends::FRIEND_FOR_PAGE)
+            ->offset($offset)
+            ->orderBy(['id' => SORT_DESC])
+            ->all();
 
         return $subscribe;
     }
@@ -177,7 +196,7 @@ class Friends extends \yii\db\ActiveRecord
 
     public static function countSubscribe($user_id)
     {
-        $user = Friends::find()->where(['user_id' => $user_id])->one();
+        $user = Friends::find()->select(['subscribe'])->where(['user_id' => $user_id])->one();
         if ($user == null) return '';
         $s_arr = $user->getMySubscribersList();
         return count($s_arr);
@@ -185,9 +204,27 @@ class Friends extends \yii\db\ActiveRecord
 
     public static function countFollower($user_id)
     {
-        $user = Friends::find()->where(['user_id' => $user_id])->one();
+        $user = Friends::find()->select(['follower'])->where(['user_id' => $user_id])->one();
         if ($user == null) return '';
         $f_arr = $user->getMyFollowerList();
         return count($f_arr);
+    }
+
+    public static function countMutuality($user_id)
+    {
+        $user = Friends::find()->select(['subscribe', 'follower'])->where(['user_id' => $user_id])->one();
+        if ($user == null) return '';
+        $s_arr = $user->getMySubscribersList();
+        $f_arr = $user->getMyFollowerList();
+        return count(array_intersect_key($s_arr, $f_arr));
+
+//        if ($s_arr == null || $f_arr == null) return [];
+//
+//        $users = implode(',', array_keys(array_intersect_key($s_arr, $f_arr)));
+
+//        $user = Friends::find()->where(['user_id' => $user_id])->one();
+//        if ($user == null) return '';
+//        $f_arr = $user->getMyFollowerList();
+//        return count($f_arr);
     }
 }

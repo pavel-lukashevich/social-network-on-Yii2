@@ -8,21 +8,36 @@
 
 namespace frontend\components;
 
+use frontend\models\Friends;
 
 class SudscribeButton
 {
-    public static function run()
+    public static function run($myId, $userId = null)
    {
-        echo "
-            <center>
-                <a class='btn btn-default' href = '/friends/all/' > все </a >
-                <a class='btn btn-default' href = '/friends/subscribe/' > подписки </a >
-                <a class='btn btn-default' href = '/friends/follower/' > подписчики </a >
-                <a class='btn btn-default' href = '/friends/mutuality/' > друзья </a >
-            </center>";
+
+       $buttonUrl = [
+           'all' => 'все пользователи',
+           'subscribe' => 'подписки',
+           'follower' => 'подписчики',
+           'mutuality' => 'друзья'
+       ];
+
+       if ($myId == $userId || $userId == null) {
+
+          $thisUrl = '/' . \Yii::$app->request->pathInfo;
+           echo "<center>";
+           foreach ($buttonUrl as $key => $val){
+                echo "<a class='btn btn-default' href = '/friends/" . $key . "' ";
+                echo ($thisUrl == $key) ?  "active" : "";
+                echo "> " . $val . " </a>";
+           }
+            echo "</center>";
+       } else {
+           echo "<center><a class='btn btn-default' href = '/profile/" . $userId . "' > назад к профилю " . $userId . "</a></center>";
+       }
    }
 
-    public static function list($user, $btn)
+    public static function list($user)
     {
         echo "<div class='center-block'>";
         foreach ($user as $sub){
@@ -39,12 +54,13 @@ class SudscribeButton
                     <a href='/profile/" . $sub->id . "' class='btn'>" . $sub->username . "</a>
                     <p>";
 
-            if ($btn == "add" || $btn == "all") {
-                echo "<a class='btn btn-sm  btn-default' href='/friends/add-subscribe/follow_id=" . $sub->id . "'>подписаться</a>";
-            }
-            if ($btn == "delete" || $btn == "all") {
+
+            if (Friends::isSubscribe($sub->id)) {
                 echo "<a class='btn btn-sm  btn-default' href = '/friends/delete-subscribe/follow_id=" . $sub->id . "' > отписаться</a >";
+            } else {
+                echo "<a class='btn btn-sm  btn-default' href='/friends/add-subscribe/follow_id=" . $sub->id . "'>подписаться</a>";
              }
+
                   echo "</p>
                         <hr>
                         </div>

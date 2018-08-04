@@ -46,13 +46,20 @@ return [
                 'friends/add-subscribe/follow_id=<follower_id:\d+>' => 'friends/add-subscribe',
                 'friends/all/p-<pageNum:\d+>' => 'friends/all',
                 'friends/all' => 'friends/all',
-                'friends/<userId:\w+>' => 'friends/index',
 
                 'friends/mutuality' => 'friends/mutuality',
 
+
+                'friends/follower/p-<pageNum:\d+>' => 'friends/follower',
+                'friends/follower/id=<userId:\d+>/p-<pageNum:\d+>' => 'friends/follower',
                 'friends/follower/id=<userId:\d+>' => 'friends/follower',
                 'friends/follower' => 'friends/follower',
 
+//                'friends/<typeBtn:\w+>/id=<userId:\d+>/p-<pageNum:\d+>' => 'friends/index',
+//                'friends/<typeBtn:\w+>/id=<userId:\d+>' => 'friends/index',
+//                'friends/<typeBtn:\w+>/+' => 'friends/index',
+                'friends/subscribe/p-<pageNum:\d+>' => 'friends/subscribe',
+                'friends/subscribe/id=<userId:\d+>/p-<pageNum:\d+>' => 'friends/subscribe',
                 'friends/subscribe/id=<userId:\d+>' => 'friends/subscribe',
                 'friends/subscribe' => 'friends/subscribe',
                 'friends' => 'friends/subscribe',

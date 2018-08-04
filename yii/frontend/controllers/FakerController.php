@@ -98,7 +98,7 @@ class FakerController extends Controller
 
     public function actionFriends()
     {
-        $y = 110;
+//        $y = 110;
         //снимаем ограничение с времени выполнения скрипта
         set_time_limit(0);
 
@@ -120,8 +120,8 @@ class FakerController extends Controller
                 $fr = new Friends();
                 $fr->user_id = $user['id'];
             }
-            $fr->subscribe = json_encode(array_flip(array_rand(array_flip($new), mt_rand(2, 9))));
-            $fr->follower = json_encode(array_flip(array_rand(array_flip($new), mt_rand(2, 9))));
+            $fr->subscribe = json_encode(array_flip(array_rand(array_flip($new), mt_rand(2, 49))));
+            $fr->follower = json_encode(array_flip(array_rand(array_flip($new), mt_rand(2, 49))));
 
             if ($fr->save()) $num++;
         }
