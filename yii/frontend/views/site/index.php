@@ -36,8 +36,8 @@ $this->title = 'My Yii Application';
     <div class="text-center">
         <h3>Присоединяйся к нам!</h3>
         <p>
-            <a class="btn btn-lg btn-info" href="/site/login">Войти</a>
-            <a class="btn btn-lg btn-success" href="/site/signup">Зарегистрироваться</a>
+            <a class="btn btn-lg btn-default" href="/site/login">Войти</a>
+            <a class="btn btn-lg btn-default" href="/site/signup">Зарегистрироваться</a>
         </p>
     </div>
 

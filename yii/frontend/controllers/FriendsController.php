@@ -9,88 +9,134 @@ use common\models\Pagination;
 
 class FriendsController extends \yii\web\Controller
 {
-    public function actionSubscribe($userId = null)
+    /**
+     * список подписок
+     * получает id пользователя и возвращает массив объектов друзей
+     * в котором должны быть id, username, firstname, lastname, country, city
+     *
+     * @param integer $userId
+     * @return array $friends \yii\web\Response
+     */
+    public function actionSubscribe($pageNum = 1, $userId = null)
     {
         if (Yii::$app->user->isGuest) {
-            return $this->redirect('site');
+            return $this->redirect('/site');
         }
 
         $userId = ($userId !== null) ? $userId : Yii::$app->user->id;
-        $friends = Friends::find('subscribe')->where(["user_id" => $userId])->one();
+        $friends = Friends::find()->select('subscribe')->where(["user_id" => $userId])->one();
 
         if ($friends == null) {
-            return $this->redirect('/friends/all');
+            $friends = new Friends();
         };
 
-        $friend = $friends->getSubscribe();
+        $offset = $friends::FRIEND_FOR_PAGE * ($pageNum - 1);
+        $friend = $friends->getSubscribe($offset);
+
+        $count = Friends::countSubscribe($userId);
+        $pagin = new Pagination($pageNum, $count, Friends::FRIEND_FOR_PAGE);
 
         return $this->render('subscribe', [
             'userId' => $userId,
             'friend' => $friend,
+            'pagin' => $pagin,
         ]);
     }
 
-    public function actionFollower($userId = null)
+    /**
+     * список подписчиков
+     * получает id пользователя и возвращает массив объектов друзей
+     * в котором должны быть id, username, firstname, lastname, country, city
+     *
+     * @param integer $userId
+     * @return array $friends \yii\web\Response
+     */
+    public function actionFollower($pageNum = 1, $userId = null)
     {
         if (Yii::$app->user->isGuest) {
-            return $this->redirect('site');
+            return $this->redirect('/site');
         }
 
         $userId = ($userId !== null) ? $userId : Yii::$app->user->id;
-        $friends = Friends::find('follower')->where(["user_id" => $userId])->one();
+        $friends = Friends::find()->select('follower')->where(["user_id" => $userId])->one();
 
         if ($friends == null) {
-            return $this->redirect('/friends/all');
+            $friends = new Friends();
         };
 
-        $friend = $friends->getFollower();
+        $offset = Friends::FRIEND_FOR_PAGE * ($pageNum - 1);
+        $friend = $friends->getFollower($offset);
+        $count = Friends::countFollower($userId);
+        $pagin = new Pagination($pageNum, $count, Friends::FRIEND_FOR_PAGE);
 
-        return $this->render('follower', [
+        return $this->render('subscribe', [
             'userId' => $userId,
             'friend' => $friend,
+            'pagin' => $pagin,
         ]);
     }
 
-    public function actionMutuality($userId = null)
+    /**
+     * список взаимных подписок
+     * получает id пользователя и возвращает массив объектов друзей
+     * в котором должны быть id, username, firstname, lastname, country, city
+     *
+     * @param integer $userId
+     * @return array $friends \yii\web\Response
+     */
+    public function actionMutuality($pageNum = 1, $userId = null)
     {
         if (Yii::$app->user->isGuest) {
-            return $this->redirect('site');
+            return $this->redirect('/site');
         }
 
         $userId = ($userId !== null) ? $userId : Yii::$app->user->id;
 
         $friends = Friends::find()->where(["user_id" => [$userId]])->one();
 
-        $friend = $friends->getMutuality();
+        if ($friends == null) {
+            $friends = new Friends();
+        };
 
-        return $this->render('mutuality', [
+        $offset = Friends::FRIEND_FOR_PAGE * ($pageNum - 1);
+        $friend = $friends->getMutuality($offset);
+        $count = Friends::countMutuality($userId);
+        $pagin = new Pagination($pageNum, $count, Friends::FRIEND_FOR_PAGE);
+
+        return $this->render('subscribe', [
             'userId' => $userId,
             'friend' => $friend,
+            'pagin' => $pagin,
         ]);
     }
 
     public function actionAll($pageNum = 1)
     {
         if (Yii::$app->user->isGuest) {
-            return $this->redirect('site');
+            return $this->redirect('/site');
         }
 
         $count = User::find()->count();
         $offset = Friends::FRIEND_FOR_PAGE * ($pageNum - 1);
-        $user = User::find()->select('id, username, avatar')->limit(Friends::FRIEND_FOR_PAGE)->offset($offset)->orderBy(['id' => SORT_DESC])->all();
+        $friend = User::find()->select('id, username, avatar')
+            ->where( 'id != ' . Yii::$app->user->id)
+            ->limit(Friends::FRIEND_FOR_PAGE)
+            ->offset($offset)
+            ->orderBy(['id' => SORT_DESC])
+            ->all();
         $pagin = new Pagination($pageNum, $count, Friends::FRIEND_FOR_PAGE);
 
-        return $this->render('all', [
-            'user' => $user,
+        return $this->render('subscribe', [
+            'friend' => $friend,
             'pagin' => $pagin,
-            'count' => $count,
+           // 'count' => $count,
         ]);
     }
 
     public function actionAddSubscribe($follower_id)
     {
         if (Yii::$app->user->isGuest) {
-            return $this->redirect('site');
+            return $this->redirect('/site');
         }
         $follower_id = ($follower_id !== null) ? $follower_id : Yii::$app->user->id;
 
@@ -111,7 +157,7 @@ class FriendsController extends \yii\web\Controller
     public function actionDeleteSubscribe($follower_id)
     {
         if (Yii::$app->user->isGuest) {
-            return $this->redirect('site');
+            return $this->redirect('/site');
         }
         $follower_id = ($follower_id !== null) ? $follower_id : Yii::$app->user->id;
 
@@ -130,7 +176,3 @@ class FriendsController extends \yii\web\Controller
     }
 }
 
-
-//echo "<pre>";
-//echo Yii::$app->user->id;
-//var_dump($subs->subscribe); die;

@@ -1,6 +1,14 @@
 html,
 body {
     height: 100%;
+    background: linear-gradient( #d3ebfd, transparent 1px), linear-gradient( 90deg, #d3ebfd, transparent 1px);
+    background-size: 15px 15px;
+    background-position: center center;
+    font-style: italic;
+    color: #53006e;
+}
+a, .btn {
+    color: #53006e;
 }
 
 .wrap {
@@ -138,3 +146,40 @@ a.desc:after {
     height: 100%;
     /*background-color: #f00;*/
 }
+
+#profile-picture {
+    width: 400px;
+    /*min-width: 350px;*/
+    /*max-width: 450px;*/
+}
+
+.list-user {
+    border-radius: 0 0 50px 50px ;
+    border-width: 1px;
+    border-top-width: 0px;
+    border-style: dashed;
+    /*border-top-style: none;*/
+    border-color: rgb(35, 20, 70);
+    margin: 10px;
+}
+
+.navbar li, .navbar-header a {
+     background: rgba(241, 244, 255, 0.95);
+     margin: 0 5px 0 0;
+     border-radius: 0 0 20px 20px ;
+     border-width: 1px;
+     border-top-width: 0px;
+     border-style: dashed;
+}
+
+.navbar li a:hover {
+    /*margin: 0 5px 0 0;*/
+    border-radius: 0 0 20px 20px;
+    /*border-width: 1px;*/
+    /*border-top-width: 0px;*/
+    /*border-style: dashed;*/
+}
+
+.navbar-toggle .icon-bar {
+    border: 2px solid #53006e;
+ }

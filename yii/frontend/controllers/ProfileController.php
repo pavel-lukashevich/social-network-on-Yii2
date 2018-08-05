@@ -8,7 +8,7 @@ use common\models\User;
 use frontend\models\EditProfile;
 use yii\web\UploadedFile;
 use yii\web\Response;
-use frontend\models\AvatarLoader;
+use frontend\models\ImageLoader;
 
 use frontend\models\UploadForm;
 use frontend\assets\AppAsset;
@@ -40,7 +40,7 @@ class ProfileController extends Controller
             return $this->redirect('site');
         }
 
-        $modelAvatar = new AvatarLoader();
+        $modelImage = new ImageLoader();
 
         $username = ($username !== null) ? $username : Yii::$app->user->id;
 
@@ -52,7 +52,7 @@ class ProfileController extends Controller
 
         return $this->render('index', [
             'user' => $user,
-            'modelAvatar' => $modelAvatar,
+            'modelImage' => $modelImage,
         ]);
     }
 
@@ -104,7 +104,7 @@ class ProfileController extends Controller
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $model = new AvatarLoader();
+        $model = new ImageLoader();
 
       $model->picture = UploadedFile::getInstance($model, "picture");
 

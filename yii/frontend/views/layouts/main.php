@@ -35,7 +35,8 @@ AppAsset::register($this);
         'options' => [
 //            'class' => 'navbar-inverse navbar-fixed-top',
             'class' => 'navbar navbar-light navbar-fixed-top',
-            'style' => 'background-color: #eaf6ff',
+//            'style' => 'background-color: #eaf6ff',
+//            'style' => 'background-color: #eaf6ff',
         ],
     ]);
 
@@ -45,7 +46,7 @@ AppAsset::register($this);
     } else {
         $menuItems = [
             ['label' => 'Новости', 'url' => ['/news/index']],
-            ['label' => 'Друзья', 'url' => ['/friends']],
+            ['label' => 'Друзья', 'url' => ['/friends/subscribe/']],
             ['label' => 'Сообщения', 'url' => ['/message']],
             ['label' => 'Профиль', 'url' => ['/profile']],
         ];

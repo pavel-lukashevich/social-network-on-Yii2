@@ -6,7 +6,7 @@ use Yii;
 use yii\base\Model;
 
 
-class AvatarLoader extends Model
+class ImageLoader extends Model
 {
     public $picture;
 
@@ -14,7 +14,7 @@ class AvatarLoader extends Model
     {
         return [
             [['picture'], 'file',
-                'extensions' => 'jpg, gif, png',
+                'extensions' => 'jpg, png, gif',
                 'checkExtensionByMimeType' => true,
             ]
         ];

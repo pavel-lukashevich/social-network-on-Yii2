@@ -8,50 +8,39 @@
 
 namespace frontend\components;
 
+use frontend\models\Friends;
 
 class SudscribeButton
 {
-    public static function run()
+    public static function run($myId, $userId = null)
    {
-        echo "
-            <center>
-                <a class='btn btn-default' href = '/friends/all/' > все </a >
-                <a class='btn btn-default' href = '/friends/subscribe/' > подписки </a >
-                <a class='btn btn-default' href = '/friends/follower/' > подписчики </a >
-                <a class='btn btn-default' href = '/friends/mutuality/' > друзья </a >
-            </center>";
+
+       $buttonUrl = [
+           'all' => 'все пользователи',
+           'subscribe' => 'подписки',
+           'follower' => 'подписчики',
+           'mutuality' => 'друзья'
+       ];
+
+       $url = \Yii::$app->request->pathInfo;
+
+       if ($myId == $userId || $userId == null) {
+
+           echo "<center>";
+           foreach ($buttonUrl as $key => $val){
+                echo "<a href = '/friends/" . $key . "'  class='btn btn-default ";
+                echo (stristr ($url, $key)) ?  "active" : "";
+                echo "'> " . $val . " </a>";
+           }
+            echo "</center>";
+       } else {
+           foreach ($buttonUrl as $key => $val){
+//               echo "вы смотрите раздел ";
+               echo (stristr ($url, $key)) ?  "<center>вы смотрите раздел <b>$val</b> пользователя $userId." : "";
+//               echo "'> " . $val . " </a>";
+           }
+           echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class='btn btn-default' href = '/profile/" . $userId . "' > назад к профилю </a></center>";
+       }
    }
 
-    public static function list($user, $btn)
-    {
-        echo "<div class='center-block'>";
-        foreach ($user as $sub){
-            $div = empty($div) ? 0 : $div;
-            if ($div++ % 2 == 0) echo "<div class='row'>";
-
-            echo "<div class='col-sm-6'>
-                <div class='col-sm-4'>
-                    <a href='/profile/" . $sub->id ."' class='btn'>
-                        <img src='" . $sub->getPicture() ."' class='img-circle' width='70px'/>
-                    </a>
-                </div>
-                <div class='col-sm-8'>
-                    <a href='/profile/" . $sub->id . "' class='btn'>" . $sub->username . "</a>
-                    <p>";
-
-            if ($btn == "add" || $btn == "all") {
-                echo "<a class='btn btn-sm  btn-default' href='/friends/add-subscribe/follow_id=" . $sub->id . "'>подписаться</a>";
-            }
-            if ($btn == "delete" || $btn == "all") {
-                echo "<a class='btn btn-sm  btn-default' href = '/friends/delete-subscribe/follow_id=" . $sub->id . "' > отписаться</a >";
-             }
-                  echo "</p>
-                        <hr>
-                        </div>
-                    </div>";
-
-                    if ($div % 2 == 0 || $div == count($user)) echo '</div >';
-                }
-            echo "</div>";
-    }
 }
