@@ -47,8 +47,8 @@ return [
                 'friends/all/p-<pageNum:\d+>' => 'friends/all',
                 'friends/all' => 'friends/all',
 
+                'friends/mutuality/p-<pageNum:\d+>' => 'friends/mutuality',
                 'friends/mutuality' => 'friends/mutuality',
-
 
                 'friends/follower/p-<pageNum:\d+>' => 'friends/follower',
                 'friends/follower/id=<userId:\d+>/p-<pageNum:\d+>' => 'friends/follower',

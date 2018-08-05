@@ -16,7 +16,7 @@ use common\models\User;
 class Friends extends \yii\db\ActiveRecord
 {
 
-    const FRIEND_FOR_PAGE = 12;
+    const FRIEND_FOR_PAGE = 10;
 
     /**
      * {@inheritdoc}
@@ -141,6 +141,10 @@ class Friends extends \yii\db\ActiveRecord
     public function addFollower($follower_id)
     {
         $follower = Friends::find()->where(['user_id' => $follower_id])->one();
+        if ($follower == null) {
+            $follower = new Friends();
+            $follower->user_id = $follower_id;
+        }
         $f_arr = $follower->getMyFollowerList();
 
         $f_arr[Yii::$app->user->id] = 1; //волшебная цифра статуса отображения (которого ещё нет)
@@ -197,7 +201,7 @@ class Friends extends \yii\db\ActiveRecord
     public static function countSubscribe($user_id)
     {
         $user = Friends::find()->select(['subscribe'])->where(['user_id' => $user_id])->one();
-        if ($user == null) return '';
+        if ($user == null) return 0;
         $s_arr = $user->getMySubscribersList();
         return count($s_arr);
     }
@@ -205,7 +209,7 @@ class Friends extends \yii\db\ActiveRecord
     public static function countFollower($user_id)
     {
         $user = Friends::find()->select(['follower'])->where(['user_id' => $user_id])->one();
-        if ($user == null) return '';
+        if ($user == null) return 0;
         $f_arr = $user->getMyFollowerList();
         return count($f_arr);
     }
@@ -213,7 +217,7 @@ class Friends extends \yii\db\ActiveRecord
     public static function countMutuality($user_id)
     {
         $user = Friends::find()->select(['subscribe', 'follower'])->where(['user_id' => $user_id])->one();
-        if ($user == null) return '';
+        if ($user == null) return 0;
         $s_arr = $user->getMySubscribersList();
         $f_arr = $user->getMyFollowerList();
         return count(array_intersect_key($s_arr, $f_arr));

@@ -62,14 +62,14 @@ class Pagination {
 	if ($this->countPages >= 5) {
 
         //первая страница
-        $htmlString .= "<li";
-        if ($this->page == 1) $htmlString .= " class='active'";
-        $htmlString .= "><a href='" . $path . $this->index . "1'>1</a></li>";
+        $htmlString .= "<li class='page-item'><a href='" . $path . $this->index . "1' class='btn-default ";
+        if ($this->page == 1) $htmlString .= " active";
+        $htmlString .= "'>1</a></li>";
 
         //вторая страница
-        $htmlString .= "<li";
-        if ($this->page == 2) $htmlString .= " class='active'";
-        $htmlString .= "><a href='" . $path . $this->index . "2'>2</a></li>";
+        $htmlString .= "<li class='page-item'><a href='" . $path . $this->index . "2' class='btn-default ";
+        if ($this->page == 2) $htmlString .= " active";
+        $htmlString .= "'>2</a></li>";
 
         // если сейчас первая, вторая или третья страница,
         // или общее количество страниц меньше пяти,
@@ -82,13 +82,13 @@ class Pagination {
         }
 
         //от третьей до предпредпоследней
-//        $htmlString .= "<li><a  style='background: #337ab7;'><select onchange='window.location.href=this.options[this.selectedIndex].value'>";
-        $htmlString .= "<li><a";
-        if ($this->page > 2 && $this->page < $this->countPages - 2) $htmlString .= " style='background: #337ab7;'";
-        $htmlString .= "><select onchange='window.location.href=this.options[this.selectedIndex].value'>";
+        $htmlString .= "<li class='page-item'><a class='btn-default";
+        if ($this->page > 2 && $this->page < $this->countPages - 2) $htmlString .= " active";
+        $htmlString .= "'><select onchange='window.location.href=this.options[this.selectedIndex].value'>";
         for ($z=3; $z <= $this->countPages - 2; $z++) {
             $htmlString .= "<option value='" . $path . $this->index . $z . "'";
-            if ($z == $this->page) $htmlString .= " selected";
+            if (($this->page < 3 || $this->page > $this->countPages - 2) && $this->countPages/2 == $z) $htmlString .= " selected";
+            elseif ($z == $this->page) $htmlString .= " selected";
             $htmlString .= ">$z</option>";
         }
         $htmlString .= "</select></a></li>";
@@ -105,21 +105,21 @@ class Pagination {
         }
 
         //предпоследная страница
-        $htmlString .= "<li";
-        if ($this->page == $this->countPages - 1) $htmlString .= " class='active'";
-        $htmlString .= "><a href='" . $path . $this->index . ($this->countPages - 1) . "'>" . ($this->countPages - 1) . "</a></li>";
+        $htmlString .= "<li class='page-item'><a href='" . $path . $this->index . ($this->countPages - 1) . "' class='btn-default ";
+        if ($this->page == $this->countPages - 1) $htmlString .= " active";
+        $htmlString .= "'>" . ($this->countPages - 1) . "</a></li>";
 
         //последная страница
-        $htmlString .= "<li";
-        if ($this->page == $this->countPages) $htmlString .= " class='active'";
-        $htmlString .= "><a href='" . $path . $this->index . $this->countPages . "'>" . $this->countPages . "</a></li>";
+        $htmlString .= "<li class='page-item'><a href='" . $path . $this->index . $this->countPages . "' class='btn-default ";
+        if ($this->page == $this->countPages) $htmlString .= " active";
+        $htmlString .= "'>" . $this->countPages . "</a></li>";
 
 	} elseif ($this->countPages >= 1) {
             // если страниц меньше пяти и больше одного
 		for ($i=1; $i<=$this->countPages; $i++){
-			$htmlString .= "<li";
-            if ($this->page == $i) $htmlString .= " class='active'";
-             $htmlString .= "><a href='"  . $path . $this->index . $i . "'>" . $i . "</a></li>";
+			$htmlString .= "<li class='page-item'><a href='" . $path . $this->index . $i . "' class='btn-default ";
+            if ($this->page == $i) $htmlString .= " active";
+             $htmlString .= "'>" . $i . "</a></li>";
 		}
 	}//если всего одна страница, то ничего не происходит и не выводится
 

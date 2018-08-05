@@ -35,7 +35,8 @@ AppAsset::register($this);
         'options' => [
 //            'class' => 'navbar-inverse navbar-fixed-top',
             'class' => 'navbar navbar-light navbar-fixed-top',
-            'style' => 'background-color: #eaf6ff',
+//            'style' => 'background-color: #eaf6ff',
+//            'style' => 'background-color: #eaf6ff',
         ],
     ]);
 
