@@ -2,7 +2,7 @@
 
 /* @var $this yii\web\View */
 
-/* @var $modelAvatar frontend\models\AvatarLoader */
+/* @var $modelImage frontend\models\ImageLoader */
 
 use yii\helpers\Url;
 use yii\helpers\Html;
@@ -33,12 +33,12 @@ $this->title = 'Просмотр профиля ' . $user->id;
 
 
             <?= FileUpload::widget([
-                    'model' => $modelAvatar,
+                    'model' => $modelImage,
                     'attribute' => 'picture',
                     'url' => ['profile/upload-picture'], // your url, this is just for demo purposes,
                     'options' => ['accept' => 'image/*'],
                     'clientOptions' => [
-                        'maxFileSize' => 2000000
+//                        'maxFileSize' => 2000000
                     ],
                     // Also, you can specify jQuery-File-Upload events
                     // see: https://github.com/blueimp/jQuery-File-Upload/wiki/Options#processing-callback-options
@@ -106,6 +106,7 @@ $this->title = 'Просмотр профиля ' . $user->id;
             </div>
         </div>
     </div>
+</div>
 
     <!---->
     <!---->

@@ -29,12 +29,12 @@ $this->title = 'друзьяшки';
             <?php if ($div++ % 2 == 0) echo "<div class='row'>"; ?>
             <div class='col-sm-6'>
                 <div class='row list-user'>
-                    <div class='col-sm-4'>
+                    <div class='col-md-4 col-xs-4'>
                         <a href='/profile/<?= $sub->id; ?>' class='btn'>
                             <img src='<?= $sub->getPicture(); ?>' class='img-rounded' width='70px'/>
                         </a>
                     </div>
-                    <div class='col-sm-8'>
+                    <div class='col-md-8 col-xs-8'>
                         <p>
                             <a href='/profile/<?= $sub->id; ?>' class='btn'><?= Html::encode($sub->username); ?></a>
                         </p>

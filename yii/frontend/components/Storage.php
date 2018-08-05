@@ -24,10 +24,13 @@ class Storage extends Component implements StorageInterface
      */
     public function saveUploadedFile(UploadedFile $file)
     {
-        $path = $this->preparePath($file);
-
+      $path = $this->preparePath($file);
         if ($path && $file->saveAs($path)) {
-            return $this->fileName;
+        // масштабируем изображение до размера 800х600 пикселей, и пересохраняем его в темп
+//           echo $patchToResize = $this->getFile($path);
+            if ($this->resizeAndCropImage($path, $path, 800, 600)) {
+                return $this->fileName;
+            }
         }
     }
 
@@ -81,6 +84,47 @@ class Storage extends Component implements StorageInterface
      */
     public function getFile(string $filename)
     {
-        return Yii::$app->params['storageUri'].$filename;
+        return Yii::$app->params['storageUri'] . $filename;
     }
+
+    protected function resizeAndCropImage($path, $save, $width, $height)
+    {
+        $info = getimagesize($path); //получаем размеры картинки и ее тип
+        $size = array($info[0], $info[1]); //закидываем размеры в массив
+
+        //В зависимости от расширения картинки вызываем соответствующую функцию
+        if ($info['mime'] == 'image/png') {
+            $src = imagecreatefrompng($path); //создаём новое изображение из файла
+        } else if ($info['mime'] == 'image/jpeg') {
+            $src = imagecreatefromjpeg($path);
+        } else if ($info['mime'] == 'image/gif') {
+            $src = imagecreatefromgif($path);
+        } else {
+            return false;
+        }
+
+        $thumb = imagecreatetruecolor($width, $height); //возвращает идентификатор изображения, представляющий черное изображение заданного размера
+
+        $scale0 = $size[0] / $width;
+        $scale1 = $size[1] / $height;
+        $scale = min($scale0, $scale1);
+
+        $new_size = [$size[0] / $scale, $size[1] / $scale];
+
+        //Ищем координаты начальной точки обрезки
+        $x_start = ($new_size[0] > $width) ? ($new_size[0] - $width) / 2 : 0;
+        $y_start = ($new_size[1] > $height) ? ($new_size[1] - $height) / 2 : 0;
+        //$src_pos = [$x_start, $y_start];
+        $src_pos = [$x_start * $scale, $y_start * $scale];
+
+        imagecopyresampled($thumb, $src, 0, 0, $src_pos[0], $src_pos[1], $width, $height, $width * $scale, $height * $scale);
+
+        if ($save == false) {
+            return imagejpeg($thumb, null, 75); //Выводит JPEG/PNG/GIF изображение
+        } else {
+            return imagejpeg($thumb, $save);//Сохраняет JPEG/PNG/GIF изображение
+        }
+    }
+
+
 }

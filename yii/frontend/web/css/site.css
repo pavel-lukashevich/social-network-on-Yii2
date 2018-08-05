@@ -148,8 +148,9 @@ a.desc:after {
 }
 
 #profile-picture {
-    min-width: 350px;
-    max-width: 450px;
+    width: 400px;
+    /*min-width: 350px;*/
+    /*max-width: 450px;*/
 }
 
 .list-user {
@@ -178,3 +179,7 @@ a.desc:after {
     /*border-top-width: 0px;*/
     /*border-style: dashed;*/
 }
+
+.navbar-toggle .icon-bar {
+    border: 2px solid #53006e;
+ }
