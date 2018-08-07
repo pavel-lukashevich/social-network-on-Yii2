@@ -24,11 +24,10 @@ class Pagination {
     
     /**
      * 
-     * @param type $page - int
-     * @param type $countString - int
-     * @param type $stringToPage - int
-     * @param type $countPages - int
-     * @param type $index - string
+     * @param integer $page
+     * @param integer $countString
+     * @param integer $stringToPage
+     * @param string $index
      */
     public function __construct( $page, $countString, $stringToPage = 10, $index = 'p-'){
         
@@ -85,10 +84,10 @@ class Pagination {
         $htmlString .= "<li class='page-item'><a class='btn-default";
         if ($this->page > 2 && $this->page < $this->countPages - 2) $htmlString .= " active";
         $htmlString .= "'><select onchange='window.location.href=this.options[this.selectedIndex].value'>";
+        if ($this->page < 3 || $this->page > $this->countPages - 2) $htmlString .= "<option selected disabled>.....</option>";
         for ($z=3; $z <= $this->countPages - 2; $z++) {
             $htmlString .= "<option value='" . $path . $this->index . $z . "'";
-            if (($this->page < 3 || $this->page > $this->countPages - 2) && $this->countPages/2 == $z) $htmlString .= " selected";
-            elseif ($z == $this->page) $htmlString .= " selected";
+            if ($z == $this->page) $htmlString .= " selected";
             $htmlString .= ">$z</option>";
         }
         $htmlString .= "</select></a></li>";

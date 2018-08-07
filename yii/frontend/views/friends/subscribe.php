@@ -2,6 +2,7 @@
 /* @var $this yii\web\View */
 /* @var $userId common\models\User */
 /* @var $friend frontend\models\Friends */
+/* @var $pagin \common\models\Pagination */
 
 use yii\helpers\Html;
 use yii\helpers\HtmlPurifier;
@@ -13,15 +14,7 @@ $this->title = 'друзьяшки';
 
 <div class="body-content">
 
-    <!--<h1>друзья пользавателя --><? //= $userId ?><!--</h1>-->
-    <?php \frontend\components\SudscribeButton::run(Yii::$app->user->id, $userId) ?>
-
-<!--    <h2>вы подписаны на </h2>-->
-    <br>
-<!--    --><?php //if (!empty($pagin))echo $pagin->get();?>
-
-<!--    --><?php //\frontend\components\SudscribeButton::list($friend) ?>
-
+    <?php \frontend\components\SudscribeButton::run(Yii::$app->user->id, $userId); ?>
 
     <div class='center-block'>
         <?php foreach ($friend as $sub): ?>
@@ -39,27 +32,22 @@ $this->title = 'друзьяшки';
                             <a href='/profile/<?= $sub->id; ?>' class='btn'><?= Html::encode($sub->username); ?></a>
                         </p>
                         <p>
-                                <?php if ($sub->id != Yii::$app->user->id): ?>
-                                    <?php if (Friends::isSubscribe($sub->id)): ?>
-                                        <a class='btn btn-sm  btn-default' href='/friends/delete-subscribe/follow_id=<?= $sub->id;?>'> отписаться</a>
-                                    <?php else: ?>
-                                        <a class='btn btn-sm  btn-default' href='/friends/add-subscribe/follow_id=<?= $sub->id;?>'>подписаться</a>
-                                    <?php endif; ?>
+                            <?php if ($sub->id != Yii::$app->user->id): ?>
+
+                                <?php if (Friends::isSubscribe($sub->id)): ?>
+                                    <a class='btn btn-sm  btn-default' href='/friends/delete-subscribe/follow_id=<?= $sub->id;?>'> отписаться</a>
+                                <?php else: ?>
+                                    <a class='btn btn-sm  btn-default' href='/friends/add-subscribe/follow_id=<?= $sub->id;?>'>подписаться</a>
                                 <?php endif; ?>
-                            </p>
+                            <?php endif; ?>
+                        </p>
                     </div>
                 </div>
             </div>
-            <?php if ($div % 2 == 0 || $div == count($user)) echo '</div >'; ?>
+            <?php if ($div % 2 == 0 || $div == count($friend)) echo '</div >'; ?>
         <?php endforeach; ?>
     </div>
 
-
     <?php if (!empty($pagin))echo $pagin->get();?>
 
-<!--    <br>-->
-<!--    <br>-->
-<!--    <p>-->
-<!--        You may change the content of this page by modifying-->
-<!--    </p>-->
 </div>

@@ -5,7 +5,7 @@ namespace frontend\controllers;
 use Yii;
 use yii\web\Controller;
 use common\models\User;
-use frontend\models\EditProfile;
+use frontend\models\EditProfileForm;
 use yii\web\UploadedFile;
 use yii\web\Response;
 use frontend\models\ImageLoader;
@@ -34,7 +34,7 @@ class ProfileController extends Controller
      *
      * @return mixed
      */
-    public function actionIndex($username = null)
+    public function actionIndex($userId = null)
     {
         if (Yii::$app->user->isGuest) {
             return $this->redirect('site');
@@ -42,9 +42,9 @@ class ProfileController extends Controller
 
         $modelImage = new ImageLoader();
 
-        $username = ($username !== null) ? $username : Yii::$app->user->id;
+        $userId = ($userId !== null) ? $userId : Yii::$app->user->id;
 
-        $user = User::find()->where(["id" => $username])->one();
+        $user = User::infoForProfile($userId);
 
         if ($user == null) {
             return $this->redirect('/profile');
@@ -64,58 +64,37 @@ class ProfileController extends Controller
         if (Yii::$app->user->isGuest) {
             return $this->redirect('site');
         }
-
-        $model = new EditProfile();
-
+        $model = new EditProfileForm();
+//        $model = User::infoForProfile($userId);
         if ($model->load(Yii::$app->request->post(), 'User')) {
-            if ($model->editProfileInfo()) {
+//            if ($model->editProfileInfo()) {
                 return $this->redirect('/profile');
-            }
+//            }
         }
-
-        $model = User::find()->where(["id" => Yii::$app->user->id])->one();
-
+//        $model = User::find()->where(["id" => Yii::$app->user->id])->one();
+        $model = User::infoForProfile(Yii::$app->user->id);
         return $this->render('edit', [
             'model' => $model,
         ]);
     }
 
     /**
-     * заггрузка изображений, из учебника
-     *
-     * @return string|\yii\web\Response
+     * @return array
      */
-//    public function actionUpload()
-//    {
-//        $model = new UploadForm();
-//
-//        if (Yii::$app->request->isPost) {
-//            $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
-//            if ($model->upload()) {
-//                // file is uploaded successfully
-//                return $this->redirect('/profile');
-//            }
-//        }
-//
-//        return $this->render('upload', ['model' => $model]);
-//    }
-
     public function actionUploadPicture()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $model = new ImageLoader();
-
-      $model->picture = UploadedFile::getInstance($model, "picture");
+        $model->picture = UploadedFile::getInstance($model, "picture");
 
         if ($model->validate()) {
-
             $user = User::find()->where(["id" => Yii::$app->user->id])->one();
-
-            $user->avatar = Yii::$app->storage->saveUploadedFile($model->picture); // 15/27/30/379e706840f951d22de02458a4788eb55f.jpg
+//            $user = Yii::$app->user->identity;
+            $user->avatar = Yii::$app->storage->saveUploadedFile($model->picture, 800, 600);
+            // 15/27/30/379e706840f951d22de02458a4788eb55f.jpg
 
             if ($user->save(false, ['avatar'])) {
-
                 return [
                     'success' => true,
                     'pictureUri' => Yii::$app->storage->getFile($user->avatar),
@@ -123,11 +102,5 @@ class ProfileController extends Controller
             }
         }
         return ['success' => false, 'errors' => $model->getErrors()];
-
-//            ///////////////////////////////
-//           echo "<pre>";
-//           echo '+++';var_dump($user->save(false, ['avatar'])); die('++++');
-//            ///////////////////////////////
-
     }
 }

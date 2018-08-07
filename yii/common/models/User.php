@@ -28,6 +28,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     const DEFAULT_IMAGE = '/img/profile_default_image.jpg';
 
+    public $password = '';
+    public $newpassword = '';
 
     /**
      * {@inheritdoc}
@@ -197,4 +199,13 @@ class User extends ActiveRecord implements IdentityInterface
 
         return self::DEFAULT_IMAGE;
     }
+
+    public static function infoForProfile($userId) {
+        $user = self::find()
+            ->select(['id', 'username', 'avatar', 'firstname', 'lastname', 'birthsday', 'country', 'city', 'phone','education', 'job', 'about'])
+            ->where(["id" => $userId])
+            ->one();
+        return $user;
+    }
+
 }

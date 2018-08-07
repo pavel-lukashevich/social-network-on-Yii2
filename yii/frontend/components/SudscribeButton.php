@@ -8,6 +8,7 @@
 
 namespace frontend\components;
 
+use common\models\User;
 use frontend\models\Friends;
 
 class SudscribeButton
@@ -19,8 +20,11 @@ class SudscribeButton
            'all' => 'все пользователи',
            'subscribe' => 'подписки',
            'follower' => 'подписчики',
-           'mutuality' => 'друзья'
+           'mutuality' => 'взаимные подписки'
        ];
+
+       $user = User::find()->select(['username', 'firstname', 'lastname'])->where(['id' => $userId])->one();
+       $name = ($user->firstname || $user->lastname) ? "$user->firstname $user->lastname" : "$user->username";
 
        $url = \Yii::$app->request->pathInfo;
 
@@ -29,17 +33,30 @@ class SudscribeButton
            echo "<center>";
            foreach ($buttonUrl as $key => $val){
                 echo "<a href = '/friends/" . $key . "'  class='btn btn-default ";
-                echo (stristr ($url, $key)) ?  "active" : "";
+                echo (stristr ($url, $key)) ? "active" : '';
                 echo "'> " . $val . " </a>";
            }
             echo "</center>";
        } else {
+           $str = [];
            foreach ($buttonUrl as $key => $val){
-//               echo "вы смотрите раздел ";
-               echo (stristr ($url, $key)) ?  "<center>вы смотрите раздел <b>$val</b> пользователя $userId." : "";
-//               echo "'> " . $val . " </a>";
+               if(stristr ($url, $key)){
+                $str[0] = $key;
+                $str[1] = $val;
+               };
            }
-           echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class='btn btn-default' href = '/profile/" . $userId . "' > назад к профилю </a></center>";
+           echo "<center><big>$str[1]</big> &nbsp;-&nbsp;";
+           echo "<a class='btn btn-default' href = '/profile/" . $userId . "' >$name</a>";
+
+           echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+           echo "<a class='btn btn-default ";
+           echo (stristr ($url, 'common')) ? "active" : '';
+           echo "' href = '/friends/common/" . $str[0] . "/id=" . $userId . "' > общие </a>";
+
+           if (stristr ($url, 'common')){
+               echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+               echo "<a class='btn btn-default' href = '/friends/subscribe/id=" . $userId . "' >назад</a></center>";
+           }
        }
    }
 

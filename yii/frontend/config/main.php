@@ -47,6 +47,9 @@ return [
                 'friends/all/p-<pageNum:\d+>' => 'friends/all',
                 'friends/all' => 'friends/all',
 
+                'friends/common/<type:\w+>/id=<userId:\d+>/p-<pageNum:\d+>' => 'friends/common',
+                'friends/common/<type:\w+>/id=<userId:\d+>' => 'friends/common',
+
                 'friends/mutuality/p-<pageNum:\d+>' => 'friends/mutuality',
                 'friends/mutuality' => 'friends/mutuality',
 
@@ -55,21 +58,15 @@ return [
                 'friends/follower/id=<userId:\d+>' => 'friends/follower',
                 'friends/follower' => 'friends/follower',
 
-//                'friends/<typeBtn:\w+>/id=<userId:\d+>/p-<pageNum:\d+>' => 'friends/index',
-//                'friends/<typeBtn:\w+>/id=<userId:\d+>' => 'friends/index',
-//                'friends/<typeBtn:\w+>/+' => 'friends/index',
                 'friends/subscribe/p-<pageNum:\d+>' => 'friends/subscribe',
                 'friends/subscribe/id=<userId:\d+>/p-<pageNum:\d+>' => 'friends/subscribe',
                 'friends/subscribe/id=<userId:\d+>' => 'friends/subscribe',
                 'friends/subscribe' => 'friends/subscribe',
-//                'friends' => 'friends/subscribe',
-//                'friends\w+' => 'friends/index',
 
-                'profile/edit\w+' => 'profile/index',
+                'profile/edit/id=<userId:\d+>' => 'profile/edit',
                 'profile/edit' => 'profile/edit',
                 'profile/upload' => 'profile/upload',
-                'profile/<username:\w+>' => 'profile/index',
-//                'profile\w+' => 'profile/index',
+                'profile/<userId:\w+>' => 'profile/index',
             ],
         ],
         'storage' => [

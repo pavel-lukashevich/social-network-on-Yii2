@@ -54,7 +54,7 @@ class Friends extends \yii\db\ActiveRecord
 
     public function getMySubscribersList()
     {
-        if ($this->subscribe != null) {
+        if ($this->subscribe || $this->subscribe != 'null') {
             $s_arr = json_decode($this->subscribe, true);
         } else $s_arr = [];
         return $s_arr;
@@ -62,7 +62,7 @@ class Friends extends \yii\db\ActiveRecord
 
     public function getMyFollowerList()
     {
-        if ($this->follower != null) {
+        if ($this->follower || $this->follower != 'null') {
             $f_arr = json_decode($this->follower, true);
         } else $f_arr = [];
         return $f_arr;
@@ -188,7 +188,9 @@ class Friends extends \yii\db\ActiveRecord
         if ($user == null) return false;
 
         $s_arr = $user->getMySubscribersList();
-        $i[$user_id] = 1;
+        if ($s_arr == null) return false;
+
+        $i["$user_id"] = '1';
         $equals = array_intersect_key($s_arr, $i);
 
         if ($equals != null) {
@@ -200,7 +202,7 @@ class Friends extends \yii\db\ActiveRecord
 
     public static function countSubscribe($user_id)
     {
-        $user = Friends::find()->select(['subscribe'])->where(['user_id' => $user_id])->one();
+        $user = self::find()->select(['subscribe'])->where(['user_id' => $user_id])->one();
         if ($user == null) return 0;
         $s_arr = $user->getMySubscribersList();
         return count($s_arr);
@@ -208,7 +210,7 @@ class Friends extends \yii\db\ActiveRecord
 
     public static function countFollower($user_id)
     {
-        $user = Friends::find()->select(['follower'])->where(['user_id' => $user_id])->one();
+        $user = self::find()->select(['follower'])->where(['user_id' => $user_id])->one();
         if ($user == null) return 0;
         $f_arr = $user->getMyFollowerList();
         return count($f_arr);
@@ -216,19 +218,72 @@ class Friends extends \yii\db\ActiveRecord
 
     public static function countMutuality($user_id)
     {
-        $user = Friends::find()->select(['subscribe', 'follower'])->where(['user_id' => $user_id])->one();
+        $user = self::find()->select(['subscribe', 'follower'])->where(['user_id' => $user_id])->one();
         if ($user == null) return 0;
         $s_arr = $user->getMySubscribersList();
         $f_arr = $user->getMyFollowerList();
+        if ($s_arr == null || $f_arr == null) return 0;
         return count(array_intersect_key($s_arr, $f_arr));
-
-//        if ($s_arr == null || $f_arr == null) return [];
-//
-//        $users = implode(',', array_keys(array_intersect_key($s_arr, $f_arr)));
-
-//        $user = Friends::find()->where(['user_id' => $user_id])->one();
-//        if ($user == null) return '';
-//        $f_arr = $user->getMyFollowerList();
-//        return count($f_arr);
     }
+
+    public static function commonSubscribe($users)
+    {
+
+        $arr1 = $users[0]->getMySubscribersList();
+        $arr2 = $users[1]->getMySubscribersList();
+
+        if (!$arr1 || !$arr2) return false;
+        $equals = array_intersect_key($arr1, $arr2);
+
+        if ($equals) {
+            $str = implode(', ',array_keys($equals));
+//
+//            $subscribe = User::find()->select(['id', 'username', 'avatar'])
+//                ->where("id IN($str)")
+//                ->limit(Friends::FRIEND_FOR_PAGE)
+//                ->offset($offset)
+//                ->orderBy(['id' => SORT_DESC])
+//                ->all();
+//
+            return $str;
+        }
+
+        return false;
+    }
+
+    public static function commonFollower($users)
+    {
+        $arr1 = $users[0]->getMyFollowerList();
+        $arr2 = $users[1]->getMyFollowerList();
+
+        if (!$arr1 || !$arr2) return false;
+        $equals = array_intersect_key($arr1, $arr2);
+
+        if ($equals) {
+            $str = implode(', ',array_keys($equals));
+            return $str;
+        }
+        return false;
+    }
+
+    public static function countCommonSubscribe($users)
+    {
+        $arr1 = $users[0]->getMySubscribersList();
+        $arr2 = $users[1]->getMySubscribersList();
+
+        if (!$arr1 || !$arr2) return 0;
+        return count(array_intersect_key($arr1, $arr2));
+
+    }
+
+    public static function countCommonFollower($users)
+    {
+        $arr1 = $users[0]->getMyFollowerList();
+        $arr2 = $users[1]->getMyFollowerList();
+
+        if (!$arr1 || !$arr2) return 0;
+        return count(array_intersect_key($arr1, $arr2));
+
+    }
+
 }

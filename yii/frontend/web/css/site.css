@@ -1,6 +1,7 @@
 html,
 body {
     height: 100%;
+    min-width: 450px;
     background: linear-gradient( #d3ebfd, transparent 1px), linear-gradient( 90deg, #d3ebfd, transparent 1px);
     background-size: 15px 15px;
     background-position: center center;
@@ -165,7 +166,7 @@ a.desc:after {
 
 .navbar li, .navbar-header a {
      background: rgba(241, 244, 255, 0.95);
-     margin: 0 5px 0 0;
+     margin: 0 2px 0 0;
      border-radius: 0 0 20px 20px ;
      border-width: 1px;
      border-top-width: 0px;
@@ -183,3 +184,28 @@ a.desc:after {
 .navbar-toggle .icon-bar {
     border: 2px solid #53006e;
  }
+.nav > li > a, .nav li > form > button.logout, .navbar-brand, .navbar-toggle{
+    padding: 10px 5px;
+}
+
+.fileinput-button {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+    color: #53006e;
+}
+
+.fileinput-button:hover {
+    color: #333;
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+.horizontal-line{
+    width: 100%;
+    height: 20px;
+    background: rgba(241, 244, 255, 0.95);
+    border-width: 0 0 1px 0;
+    border-style: dashed;
+    position: fixed;
+    z-index: 1;
+}
