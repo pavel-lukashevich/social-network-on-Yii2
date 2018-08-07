@@ -98,7 +98,7 @@ class FakerController extends Controller
 
     public function actionFriends()
     {
-//        $y = 110;
+        $y = 110;
         //снимаем ограничение с времени выполнения скрипта
         set_time_limit(0);
 
@@ -108,11 +108,10 @@ class FakerController extends Controller
         $num = 0;
         $new = [];
 
-        foreach ($column as $user) {
-        $new[] =$user['id'];
+        foreach ($column as $key => $user) {
+        $new[$key] = $user['id'];
 
         }
-
         foreach ($column as $user) {
 
             $fr = Friends::find()->where(['user_id' => $user['id']])->one();
@@ -120,9 +119,9 @@ class FakerController extends Controller
                 $fr = new Friends();
                 $fr->user_id = $user['id'];
             }
-            $fr->subscribe = json_encode(array_flip(array_rand(array_flip($new), mt_rand(2, 49))));
-            $fr->follower = json_encode(array_flip(array_rand(array_flip($new), mt_rand(2, 49))));
 
+            @$fr->subscribe = json_encode(array_flip(array_rand(array_flip($new, mt_rand(0, 49)))));
+            @$fr->follower = json_encode(array_flip(array_rand(array_flip($new), mt_rand(0, 49))));
             if ($fr->save()) $num++;
         }
 

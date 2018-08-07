@@ -28,6 +28,7 @@ AppAsset::register($this);
 
 <div class="wrap">
     <?php
+    echo '<div class="container-fluid fixed horizontal-line"></div>';
     NavBar::begin([
 //        'brandLabel' => Yii::$app->name,
         'brandLabel' => 'social-3AX-xyz',
@@ -35,7 +36,6 @@ AppAsset::register($this);
         'options' => [
 //            'class' => 'navbar-inverse navbar-fixed-top',
             'class' => 'navbar navbar-light navbar-fixed-top',
-//            'style' => 'background-color: #eaf6ff',
 //            'style' => 'background-color: #eaf6ff',
         ],
     ]);
@@ -46,7 +46,8 @@ AppAsset::register($this);
     } else {
         $menuItems = [
             ['label' => 'Новости', 'url' => ['/news/index']],
-            ['label' => 'Друзья', 'url' => ['/friends/subscribe/']],
+            ['label' => 'Галерея', 'url' => ['/galery/index']],
+            ['label' => 'Друзья', 'url' => ['/friends/subscribe']],
             ['label' => 'Сообщения', 'url' => ['/message']],
             ['label' => 'Профиль', 'url' => ['/profile']],
         ];
@@ -63,13 +64,14 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => $menuItems,
     ]);
+
     NavBar::end();
     ?>
 
     <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
+<!--        --><?//= Breadcrumbs::widget([
+//            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+//        ]) ?>
         <?= Alert::widget() ?>
         <?= $content ?>
     </div>

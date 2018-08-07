@@ -44,7 +44,11 @@ class ProfileController extends Controller
 
         $username = ($username !== null) ? $username : Yii::$app->user->id;
 
-        $user = User::find()->where(["id" => $username])->one();
+        $user = User::find()
+            ->select(['id', 'username', 'avatar', 'firstname', 'lastname', 'birthsday', 'country', 'city', 'phone','education', 'job', 'about'])
+            ->where(["id" => $username])
+            ->orWhere(["username" => $username])
+            ->one();
 
         if ($user == null) {
             return $this->redirect('/profile');
@@ -100,22 +104,23 @@ class ProfileController extends Controller
 //        return $this->render('upload', ['model' => $model]);
 //    }
 
+    /**
+     * @return array
+     */
     public function actionUploadPicture()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $model = new ImageLoader();
-
-      $model->picture = UploadedFile::getInstance($model, "picture");
+        $model->picture = UploadedFile::getInstance($model, "picture");
 
         if ($model->validate()) {
-
             $user = User::find()->where(["id" => Yii::$app->user->id])->one();
-
-            $user->avatar = Yii::$app->storage->saveUploadedFile($model->picture); // 15/27/30/379e706840f951d22de02458a4788eb55f.jpg
+//            $user = Yii::$app->user->identity;
+            $user->avatar = Yii::$app->storage->saveUploadedFile($model->picture, 800, 600);
+            // 15/27/30/379e706840f951d22de02458a4788eb55f.jpg
 
             if ($user->save(false, ['avatar'])) {
-
                 return [
                     'success' => true,
                     'pictureUri' => Yii::$app->storage->getFile($user->avatar),
@@ -123,11 +128,5 @@ class ProfileController extends Controller
             }
         }
         return ['success' => false, 'errors' => $model->getErrors()];
-
-//            ///////////////////////////////
-//           echo "<pre>";
-//           echo '+++';var_dump($user->save(false, ['avatar'])); die('++++');
-//            ///////////////////////////////
-
     }
 }
