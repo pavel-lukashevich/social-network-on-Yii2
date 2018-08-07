@@ -20,19 +20,24 @@ class Storage extends Component implements StorageInterface
     /**
      * Save given UploadedFile instance to disk
      * @param UploadedFile $file
+     * @width integer, default 800
+     * @height integer, default 600
      * @return string|null
      */
-    public function saveUploadedFile(UploadedFile $file)
+    public function saveUploadedFile(UploadedFile $file, $width = 800, $height = 600)
     {
       $path = $this->preparePath($file);
+
         if ($path && $file->saveAs($path)) {
-        // масштабируем изображение до размера 800х600 пикселей, и пересохраняем его в темп
+            // масштабируем изображение до размера 800х600 пикселей, и пересохраняем его в темп
 //           echo $patchToResize = $this->getFile($path);
-            if ($this->resizeAndCropImage($path, $path, 800, 600)) {
+            if (self::resizeAndCropImage($path, $path, $width, $height)) {
                 return $this->fileName;
             }
         }
     }
+
+
 
     /**
      * Prepare path to save uploaded file
@@ -87,7 +92,7 @@ class Storage extends Component implements StorageInterface
         return Yii::$app->params['storageUri'] . $filename;
     }
 
-    protected function resizeAndCropImage($path, $save, $width, $height)
+    protected static function resizeAndCropImage($path, $save, $width, $height)
     {
         $info = getimagesize($path); //получаем размеры картинки и ее тип
         $size = array($info[0], $info[1]); //закидываем размеры в массив

@@ -14,8 +14,9 @@ class FriendsController extends \yii\web\Controller
      * получает id пользователя и возвращает массив объектов друзей
      * в котором должны быть id, username, firstname, lastname, country, city
      *
+     * @param integer $pageNum
      * @param integer $userId
-     * @return array $friends \yii\web\Response
+     * @return mixed $friends \yii\web\Response
      */
     public function actionSubscribe($pageNum = 1, $userId = null)
     {
@@ -110,6 +111,62 @@ class FriendsController extends \yii\web\Controller
         ]);
     }
 
+    public function actionCommon($type, $userId = null, $pageNum = 1)
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect('/site');
+        }
+
+        if ($userId == null || $userId == Yii::$app->user->id){
+            return $this->redirect('/friends/mutuality');
+        }
+
+        $friends = Friends::find()
+            ->select($type)
+            ->where(["user_id" => [$userId]])
+            ->orWhere(["user_id" => Yii::$app->user->id])
+            ->all();
+        if ($friends[0] == null || $friends[1] == null) {
+            return $this->redirect(Yii::$app->request->referrer);
+        };
+
+            $offset = Friends::FRIEND_FOR_PAGE * ($pageNum - 1);
+        $str = 0;
+        if ($type == 'subscribe') {
+             $str = Friends::commonSubscribe($friends);
+            $count = Friends::countCommonSubscribe($friends, $offset);
+        }elseif ($type == 'follower') {
+            $str = Friends::commonFollower($friends);
+            $count = Friends::countCommonFollower($friends, $offset);
+        }
+
+        if ($pageNum > $count/Friends::FRIEND_FOR_PAGE){
+            $pageNum =  $count/Friends::FRIEND_FOR_PAGE;
+        }
+
+        //var_dump($pageNum); die;
+        if ($str != false) {
+            $friend = User::find()->select(['id', 'username', 'avatar'])
+                ->where("id IN($str)")
+                ->limit(Friends::FRIEND_FOR_PAGE)
+                ->offset($offset)
+                ->orderBy(['id' => SORT_DESC])
+                ->all();
+        }else $friend = [];
+
+        if (!$friend) {
+            return $this->redirect(Yii::$app->request->referrer);
+        };
+
+         $pagin = new Pagination($pageNum, $count, Friends::FRIEND_FOR_PAGE);
+
+        return $this->render('subscribe', [
+            'userId' => $userId,
+            'friend' => $friend,
+            'pagin' => $pagin,
+        ]);
+    }
+
     public function actionAll($pageNum = 1)
     {
         if (Yii::$app->user->isGuest) {
@@ -129,7 +186,6 @@ class FriendsController extends \yii\web\Controller
         return $this->render('subscribe', [
             'friend' => $friend,
             'pagin' => $pagin,
-           // 'count' => $count,
         ]);
     }
 
