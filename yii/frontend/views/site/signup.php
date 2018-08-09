@@ -8,13 +8,11 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\captcha\Captcha;
 
-$this->title = 'Регистраци';
+$this->title = 'Регистрация';
 //$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-signup">
     <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>Пожалуйста, заполните для регистрации:</p>
 
     <div class="row">
         <div class="col-lg-5">
@@ -25,7 +23,7 @@ $this->title = 'Регистраци';
                 <?= $form->field($model, 'email')->label('введите email')->textInput(['autofocus' => true]) ?>
 
                 <?= $form->field($model, 'password')->label('введите пароль')->passwordInput() ?>
-<?phph /* */ ?>
+<?php /* */ ?>
               <?= $form->field($model, 'verifyCode')->label('введите код')->widget(Captcha::className(), [
                     'template' => '<div class="row"><div class="col-lg-3">{image}</div><div class="col-lg-6">{input}</div></div>',
                 ]) ?>

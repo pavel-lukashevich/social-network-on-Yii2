@@ -13,70 +13,131 @@ class EditProfileForm extends Model
 {
     public $username;
     public $email;
-//    public $password_hash;
     public $firstname;
     public $lastname;
     public $about;
+    public $country;
+    public $city;
+    public $birthsday;
+    public $education;
+    public $job;
+    public $phone;
     public $password = '';
 
-    /**
-     * {@inheritdoc}
-     */
+    private $_user;
+
+
     public function rules()
     {
         return [
+            [['username'], 'required', 'on' => 'editUsername'],
+            [['password'], 'required', 'on' => ['editEmail', 'editUsername']],
+            [['about'], 'string', 'max' => 5000, 'on' => ['editInfo']],
+            [['firstname', 'lastname', 'country', 'city', 'education', 'job'], 'string', 'max' => 255, 'on' => ['editInfo']],
+            [['firstname', 'lastname', 'about', 'country', 'city', 'education', 'job'], 'trim'],
+            [['phone', 'birthsday'], 'integer'],
+
+            [['email'], 'required', 'on' => 'editEmail'],
             ['username', 'trim'],
-            ['username', 'required'],
-//            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'пользователь с таким ником уже есть.'],
             ['username', 'string', 'min' => 2, 'max' => 255],
 
-//            [['email', 'username', 'firstname', 'lastname', 'about'], 'trim'],
-//            [['email', 'username', 'firstname', 'lastname', 'about'], 'safe'],
-//            [['email', 'username', 'firstname', 'lastname', 'about'], 'string', 'max' => 255],
-
-//            [['email', 'username', 'firstname', 'lastname', 'about'], 'trim'],/**/
             ['email', 'trim'],
-            ['email', 'required'],
             ['email', 'email'],
-            ['email', 'string', 'max' => 255],
-//            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'такой email уже зарегистрирован.'],
-//
-            ['password', 'required'],
-            ['password', 'string', 'min' => 6, 'max' => 20],
-//            ['email', 'username', 'confirmPassword', 'on' => 'editProfileInfo'],
-//            ['confirmPassword', 'validatePassword'],
+
+            ['password', 'string', 'min' => 6],
 
         ];
     }
 
     /**
-     * Signs user up.
-     *
-     * @return User|null the saved model or null if saving fails
+     * @return User|null
      */
-    public function editProfileInfo()
+    protected function getEmail()
     {
+        if ($this->_user === null) {
+            $this->_user = User::findOne(Yii::$app->user->id);
+        }
+        return $this->_user;
+    }
 
+
+    /**
+     * @return User|null
+     */
+    public function editUsername()
+    {
         if (!$this->validate()) {
             return null;
         }
 
         $user = User::findOne(Yii::$app->user->id);
 
-        //заполнить по всем полям формы редактирования
-        if ($this->username != false) {$user->username = $this->username; }
-        if ($this->email != false) {$user->email = $this->email; }
-        if ($this->about != false) {$user->about = $this->about;}
-        if ($this->firstname != false) {$user->firstname = $this->firstname;}
-        if ($this->lastname != false) {$user->lastname = $this->lastname;}
+        if ($user->validatePassword($this->password)) {
 
-//var_dump($user->update(true, ['username', 'email']));die;
-
-        if ($user->update(true, ['username', 'email'])) {
-            return $user;
+            if ($user->uniqueUsername($this->username)) {
+                $user->username = $this->username;
+                return $user->save() ? $user : null;
+            } else {
+//добавить флэшку имя занято
+            }
         }else {
+        $this->password = '';
+//  добавить флэшку пароль неправильный
+        return null;
+        }
+
+    }
+
+
+    /**
+     * @return User|null
+     */
+    public function editEmail()
+    {
+        if (!$this->validate()) {
             return null;
         }
+
+        $user = User::findOne(Yii::$app->user->id);
+
+        if ($user->validatePassword($this->password)) {
+
+            if ($user->uniqueEmail($this->email)) {
+                $user->email = $this->email;
+                return $user->save() ? $user : null;
+            } else {
+//добавить флэшку имя занято
+            }
+        }else {
+            $this->password = '';
+//  добавить флэшку пароль неправильный
+            return null;
+        }
+    }
+
+
+    /**
+     * @return User|null
+     */
+    public function editInfo()
+    {
+        if (!$this->validate()) {
+            return null;
+        }
+
+        $user = User::findOne(Yii::$app->user->id);
+
+        $user->firstname = $this->firstname;
+        $user->lastname = $this->lastname;
+        $user->country = $this->country;
+        $user->city = $this->city;
+        $user->birthsday = $this->birthsday;
+        $user->phone = $this->phone;
+        $user->education = $this->education;
+        $user->job = $this->job;
+        $user->about = $this->about;
+
+        return $user->save() ? $user : null;
     }
 
 }

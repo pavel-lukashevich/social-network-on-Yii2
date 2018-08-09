@@ -64,7 +64,6 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => $menuItems,
     ]);
-
     NavBar::end();
     ?>
 
