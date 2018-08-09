@@ -35,7 +35,8 @@ class EditProfileForm extends Model
             [['about'], 'string', 'max' => 5000, 'on' => ['editInfo']],
             [['firstname', 'lastname', 'country', 'city', 'education', 'job'], 'string', 'max' => 255, 'on' => ['editInfo']],
             [['firstname', 'lastname', 'about', 'country', 'city', 'education', 'job'], 'trim'],
-            [['phone', 'birthsday'], 'integer'],
+            [['phone'], 'integer'],
+            [['birthsday'], 'integer'],
 
             [['email'], 'required', 'on' => 'editEmail'],
             ['username', 'trim'],

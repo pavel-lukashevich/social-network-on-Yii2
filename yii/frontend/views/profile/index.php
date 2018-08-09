@@ -11,7 +11,7 @@ use yii\helpers\HtmlPurifier;
 use dosamigos\fileupload\FileUpload;
 use frontend\models\Friends;
 
-$this->title = 'Просмотр профиля ' . $user->id;
+$this->title = 'Просмотр профиля ' . Html::encode($user->username);
 ?>
 <div class="site-index">
 
@@ -89,14 +89,12 @@ $this->title = 'Просмотр профиля ' . $user->id;
 
                 <h3>информация</h3>
 
-<!--                <h1>--><?//= ($user->firstname || $user->lastname) ? (Html::encode($user->firstname) . " " . Html::encode($user->lastname)) : (Html::encode($user->username)) ; ?><!-- </h1>-->
-
                 <div class="row">
                     <div class="col-md-12">
                         <div class="list-user">
-                            &nbsp;<?= $user->firstname ? $user->firstname : "<sub>имя</sub>";?>&nbsp;
+                            &nbsp;<?= $user->firstname ? Html::encode($user->firstname) : "<sub>имя</sub>";?>&nbsp;
                             &nbsp;&nbsp;
-                            &nbsp;<?= $user->lastname ? $user->lastname : "<sub>фамилия</sub>";?>&nbsp;
+                            &nbsp;<?= $user->lastname ? Html::encode($user->lastname) : "<sub>фамилия</sub>";?>&nbsp;
                         </div>
 
                     </div>

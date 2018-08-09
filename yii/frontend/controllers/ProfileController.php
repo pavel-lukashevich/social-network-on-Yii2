@@ -85,7 +85,7 @@ class ProfileController extends Controller
                     return $this->refresh();
                 }
             }
-        }else $model = User::infoForProfile();
+        }else $model = User::infoForProfile(Yii::$app->user->id);
 
         return $this->render('edit', [
             'model' => $model,

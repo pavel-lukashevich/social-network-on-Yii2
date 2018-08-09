@@ -66,7 +66,7 @@ return [
                 'profile/edit/id=<userId:\d+>' => 'profile/edit',
                 'profile/edit' => 'profile/edit',
                 'profile/upload' => 'profile/upload',
-                'profile/<userId:\w+>' => 'profile/index',
+                'profile/<userId:\d+>' => 'profile/index',
             ],
         ],
         'storage' => [

@@ -29,7 +29,7 @@ class User extends ActiveRecord implements IdentityInterface
     const DEFAULT_IMAGE = '/img/profile_default_image.jpg';
 
     public $password = '';
-    public $newpassword = '';
+//    public $newpassword = '';
 
     /**
      * {@inheritdoc}
@@ -203,11 +203,11 @@ class User extends ActiveRecord implements IdentityInterface
         return self::DEFAULT_IMAGE;
     }
 
-    /**
-     * @param $userId
+    /***
+     * @param $id
      * @return array|null|ActiveRecord
      */
-    public static function infoForProfile() {
+    public static function infoForProfile($id) {
         $user = User::find()
             ->select([
                 'id',
@@ -223,7 +223,7 @@ class User extends ActiveRecord implements IdentityInterface
                 'job',
                 'about'
             ])
-            ->where(["id" => Yii::$app->user->id])
+            ->where(["id" => $id])
             ->one();
         return $user;
     }

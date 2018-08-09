@@ -39,6 +39,8 @@ $this->title = 'друзьяшки';
                                 <?php else: ?>
                                     <a class='btn btn-sm  btn-default' href='/friends/add-subscribe/follow_id=<?= $sub->id;?>'>подписаться</a>
                                 <?php endif; ?>
+                            <?php else:?>
+                                    <a class='btn btn-sm  btn-default' href='/profile'>О, это же вы )))</a>
                             <?php endif; ?>
                         </p>
                     </div>

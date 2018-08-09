@@ -2,9 +2,12 @@
 
 namespace frontend\controllers;
 
+use common\models\User;
+use frontend\models\Friends;
 use Yii;
 use frontend\models\News;
 use yii\data\ActiveDataProvider;
+use common\models\Pagination;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -33,15 +36,64 @@ class NewsController extends Controller
      * Lists all News models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($pageNum = 1)
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => News::find(),
-        ]);
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect('/site');
+        }
+        $friends = Friends::find()->select('subscribe')->where(["user_id" => Yii::$app->user->id])->one();
+        $listFriends = $friends->getMySubscribersList();
+
+        $offset = News::NEWS_FOR_PAGE * ($pageNum - 1);
+
+        $users_id = implode(',', array_keys($listFriends));
+
+        $users = User::find()
+            ->select(['id', 'username', 'avatar'])
+            ->where("id IN($users_id)")
+            ->indexBy('id')
+//            ->asArray()
+//            ->limit(Friends::FRIEND_FOR_PAGE)
+//            ->offset($offset)
+//            ->orderBy(['id' => SORT_DESC])
+            ->all();
+
+//        $s_arr = $friends->getSubscribe($offset);
+        $news = News::find()
+//            ->select(['id', 'user_id', 'date', 'heading', 'preview', 'like', 'dislike'])
+//            ->where(['user_id' => $users_id, 'status' => 1])
+            ->where("user_id IN ($users_id)")
+            ->andWhere(['=','status', '1'])
+            ->limit(Friends::FRIEND_FOR_PAGE)
+            ->offset($offset)
+            ->orderBy(['id' => SORT_DESC])
+//            ->asArray()
+            ->all();
+
+//        if ($friends == null) {
+//            $friends = new Friends();
+//        };
+//
+//        $count = Friends::countSubscribe(Yii::$app->user->id);
+//        $pagin = new Pagination($pageNum, $count, Friends::FRIEND_FOR_PAGE);
 
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            'news' => $news,
+            'users' => $users,
+//            'pagin' => $pagin,
         ]);
+
+        //////////////////////////////////////////////////
+        //////////////////////////////////////////////////
+        //////////////////////////////////////////////////
+//
+//        $dataProvider = new ActiveDataProvider([
+//            'query' => News::find(),
+//        ]);
+//
+//        return $this->render('index', [
+//            'dataProvider' => $dataProvider,
+//        ]);
     }
 
     /**

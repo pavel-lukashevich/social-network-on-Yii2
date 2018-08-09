@@ -20,6 +20,9 @@ use Yii;
  */
 class News extends \yii\db\ActiveRecord
 {
+
+    const NEWS_FOR_PAGE = 20;
+
     /**
      * {@inheritdoc}
      */
@@ -46,19 +49,21 @@ class News extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'user_id' => 'User ID',
-            'date' => 'Date',
-            'heading' => 'Heading',
-            'tags' => 'Tags',
-            'preview' => 'Preview',
-            'text' => 'Text',
-            'like' => 'Like',
-            'dislike' => 'Dislike',
-            'status' => 'Status',
-        ];
-    }
+//    public function attributeLabels()
+//    {
+//        return [
+//            'id' => 'ID',
+//            'user_id' => 'User ID',
+//            'date' => 'Date',
+//            'heading' => 'Heading',
+//            'tags' => 'Tags',
+//            'preview' => 'Preview',
+//            'text' => 'Text',
+//            'like' => 'Like',
+//            'dislike' => 'Dislike',
+//            'status' => 'Status',
+//        ];
+//    }
+
+
 }

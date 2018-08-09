@@ -28,10 +28,10 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
+                'only' => ['logout', 'signup', 'login'],
                 'rules' => [
                     [
-                        'actions' => ['signup'],
+                        'actions' => ['signup', 'login'],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
@@ -83,9 +83,8 @@ class SiteController extends Controller
                 'count' => $count,
             ]);
         } else {
-            return $this->redirect('news');
+            return $this->redirect('/news');
         }
-
     }
 
     /**
@@ -95,9 +94,6 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
@@ -122,39 +118,6 @@ class SiteController extends Controller
 
         return $this->goHome();
     }
-
-    /**
-     * Displays contact page.
-     *
-     * @return mixed
-     */
-    // public function actionContact()
-    // {
-        // $model = new ContactForm();
-        // if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            // if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                // Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
-            // } else {
-                // Yii::$app->session->setFlash('error', 'There was an error sending your message.');
-            // }
-
-            // return $this->refresh();
-        // } else {
-            // return $this->render('contact', [
-                // 'model' => $model,
-            // ]);
-        // }
-    // }
-
-    /**
-     * Displays about page.
-     *
-     * @return mixed
-     */
-    // public function actionAbout()
-    // {
-        // return $this->render('about');
-    // }
 
     /**
      * Signs user up.
@@ -226,4 +189,31 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+
+
+
+    /**
+     * Displays contact page.
+     *
+     * @return mixed
+     */
+    // public function actionContact()
+    // {
+    // $model = new ContactForm();
+    // if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+    // if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
+    // Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
+    // } else {
+    // Yii::$app->session->setFlash('error', 'There was an error sending your message.');
+    // }
+
+    // return $this->refresh();
+    // } else {
+    // return $this->render('contact', [
+    // 'model' => $model,
+    // ]);
+    // }
+    // }
+
+
 }

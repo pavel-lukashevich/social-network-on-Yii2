@@ -7,7 +7,7 @@
 
 use yii\helpers\Html;
 
-$this->title = $name;
+$this->title = 'ошибка';
 ?>
 <div class="site-error">
 
@@ -17,11 +17,7 @@ $this->title = $name;
         <?= nl2br(Html::encode($message)) ?>
     </div>
 
-    <p>
-        The above error occurred while the Web server was processing your request.
-    </p>
-    <p>
-        Please contact us if you think this is a server error. Thank you.
-    </p>
+    <p>Что-то пошло не так, но мы с этим разберёмся.</p>
+    <p>Приносим извинения за доставленные неудобства.</p>
 
 </div>
