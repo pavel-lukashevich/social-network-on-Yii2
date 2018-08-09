@@ -63,10 +63,10 @@ return [
                 'friends/subscribe/id=<userId:\d+>' => 'friends/subscribe',
                 'friends/subscribe' => 'friends/subscribe',
 
-                'profile/edit\w+' => 'profile/index',
+                'profile/edit/id=<userId:\d+>' => 'profile/edit',
                 'profile/edit' => 'profile/edit',
                 'profile/upload' => 'profile/upload',
-                'profile/<username:\w+>' => 'profile/index',
+                'profile/<userId:\w+>' => 'profile/index',
             ],
         ],
         'storage' => [

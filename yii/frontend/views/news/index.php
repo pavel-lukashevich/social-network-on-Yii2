@@ -1,34 +1,40 @@
 <?php
 
+use yii\helpers\Html;
+use yii\grid\GridView;
+
 /* @var $this yii\web\View */
+/* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Крутые новости, крутых друзей';
+$this->title = 'News';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-index">
+<div class="news-index">
 
-    <div class="text-center">
-        <h1>НОВОСТИ</h1>
-<!--        <p class="lead">Нас --><?//= $count ?><!-- человек.</p>-->
-    </div>
-    <div class="jumbotron">
+    <h1><?= Html::encode($this->title) ?></h1>
 
-        <div class="body-content">
+    <p>
+        <?= Html::a('Create News', ['create'], ['class' => 'btn btn-success']) ?>
+    </p>
 
-            <div class="row">
-<!--                --><?php //foreach ($user as $show): ?>
-<!---->
-<!--                    <div class="col-lg-3">-->
-<!--                        <div>-->
-<!--                            <img src="https://pp.userapi.com/c5100/u120281127/a_7768e20b.jpg" alt="..."-->
-<!--                                 class="center-block img-circle" width="60%">-->
-<!--                            <h2 class="text-center">--><?//= $show->username ?><!--</h2>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                --><?php //endforeach; ?>
 
-                <p>текст новостей</p>
-            </div>
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
 
-        </div>
-    </div>
+            'id',
+            'user_id',
+            'date',
+            'heading',
+            'tags',
+            'preview',
+//            'text',
+            'like:ntext',
+            'dislike:ntext',
+            'status',
+
+            ['class' => 'yii\grid\ActionColumn'],
+        ],
+    ]); ?>
 </div>

@@ -16,10 +16,7 @@ $this->title = 'Просмотр профиля ' . $user->id;
 <div class="site-index">
 
     <div class="text-center">
-        <h1><?= ($user->firstname || $user->lastname) ? (Html::encode($user->firstname) . " " . Html::encode($user->lastname)) : (Html::encode($user->username)) ; ?> </h1>
-
-
-
+        <h1><?= Html::encode($user->username) ; ?> </h1>
         <br>
     </div>
 
@@ -80,74 +77,87 @@ $this->title = 'Просмотр профиля ' . $user->id;
 
         <div class="col-md-7">
             <div class="text-center">
-                <!--        <h3>подписки и подписчики</h3>-->
                 <a class="btn btn-md btn-default"
                    href="/friends/subscribe/id=<?= $user->id; ?>">подписки <?= Friends::countSubscribe($user->id); ?></a>
                 &nbsp;
                 <a class="btn btn-md btn-default"
                    href="/friends/follower/id=<?= $user->id; ?>">подписчики <?= Friends::countFollower($user->id); ?></a>
-
                 <br><br>
-
             </div>
 
-            <div class="jumbotron">
+            <div class="body-content text-center">
 
-                <div class="body-content">
+                <h3>информация</h3>
 
-<!--                    <div class="row">-->
-<!--                        <div class="col-md-6">-->
-<!--                            <div class="list-user">-->
-<!--                                --><?//= $user->firstname ? $user->firstname : "<sub>имя</sub>";?>
-<!--                                &nbsp;-->
-<!--                                --><?//= $user->lastname ? $user->lastname : "<sub>фамилия</sub>";?>
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="col-md-6">-->
-<!--                            <div class="list-user">-->
-<!--                                &nbsp;--><?//= $user->birthsday ? $user->birthsday : "<sub>дата рождения</sub>";?><!--&nbsp;-->
-<!--                            </div>-->
-<!---->
-<!--                        </div>-->
-<!--                    </div>-->
+<!--                <h1>--><?//= ($user->firstname || $user->lastname) ? (Html::encode($user->firstname) . " " . Html::encode($user->lastname)) : (Html::encode($user->username)) ; ?><!-- </h1>-->
 
-                    <h3></h3>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="list-user">
-                                <?= $user->country ? $user->country : "<sub>страна</sub>";?>
-                                &nbsp;&brvbar;&nbsp;
-                                <?= $user->city ? $user->city : "<sub>город</sub>";?>
-                            </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="list-user">
+                            &nbsp;<?= $user->firstname ? $user->firstname : "<sub>имя</sub>";?>&nbsp;
+                            &nbsp;&nbsp;
+                            &nbsp;<?= $user->lastname ? $user->lastname : "<sub>фамилия</sub>";?>&nbsp;
                         </div>
-                        <div class="col-md-6">
-                            <div class="list-user">
-                                &nbsp;<?= $user->phone ? $user->phone : "<sub>телефон</sub>";?>&nbsp;
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <p><?php echo HtmlPurifier::process($user->about); ?></p>
-
-<!--'id', 'username', -'avatar', -'firstname', -'lastname', -'birthsday',-->
-<!--                        -'country', -'city', -'phone','education', 'job', 'about'])-->
-
-
-                        <!--                        --><?php //foreach ($user as $key => $param): ?>
-<!--                            --><?//= "$key = $param<br>"; ?>
-<!--                        --><?php //endforeach; ?>
-
-<!--                                        <p>привет --><?// //= $user->id ;?><!--</p>-->
-<!--                                        <p>привет --><?// //= $user->username;?><!--</p></div>-->
-
-                    <div class="row">
 
                     </div>
                 </div>
-            </div>
 
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="list-user">
+                            <?= $user->country ? Html::encode($user->country) : "<sub>страна</sub>";?>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="list-user">&nbsp;
+                            <?= $user->city ? Html::encode($user->city) : "<sub>город</sub>";?>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="list-user">
+                            &nbsp;<?= $user->birthsday ? $user->birthsday : "<sub>дата рождения</sub>";?>&nbsp;
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="list-user">
+                            &nbsp;<?= $user->phone ? $user->phone : "<sub>телефон</sub>";?>&nbsp;
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="list-user">
+                            <?= $user->education ? "образование: " . Html::encode($user->education) : "<sub>образование</sub>";?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="list-user">
+                            <?= $user->job ? "работа: " . Html::encode($user->job) : "<sub>работа</sub>";?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="list-user">
+                            <?= $user->about ? "о себе: " . HtmlPurifier::process($user->about) : "<sub>о себе</sub>";?>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
+    <div class="row">
+
+    </div>
 </div>

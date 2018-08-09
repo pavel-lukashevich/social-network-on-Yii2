@@ -5,7 +5,7 @@ namespace frontend\controllers;
 use Yii;
 use yii\web\Controller;
 use common\models\User;
-use frontend\models\EditProfile;
+use frontend\models\EditProfileForm;
 use yii\web\UploadedFile;
 use yii\web\Response;
 use frontend\models\ImageLoader;
@@ -34,21 +34,17 @@ class ProfileController extends Controller
      *
      * @return mixed
      */
-    public function actionIndex($username = null)
+    public function actionIndex($userId = null)
     {
         if (Yii::$app->user->isGuest) {
-            return $this->redirect('site');
+            return $this->redirect('/site');
         }
 
         $modelImage = new ImageLoader();
 
-        $username = ($username !== null) ? $username : Yii::$app->user->id;
+        $userId = ($userId !== null) ? $userId : Yii::$app->user->id;
 
-        $user = User::find()
-            ->select(['id', 'username', 'avatar', 'firstname', 'lastname', 'birthsday', 'country', 'city', 'phone','education', 'job', 'about'])
-            ->where(["id" => $username])
-            ->orWhere(["username" => $username])
-            ->one();
+        $user = User::infoForProfile($userId);
 
         if ($user == null) {
             return $this->redirect('/profile');
@@ -60,48 +56,95 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * @return string|\yii\web\Response
-     */
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public function actionEdit()
     {
         if (Yii::$app->user->isGuest) {
-            return $this->redirect('site');
+            return $this->redirect('/site');
         }
-
-        $model = new EditProfile();
+        $model = new EditProfileForm();
 
         if ($model->load(Yii::$app->request->post(), 'User')) {
-            if ($model->editProfileInfo()) {
-                return $this->redirect('/profile');
-            }
-        }
 
-        $model = User::find()->where(["id" => Yii::$app->user->id])->one();
+            if (isset($_POST['edit_username'])) {
+                if ($model->editUsername() != null) {
+                   // добавить флэшки
+                    return $this->refresh();
+                }
+            }elseif (isset($_POST['edit_email'])) {
+                if ($model->editEmail() != null) {
+                    // добавить флэшки
+                    return $this->refresh();
+                }
+            }elseif (isset($_POST['edit_info'])) {
+                if ($model->editInfo() != null) {
+                    // добавить флэшки
+                    return $this->refresh();
+                }
+            }
+        }else $model = User::infoForProfile();
 
         return $this->render('edit', [
             'model' => $model,
         ]);
     }
 
-    /**
-     * заггрузка изображений, из учебника
-     *
-     * @return string|\yii\web\Response
-     */
-//    public function actionUpload()
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//    public function actionEdit()
 //    {
-//        $model = new UploadForm();
-//
-//        if (Yii::$app->request->isPost) {
-//            $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
-//            if ($model->upload()) {
-//                // file is uploaded successfully
-//                return $this->redirect('/profile');
-//            }
+//        if (Yii::$app->user->isGuest) {
+//            return $this->redirect('/site');
 //        }
 //
-//        return $this->render('upload', ['model' => $model]);
+//        $model = new EditProfileForm();
+//
+//
+////echo (!empty(Yii::$app->request->post()->button2)) ? '+' : '-';
+//
+////        $request = $model->load(Yii::$app->request->post(), 'User');
+//        $request = $model->load(Yii::$app->request->post(), 'User');
+////        $model = User::infoForProfile($userId);
+//        if ($request) {
+//
+//            if (isset($_POST['edit_username'])) {
+//
+//                if ($model->editUsername() != null) {
+//                    $model = $model->editUsername();
+//                } else $model->password = '';
+//            } elseif (isset($_POST['edit_profile_info'])) {
+//                if ($model->editProfileInfo() != null) {
+//                    $model->editProfileInfo();
+//                }
+//            } elseif (isset($_POST['edit_email'])) {
+//                if ($model->editEmail() != null) {
+//                    $model->editEmail();
+//                } else $model->password = '';
+//            } elseif (isset($_POST['edit_password'])) {
+//                if ($model->editPassword() != null) {
+//                    $model->editPassword();
+//                } else $model->password = '';
+//            }else $model = User::infoForProfile(Yii::$app->user->id);
+//        }else $model = User::infoForProfile(Yii::$app->user->id);
+//
+////            if ($model->editProfileInfo() != null) {
+////                $model->editProfileInfo();
+////                return $this->redirect('/profile');
+////            }else $model = User::infoForProfile(Yii::$app->user->id);
+////        }
+////        $model = User::find()->where(["id" => Yii::$app->user->id])->one();
+//        return $this->render('edit', [
+//            'model' => $model,
+//        ]);
 //    }
 
     /**

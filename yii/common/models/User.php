@@ -28,6 +28,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     const DEFAULT_IMAGE = '/img/profile_default_image.jpg';
 
+    public $password = '';
+    public $newpassword = '';
 
     /**
      * {@inheritdoc}
@@ -189,6 +191,9 @@ class User extends ActiveRecord implements IdentityInterface
         $this->password_reset_token = null;
     }
 
+    /**
+     * @return string
+     */
     public function getPicture()
     {
         if ($this->avatar !== null) {
@@ -197,4 +202,60 @@ class User extends ActiveRecord implements IdentityInterface
 
         return self::DEFAULT_IMAGE;
     }
+
+    /**
+     * @param $userId
+     * @return array|null|ActiveRecord
+     */
+    public static function infoForProfile() {
+        $user = User::find()
+            ->select([
+                'id',
+                'username',
+                'avatar',
+                'firstname',
+                'lastname',
+                'birthsday',
+                'country',
+                'city',
+                'phone',
+                'education',
+                'job',
+                'about'
+            ])
+            ->where(["id" => Yii::$app->user->id])
+            ->one();
+        return $user;
+    }
+
+    /**
+     * @param $username
+     * @return bool
+     */
+    public function uniqueUsername($username)
+    {
+        $user = User::find()
+            ->select(['count(*)'])
+            ->where(["username" => $username])
+            ->andWhere(['!=', 'id', Yii::$app->user->id])
+            ->asArray()
+            ->one();
+        if ($user['count(*)'] == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function uniqueEmail($email)
+    {
+        $user = User::find()
+            ->select(['count(*)'])
+            ->where(["email" => $email])
+            ->andWhere(['!=', 'id', Yii::$app->user->id])
+            ->asArray()
+            ->one();
+        if ($user['count(*)'] == 0) {
+            return true;
+        }
+        return false;    }
 }

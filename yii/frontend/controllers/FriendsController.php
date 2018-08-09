@@ -48,9 +48,9 @@ class FriendsController extends \yii\web\Controller
      * список подписчиков
      * получает id пользователя и возвращает массив объектов друзей
      * в котором должны быть id, username, firstname, lastname, country, city
-     *
-     * @param integer $userId
-     * @return array $friends \yii\web\Response
+     * @param int $pageNum
+     * @param null $userId
+     * @return string|\yii\web\Response
      */
     public function actionFollower($pageNum = 1, $userId = null)
     {
@@ -81,9 +81,9 @@ class FriendsController extends \yii\web\Controller
      * список взаимных подписок
      * получает id пользователя и возвращает массив объектов друзей
      * в котором должны быть id, username, firstname, lastname, country, city
-     *
-     * @param integer $userId
-     * @return array $friends \yii\web\Response
+     * @param int $pageNum
+     * @param null $userId
+     * @return string|\yii\web\Response
      */
     public function actionMutuality($pageNum = 1, $userId = null)
     {
@@ -111,6 +111,13 @@ class FriendsController extends \yii\web\Controller
         ]);
     }
 
+
+    /**
+     * @param $type
+     * @param null $userId
+     * @param int $pageNum
+     * @return string|\yii\web\Response
+     */
     public function actionCommon($type, $userId = null, $pageNum = 1)
     {
         if (Yii::$app->user->isGuest) {
@@ -144,7 +151,6 @@ class FriendsController extends \yii\web\Controller
             $pageNum =  $count/Friends::FRIEND_FOR_PAGE;
         }
 
-        //var_dump($pageNum); die;
         if ($str != false) {
             $friend = User::find()->select(['id', 'username', 'avatar'])
                 ->where("id IN($str)")
@@ -167,6 +173,10 @@ class FriendsController extends \yii\web\Controller
         ]);
     }
 
+    /**
+     * @param int $pageNum
+     * @return string|\yii\web\Response
+     */
     public function actionAll($pageNum = 1)
     {
         if (Yii::$app->user->isGuest) {
@@ -189,6 +199,10 @@ class FriendsController extends \yii\web\Controller
         ]);
     }
 
+    /**
+     * @param $follower_id
+     * @return \yii\web\Response
+     */
     public function actionAddSubscribe($follower_id)
     {
         if (Yii::$app->user->isGuest) {
