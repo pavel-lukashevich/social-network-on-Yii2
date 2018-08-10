@@ -111,8 +111,8 @@ $this->title = 'Редактирование профиля ';
         <?= $form->field($model, 'lastname')->label('фамилия') ?>
         <?= $form->field($model, 'country')->label('страна') ?>
         <?= $form->field($model, 'city')->label('город') ?>
-        <?= $form->field($model, 'birthsday')->label('день рождения') ?>
-        <?= $form->field($model, 'phone')->label('телефон') ?>
+<!--        --><?//= $form->field($model, 'birthsday')->label('день рождения') ?>
+<!--        --><?//= $form->field($model, 'phone')->label('телефон') ?>
         <?= $form->field($model, 'education')->label('образование') ?>
         <?= $form->field($model, 'job')->label('работа') ?>
         <?= $form->field($model, 'about')->label('о себе')->textarea(['rows' => '8']) ?>

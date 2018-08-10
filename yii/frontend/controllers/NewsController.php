@@ -46,45 +46,94 @@ class NewsController extends Controller
 
         $offset = News::NEWS_FOR_PAGE * ($pageNum - 1);
 
-        $users_id = implode(',', array_keys($listFriends));
 
-        $users = User::find()
-            ->select(['id', 'username', 'avatar'])
-            ->where("id IN($users_id)")
-            ->indexBy('id')
-//            ->asArray()
-//            ->limit(Friends::FRIEND_FOR_PAGE)
-//            ->offset($offset)
-//            ->orderBy(['id' => SORT_DESC])
-            ->all();
+        ////////////////////////////////////
+        /// перенести в модель,
+        /// мои подписки
+        /// ///////////////////////////////
+        if ($listFriends != null) {
+            $users_id = implode(',', array_keys($listFriends));
 
-//        $s_arr = $friends->getSubscribe($offset);
-        $news = News::find()
-//            ->select(['id', 'user_id', 'date', 'heading', 'preview', 'like', 'dislike'])
-//            ->where(['user_id' => $users_id, 'status' => 1])
-            ->where("user_id IN ($users_id)")
-            ->andWhere(['=','status', '1'])
-            ->limit(Friends::FRIEND_FOR_PAGE)
-            ->offset($offset)
-            ->orderBy(['id' => SORT_DESC])
-//            ->asArray()
-            ->all();
+            $countNews = News::find()
+                ->select(['count(*)'])
+                ->where("user_id IN ($users_id)")
+                ->andWhere(['=','status', '1'])
+                ->asArray()
+                ->one();
+            $count = $countNews['count(*)'];
 
-//        if ($friends == null) {
-//            $friends = new Friends();
-//        };
-//
-//        $count = Friends::countSubscribe(Yii::$app->user->id);
-//        $pagin = new Pagination($pageNum, $count, Friends::FRIEND_FOR_PAGE);
+            $news = News::find()
+                ->select(['id', 'user_id', 'date', 'heading', 'preview', 'like', 'dislike'])
+                ->where("user_id IN ($users_id)")
+                ->andWhere(['=','status', '1'])
+                ->limit(News::NEWS_FOR_PAGE)
+                ->offset($offset)
+                ->orderBy(['id' => SORT_DESC])
+                ->all();
+
+//            echo "<pre>";var_dump($news == null); die;
+            if ($news != null) {
+                $user_id = '';
+                foreach ($news as $list) {
+                    $user_id .= $list->user_id . ",";
+                }
+                $user_id = trim($user_id, ',');
+
+                $users = User::find()
+                    ->select(['id', 'username', 'avatar'])
+                    ->where("id IN($user_id)")
+                    ->indexBy('id')
+                    ->all();
+            }
+
+        }else {
+            ////////////////////////////////////
+            /// перенести в модель,
+            /// все новости
+            /// ///////////////////////////////
+
+            // счётчик
+            $countNews = News::find()
+                ->select(['count(*)'])
+                ->where(['=','status', '1'])
+                ->asArray()
+                ->one();
+            $count = $countNews['count(*)'];
+
+            // получение новостей
+            $news = News::find()
+                ->select(['id', 'user_id', 'date', 'heading', 'preview', 'like', 'dislike'])
+                ->where(['=','status', '1'])
+                ->limit(News::NEWS_FOR_PAGE)
+                ->offset($offset)
+                ->orderBy(['id' => SORT_DESC])
+                ->all();
+            // получить список юзеров
+            $user_id = '';
+            foreach ($news as $list){
+                $user_id .= $list->user_id . ",";
+            }
+            $user_id = rtrim($user_id, ',');
+
+            // инфо о юзерах
+            $users = User::find()
+                ->select(['id', 'username', 'avatar'])
+                ->where("id IN($user_id)")
+                ->indexBy('id')
+                ->all();
+
+        }
+
+        $pagin = new Pagination($pageNum, $count, News::NEWS_FOR_PAGE);
 
         return $this->render('index', [
             'news' => $news,
             'users' => $users,
-//            'pagin' => $pagin,
+            'pagin' => $pagin,
         ]);
 
         //////////////////////////////////////////////////
-        //////////////////////////////////////////////////
+        ///             остатки индекса  из gii      //////
         //////////////////////////////////////////////////
 //
 //        $dataProvider = new ActiveDataProvider([

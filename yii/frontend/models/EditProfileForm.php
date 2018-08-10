@@ -18,10 +18,10 @@ class EditProfileForm extends Model
     public $about;
     public $country;
     public $city;
-    public $birthsday;
     public $education;
     public $job;
-    public $phone;
+//    public $birthsday;
+//    public $phone;
     public $password = '';
 
     private $_user;
@@ -35,8 +35,8 @@ class EditProfileForm extends Model
             [['about'], 'string', 'max' => 5000, 'on' => ['editInfo']],
             [['firstname', 'lastname', 'country', 'city', 'education', 'job'], 'string', 'max' => 255, 'on' => ['editInfo']],
             [['firstname', 'lastname', 'about', 'country', 'city', 'education', 'job'], 'trim'],
-            [['phone'], 'integer'],
-            [['birthsday'], 'integer'],
+//            [['phone'], 'integer'],
+//            [['birthsday'], 'integer'],
 
             [['email'], 'required', 'on' => 'editEmail'],
             ['username', 'trim'],
@@ -132,8 +132,8 @@ class EditProfileForm extends Model
         $user->lastname = $this->lastname;
         $user->country = $this->country;
         $user->city = $this->city;
-        $user->birthsday = $this->birthsday;
-        $user->phone = $this->phone;
+//        $user->birthsday = $this->birthsday;
+//        $user->phone = $this->phone;
         $user->education = $this->education;
         $user->job = $this->job;
         $user->about = $this->about;

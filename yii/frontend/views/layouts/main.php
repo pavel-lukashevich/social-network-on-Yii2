@@ -46,7 +46,7 @@ AppAsset::register($this);
     } else {
         $menuItems = [
             ['label' => 'Новости', 'url' => ['/news/index']],
-            ['label' => 'Галерея', 'url' => ['/galery/index']],
+            ['label' => 'Галерея', 'url' => ['/gallery/index']],
             ['label' => 'Друзья', 'url' => ['/friends/subscribe']],
             ['label' => 'Сообщения', 'url' => ['/message']],
             ['label' => 'Профиль', 'url' => ['/profile']],

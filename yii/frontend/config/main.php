@@ -67,6 +67,9 @@ return [
                 'profile/edit' => 'profile/edit',
                 'profile/upload' => 'profile/upload',
                 'profile/<userId:\d+>' => 'profile/index',
+
+                'news/index/p-<pageNum:\d+>' => 'news/index',
+                'news/index' => 'news/index',
             ],
         ],
         'storage' => [

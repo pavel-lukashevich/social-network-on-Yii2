@@ -9,6 +9,7 @@ use frontend\models\EditProfileForm;
 use yii\web\UploadedFile;
 use yii\web\Response;
 use frontend\models\ImageLoader;
+use frontend\models\Gallery as GalleryList;
 
 use frontend\models\UploadForm;
 use frontend\assets\AppAsset;
@@ -56,10 +57,9 @@ class ProfileController extends Controller
         ]);
     }
 
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+    /**
+     * @return string|Response
+     */
     public function actionEdit()
     {
         if (Yii::$app->user->isGuest) {
@@ -92,60 +92,6 @@ class ProfileController extends Controller
         ]);
     }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//    public function actionEdit()
-//    {
-//        if (Yii::$app->user->isGuest) {
-//            return $this->redirect('/site');
-//        }
-//
-//        $model = new EditProfileForm();
-//
-//
-////echo (!empty(Yii::$app->request->post()->button2)) ? '+' : '-';
-//
-////        $request = $model->load(Yii::$app->request->post(), 'User');
-//        $request = $model->load(Yii::$app->request->post(), 'User');
-////        $model = User::infoForProfile($userId);
-//        if ($request) {
-//
-//            if (isset($_POST['edit_username'])) {
-//
-//                if ($model->editUsername() != null) {
-//                    $model = $model->editUsername();
-//                } else $model->password = '';
-//            } elseif (isset($_POST['edit_profile_info'])) {
-//                if ($model->editProfileInfo() != null) {
-//                    $model->editProfileInfo();
-//                }
-//            } elseif (isset($_POST['edit_email'])) {
-//                if ($model->editEmail() != null) {
-//                    $model->editEmail();
-//                } else $model->password = '';
-//            } elseif (isset($_POST['edit_password'])) {
-//                if ($model->editPassword() != null) {
-//                    $model->editPassword();
-//                } else $model->password = '';
-//            }else $model = User::infoForProfile(Yii::$app->user->id);
-//        }else $model = User::infoForProfile(Yii::$app->user->id);
-//
-////            if ($model->editProfileInfo() != null) {
-////                $model->editProfileInfo();
-////                return $this->redirect('/profile');
-////            }else $model = User::infoForProfile(Yii::$app->user->id);
-////        }
-////        $model = User::find()->where(["id" => Yii::$app->user->id])->one();
-//        return $this->render('edit', [
-//            'model' => $model,
-//        ]);
-//    }
 
     /**
      * @return array
@@ -159,11 +105,12 @@ class ProfileController extends Controller
 
         if ($model->validate()) {
             $user = User::find()->where(["id" => Yii::$app->user->id])->one();
-//            $user = Yii::$app->user->identity;
             $user->avatar = Yii::$app->storage->saveUploadedFile($model->picture, 800, 600);
             // 15/27/30/379e706840f951d22de02458a4788eb55f.jpg
 
-            if ($user->save(false, ['avatar'])) {
+            $gallery = new GalleryList();
+            if ($user->save(false, ['avatar']) && $gallery->addPicture($user->avatar)) {
+//            if ($user->save(false, ['avatar'])) {
                 return [
                     'success' => true,
                     'pictureUri' => Yii::$app->storage->getFile($user->avatar),

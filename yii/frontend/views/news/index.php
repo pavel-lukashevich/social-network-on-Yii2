@@ -62,6 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 
+<?php if (!empty($pagin))echo $pagin->get();?>
 
 <!--//////////////////////////////////////////////-->
 <?php //echo"<pre>"; var_dump($users)?>

@@ -114,19 +114,19 @@ $this->title = 'Просмотр профиля ' . Html::encode($user->username
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="list-user">
-                            &nbsp;<?= $user->birthsday ? $user->birthsday : "<sub>дата рождения</sub>";?>&nbsp;
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="list-user">
-                            &nbsp;<?= $user->phone ? $user->phone : "<sub>телефон</sub>";?>&nbsp;
-                        </div>
-
-                    </div>
-                </div>
+<!--                <div class="row">-->
+<!--                    <div class="col-md-6">-->
+<!--                        <div class="list-user">-->
+<!--                            &nbsp;--><?//= $user->birthsday ? $user->birthsday : "<sub>дата рождения</sub>";?><!--&nbsp;-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-6">-->
+<!--                        <div class="list-user">-->
+<!--                            &nbsp;--><?//= $user->phone ? $user->phone : "<sub>телефон</sub>";?><!--&nbsp;-->
+<!--                        </div>-->
+<!---->
+<!--                    </div>-->
+<!--                </div>-->
 
                 <div class="row">
                     <div class="col-md-12">
