@@ -46,9 +46,9 @@ $this->title = 'Редактирование профиля ';
 
                     <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
-                    <?= $form->field($model, 'username')->textInput(['label' => 'имя пользователя']) ?>
+                    <?= $form->field($model, 'username')->textInput()->label('имя пользователя') ?>
 
-                    <?= $form->field($model, 'password')->passwordInput() ?>
+                    <?= $form->field($model, 'password')->label('введите пароль')->passwordInput() ?>
 
                     <div class="form-group">
                         <?= Html::submitButton('изменить псевдоним', ['class' => 'btn btn-default', 'name' => 'edit_username']) ?>

@@ -48,7 +48,7 @@ AppAsset::register($this);
             ['label' => 'Новости', 'url' => ['/news/index']],
             ['label' => 'Галерея', 'url' => ['/gallery/index']],
             ['label' => 'Друзья', 'url' => ['/friends/subscribe']],
-            ['label' => 'Сообщения', 'url' => ['/message']],
+//            ['label' => 'Сообщения', 'url' => ['/message']],
             ['label' => 'Профиль', 'url' => ['/profile']],
         ];
         $menuItems[] = '<li>'

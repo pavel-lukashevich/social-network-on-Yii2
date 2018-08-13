@@ -7,9 +7,11 @@
 /* @var $user \common\models\User*/
 
 use yii\helpers\Html;
+use yii\bootstrap\ActiveForm;
 use yii\helpers\HtmlPurifier;
 use dosamigos\fileupload\FileUpload;
 use frontend\models\Friends;
+use frontend\models\News;
 
 $this->title = 'Просмотр профиля ' . Html::encode($user->username);
 ?>
@@ -156,6 +158,83 @@ $this->title = 'Просмотр профиля ' . Html::encode($user->username
     </div>
 
     <div class="row">
+        <div class="text-center">
+        <?php if (Yii::$app->user->id == $user->id): ?>
+            <div class="list-user">
+                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addNews">добавить новость</button>
+                <br>
+                <br>
+            </div>
+        <?php endif;?>
 
+            <?php foreach ($news as $newsItem): ?>
+            <div class="list-user">
+                <div class='row'>
+                    <div class='col-md-6'>
+                        <p>
+                            <?= Html::encode($newsItem->heading); ?>
+                        </p>
+                    </div>
+                    <div class='col-md-6'>
+                        <p>
+                            <?= date('d-m-Y / H:i', $newsItem->date); ?>
+                        </p>
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-md-12'>
+                        <p>
+                            <?= Html::encode($newsItem->text); ?>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+
+            <?php if (!empty($pagin))echo $pagin->get();?>
+
+        </div>
     </div>
+
+
+    <?php if (Yii::$app->user->id == $user->id): ?>
+    <!-- Модальное окно -->
+    <div class="modal fade" id="addNews" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="text-center">
+                        <h4 class="modal-title" id="myModalLabel">добавить новость</h4>
+
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+
+                        <?php $form = ActiveForm::begin(['id' => 'addNews', 'action' => '/news/create']); ?>
+
+                        <?= $form->field($model, 'heading')->textInput()->label('заголовок') ?>
+                        <?= $form->field($model, 'tags')->textInput()->label('тэги') ?>
+                        <?= $form->field($model, 'text')->label('новость')->textarea(['rows' => '8']) ?>
+
+                        <div class="form-group">
+                            <?= Html::submitButton('добавить новость', ['class' => 'btn btn-default',]) ?>
+                        </div>
+
+                        <?php ActiveForm::end(); ?>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif;?>
+
+
+
+
 </div>

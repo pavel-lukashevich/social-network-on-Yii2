@@ -8,6 +8,7 @@ $params = array_merge(
 
 return [
     'id' => 'app-frontend',
+    'name' => 'social-3AX-xyz',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
@@ -66,10 +67,15 @@ return [
                 'profile/edit/id=<userId:\d+>' => 'profile/edit',
                 'profile/edit' => 'profile/edit',
                 'profile/upload' => 'profile/upload',
+                'profile/p-<pageNum:\d+>' => 'profile/index',
+                'profile/<userId:\d+>/p-<pageNum:\d+>' => 'profile/index',
                 'profile/<userId:\d+>' => 'profile/index',
 
+                'news/view/post-<postId:\d+>' => 'news/view',
                 'news/index/p-<pageNum:\d+>' => 'news/index',
                 'news/index' => 'news/index',
+                'news/<typeList:friends>/p-<pageNum:\d+>' => 'news/index',
+                'news/<typeList:friends>' => 'news/index',
             ],
         ],
         'storage' => [

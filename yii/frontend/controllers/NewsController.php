@@ -32,129 +32,69 @@ class NewsController extends Controller
         ];
     }
 
+
     /**
-     * Lists all News models.
-     * @return mixed
+     * @param int $pageNum
+     * @return string|\yii\web\Response
      */
-    public function actionIndex($pageNum = 1)
+    public function actionIndex($pageNum = 1, $typeList = null)
     {
         if (Yii::$app->user->isGuest) {
             return $this->redirect('/site');
         }
-        $friends = Friends::find()->select('subscribe')->where(["user_id" => Yii::$app->user->id])->one();
-        $listFriends = $friends->getMySubscribersList();
 
         $offset = News::NEWS_FOR_PAGE * ($pageNum - 1);
 
+//       $list = Yii::$app->request->get();
 
-        ////////////////////////////////////
-        /// перенести в модель,
-        /// мои подписки
-        /// ///////////////////////////////
-        if ($listFriends != null) {
+        $friends = null;
+
+        if ($typeList == 'friends') {
+            $friends = Friends::find()->select('subscribe')->where(["user_id" => Yii::$app->user->id])->one();
+        }
+
+        $users_id = null;
+
+        if ($friends != null && $friends->getMySubscribersList() != null) {
+
+//            $listBtn = $list['list'];
+
+            $listFriends = $friends->getMySubscribersList();
+
             $users_id = implode(',', array_keys($listFriends));
 
-            $countNews = News::find()
-                ->select(['count(*)'])
-                ->where("user_id IN ($users_id)")
-                ->andWhere(['=','status', '1'])
-                ->asArray()
-                ->one();
-            $count = $countNews['count(*)'];
+        }else $typeList = 'all';
 
-            $news = News::find()
-                ->select(['id', 'user_id', 'date', 'heading', 'preview', 'like', 'dislike'])
-                ->where("user_id IN ($users_id)")
-                ->andWhere(['=','status', '1'])
-                ->limit(News::NEWS_FOR_PAGE)
-                ->offset($offset)
-                ->orderBy(['id' => SORT_DESC])
-                ->all();
+        $count = News::count($users_id);
 
-//            echo "<pre>";var_dump($news == null); die;
-            if ($news != null) {
-                $user_id = '';
-                foreach ($news as $list) {
-                    $user_id .= $list->user_id . ",";
-                }
-                $user_id = trim($user_id, ',');
+        $news = News::findNews($offset, $users_id);
 
-                $users = User::find()
-                    ->select(['id', 'username', 'avatar'])
-                    ->where("id IN($user_id)")
-                    ->indexBy('id')
-                    ->all();
-            }
-
-        }else {
-            ////////////////////////////////////
-            /// перенести в модель,
-            /// все новости
-            /// ///////////////////////////////
-
-            // счётчик
-            $countNews = News::find()
-                ->select(['count(*)'])
-                ->where(['=','status', '1'])
-                ->asArray()
-                ->one();
-            $count = $countNews['count(*)'];
-
-            // получение новостей
-            $news = News::find()
-                ->select(['id', 'user_id', 'date', 'heading', 'preview', 'like', 'dislike'])
-                ->where(['=','status', '1'])
-                ->limit(News::NEWS_FOR_PAGE)
-                ->offset($offset)
-                ->orderBy(['id' => SORT_DESC])
-                ->all();
-            // получить список юзеров
-            $user_id = '';
-            foreach ($news as $list){
-                $user_id .= $list->user_id . ",";
-            }
-            $user_id = rtrim($user_id, ',');
-
-            // инфо о юзерах
-            $users = User::find()
-                ->select(['id', 'username', 'avatar'])
-                ->where("id IN($user_id)")
-                ->indexBy('id')
-                ->all();
-
-        }
+        $users = News::getListUsers($news);
 
         $pagin = new Pagination($pageNum, $count, News::NEWS_FOR_PAGE);
 
+        $model = new News();
         return $this->render('index', [
+            'list' => $typeList,
             'news' => $news,
             'users' => $users,
             'pagin' => $pagin,
+            'model' => $model,
         ]);
 
-        //////////////////////////////////////////////////
-        ///             остатки индекса  из gii      //////
-        //////////////////////////////////////////////////
-//
-//        $dataProvider = new ActiveDataProvider([
-//            'query' => News::find(),
-//        ]);
-//
-//        return $this->render('index', [
-//            'dataProvider' => $dataProvider,
-//        ]);
     }
 
     /**
-     * Displays a single News model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
+     * @param $postId
+     * @return string
      */
-    public function actionView($id)
+    public function actionView($postId)
     {
+        $model = News::findFullNews($postId);
+        $user = User::find()->select(['id', 'username', 'avatar'])->where(['id' => $model->user_id])->one();
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'user' => $user,
         ]);
     }
 
@@ -167,13 +107,15 @@ class NewsController extends Controller
     {
         $model = new News();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post(), 'News')) {
+//            if ($model->addNews()){
+            if ($model->addNews() && $model->save()){
+//                        var_dump($this); die;
+                return $this->refresh();
+            }
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        return $this->redirect(Yii::$app->request->referrer);
     }
 
     /**

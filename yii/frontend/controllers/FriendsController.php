@@ -193,7 +193,10 @@ class FriendsController extends \yii\web\Controller
             ->all();
         $pagin = new Pagination($pageNum, $count, Friends::FRIEND_FOR_PAGE);
 
+        $userId = Yii::$app->user->id;
+
         return $this->render('subscribe', [
+            'userId' => $userId,
             'friend' => $friend,
             'pagin' => $pagin,
         ]);

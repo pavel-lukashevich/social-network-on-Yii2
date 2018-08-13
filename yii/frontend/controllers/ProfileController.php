@@ -10,8 +10,10 @@ use yii\web\UploadedFile;
 use yii\web\Response;
 use frontend\models\ImageLoader;
 use frontend\models\Gallery as GalleryList;
-
+use frontend\models\News;
 use frontend\models\UploadForm;
+use common\models\Pagination;
+
 use frontend\assets\AppAsset;
 use yii\web\BadRequestHttpException;
 use yii\filters\VerbFilter;
@@ -35,7 +37,7 @@ class ProfileController extends Controller
      *
      * @return mixed
      */
-    public function actionIndex($userId = null)
+    public function actionIndex($userId = null, $pageNum = 1 )
     {
         if (Yii::$app->user->isGuest) {
             return $this->redirect('/site');
@@ -51,9 +53,19 @@ class ProfileController extends Controller
             return $this->redirect('/profile');
         }
 
+        $offset = News::NEWS_FOR_PROFILE * ($pageNum - 1);
+        $news = News::getNewsForProfile($offset, $userId);
+        $count = News::count($userId);
+        $pagin = new Pagination($pageNum, $count, News::NEWS_FOR_PROFILE);
+//echo "<pre>";var_dump($news); die;
+        $model = new News();
+
         return $this->render('index', [
             'user' => $user,
             'modelImage' => $modelImage,
+            'model' => $model,
+            'news' => $news,
+            'pagin' => $pagin,
         ]);
     }
 
