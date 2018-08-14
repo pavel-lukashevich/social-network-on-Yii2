@@ -71,6 +71,8 @@ return [
                 'profile/<userId:\d+>/p-<pageNum:\d+>' => 'profile/index',
                 'profile/<userId:\d+>' => 'profile/index',
 
+//                'news/dislike/post_id=<postId:\d+>' => 'news/dislike',
+//                'news/like/post_id=<postId:\d+>' => 'news/like',
                 'news/view/post-<postId:\d+>' => 'news/view',
                 'news/index/p-<pageNum:\d+>' => 'news/index',
                 'news/index' => 'news/index',

@@ -11,6 +11,7 @@ use common\models\Pagination;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * NewsController implements the CRUD actions for News model.
@@ -35,7 +36,8 @@ class NewsController extends Controller
 
     /**
      * @param int $pageNum
-     * @return string|\yii\web\Response
+     * @param null $typeList
+     * @return string|Response
      */
     public function actionIndex($pageNum = 1, $typeList = null)
     {
@@ -44,8 +46,6 @@ class NewsController extends Controller
         }
 
         $offset = News::NEWS_FOR_PAGE * ($pageNum - 1);
-
-//       $list = Yii::$app->request->get();
 
         $friends = null;
 
@@ -56,8 +56,6 @@ class NewsController extends Controller
         $users_id = null;
 
         if ($friends != null && $friends->getMySubscribersList() != null) {
-
-//            $listBtn = $list['list'];
 
             $listFriends = $friends->getMySubscribersList();
 
@@ -108,14 +106,55 @@ class NewsController extends Controller
         $model = new News();
 
         if ($model->load(Yii::$app->request->post(), 'News')) {
-//            if ($model->addNews()){
             if ($model->addNews() && $model->save()){
-//                        var_dump($this); die;
                 return $this->refresh();
             }
         }
 
         return $this->redirect(Yii::$app->request->referrer);
+    }
+
+
+    public function actionLike()
+    {
+        $postId = Yii::$app->request->post('id');
+        $models = new News();
+        $model = $models->isRateLike($postId, Yii::$app->user->id);
+
+//echo "<pre>"; var_dump($model->save(false)); die;
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        if($model->save(false)) {
+            return [
+                'success' => true,
+                'likeCount' => $model->count_like,
+                'dislikeCount' => $model->count_dislike,
+            ];
+        }
+
+        return [
+            'success' => false,
+        ];
+    }
+
+    public function actionDislike()
+    {
+        $postId = Yii::$app->request->post('id');
+        $models = new News();
+        $model = $models->isRateDislike($postId, Yii::$app->user->id);
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        if($model->save(false)) {
+            return [
+                'success' => true,
+                'likeCount' => $model->count_like,
+                'dislikeCount' => $model->count_dislike,
+            ];
+        }
+
+        return [
+            'success' => false,
+        ];
     }
 
     /**

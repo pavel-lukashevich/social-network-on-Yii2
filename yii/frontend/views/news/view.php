@@ -57,7 +57,13 @@ $this->title = Html::encode($model->heading);
                         <?php endif; ?>
                     <?php else :?>
                         <a class='btn btn-sm  btn-default' href='/news/edit/post_id=<?= $model->id;?>'>редактировать</a>
-                        <!--                                <a class='btn btn-sm  btn-default' href='/news/delete/post_id=--><?//= $newsItem->id;?><!--'>удалить</a>-->
+
+<!--                        <a class='btn btn-sm  btn-default' href='/news/delete/post_id=-->
+<!--                        --><?php //
+//                            echo $newsItem->id;
+//                        ?>
+<!--                        '>удалить</a>-->
+
                     <?php endif; ?>
                     <!--            like-dislike-end                -->
                     <!--            like-dislike-end                -->
@@ -66,32 +72,5 @@ $this->title = Html::encode($model->heading);
         </div>
             <a class='btn btn-default' href = '<?= Yii::$app->request->referrer?>' >назад</a>
     </div>
-
-<!--    <p>-->
-<!--        --><?//= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-<!--        --><?//= Html::a('Delete', ['delete', 'id' => $model->id], [
-//            'class' => 'btn btn-danger',
-//            'data' => [
-//                'confirm' => 'Are you sure you want to delete this item?',
-//                'method' => 'post',
-//            ],
-//        ]) ?>
-<!--    </p>-->
-
-<!--    --><?//= DetailView::widget([
-//        'model' => $model,
-//        'attributes' => [
-//            'id',
-//            'user_id',
-//            'date',
-//            'heading',
-//            'tags',
-//            'preview',
-//            'text',
-//            'like:ntext',
-//            'dislike:ntext',
-//            'status',
-//        ],
-//    ]) ?>
 
 </div>

@@ -40,6 +40,5 @@ class m180728_174224_add_column_to_user_table extends Migration
         $this->dropColumn('user', 'about');
         $this->dropColumn('user', 'avatar');
 
-        return false;
     }
 }

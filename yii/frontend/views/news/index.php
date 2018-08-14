@@ -94,19 +94,25 @@ $this->title = 'Новости';
                                 <?= Html::encode($newsItem->preview); ?>
                             </p>
 <!--          like-dislike                  -->
-<!--          like-dislike                  -->
                             <?php if ($newsItem->user_id != Yii::$app->user->id): ?>
-                                <?php if (News::isRateLike($newsItem->id)): ?>
-                                    <a class='btn btn-sm  btn-default' href='/news/like/post_id=<?= $newsItem->id;?>'> + </a>
-                                <?php endif; ?>
-                                <?php if (News::isRateDislike($newsItem->id)): ?>
-                                    <a class='btn btn-sm  btn-default' href='/news/dislike/post_id=<?= $newsItem->id;?>'> - </a>
-                                <?php endif; ?>
+<!--                                --><?php //if (News::isRateLike($newsItem->id)): ?>
+                                <a class='btn btn-sm  btn-default button-like' href="#" data-id='<?= $newsItem->id;?>'><span class="like-count"><?= $newsItem->count_like;?></span> + </a>
+<!--                                --><?php //endif; ?>
+<!--                                --><?php //if (News::isRateDislike($newsItem->id)): ?>
+                                <a class='btn btn-sm  btn-default button-dislike' href="#" data-id='<?= $newsItem->id;?>'> - <span class="dislike-count"><?= $newsItem->count_dislike;?></span></a>
+<!--                                --><?php //endif; ?>
                             <?php else :?>
+                                <span class='btn btn-sm  btn-default'><?= $newsItem->count_like;?> + </span>
+                                <span class='btn btn-sm  btn-default'> - <?= $newsItem->count_dislike;?></span>
                                 <a class='btn btn-sm  btn-default' href='/news/edit/post_id=<?= $newsItem->id;?>'>редактировать</a>
-<!--                                <a class='btn btn-sm  btn-default' href='/news/delete/post_id=--><?//= $newsItem->id;?><!--'>удалить</a>-->
+
+<!--                                <a class='btn btn-sm  btn-default' href='/news/delete/post_id=-->
+<!--                                --><?php
+//                                    echo $newsItem->id;
+//                                ?>
+<!--                                '>удалить</a>-->
+
                             <?php endif; ?>
-<!--            like-dislike-end                -->
 <!--            like-dislike-end                -->
                         </div>
                     </div>
@@ -123,3 +129,9 @@ $this->title = 'Новости';
 <?php //echo"<pre><hr>"; var_dump($news);?>
 <!-- --><?php //die;?>
 <!--//////////////////////////////////////////////-->
+
+<?php
+    $this->registerJsFile('/js/likes.js', [
+       'depends' => \yii\web\JqueryAsset::className(),
+    ]);
+?>
