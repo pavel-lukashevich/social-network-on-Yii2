@@ -191,7 +191,7 @@ $this->title = 'Просмотр профиля ' . Html::encode($user->username
                 <div class='row'>
                     <div class='col-md-12'>
                         <p>
-                            <?= Html::encode($newsItem->text); ?>
+                            <?= HtmlPurifier::process($newsItem->text); ?>
                         </p>
                     </div>
                 </div>

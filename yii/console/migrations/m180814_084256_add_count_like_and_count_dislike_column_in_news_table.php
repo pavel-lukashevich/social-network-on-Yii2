@@ -21,8 +21,8 @@ class m180814_084256_add_count_like_and_count_dislike_column_in_news_table exten
      */
     public function safeDown()
     {
-        $this->dropColumn('news', 'count_like');;
-        $this->dropColumn('news', 'count_dislike');;
+        $this->dropColumn('news', 'count_like');
+        $this->dropColumn('news', 'count_dislike');
     }
 
 }

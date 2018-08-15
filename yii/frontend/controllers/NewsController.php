@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use frontend\models\Comment;
 use common\models\User;
 use frontend\models\Friends;
 use Yii;
@@ -81,7 +82,7 @@ class NewsController extends Controller
      * @param $postId
      * @return string
      */
-    public function actionView($postId)
+    public function actionView($postId, $pageNum = 1)
     {
         if (Yii::$app->user->isGuest) {
             return $this->redirect('/site');
@@ -94,10 +95,38 @@ class NewsController extends Controller
             $user = User::find()->select(['id', 'username', 'avatar'])->where(['id' => $model->user_id])->one();
         }else return $this->redirect('/news');
 
+//данные для формы комментов
+        $formComment = new Comment();
+        $formComment->news_id = $postId;
+        $formComment->user_id = Yii::$app->user->id;
+
+        $count = Comment::count($postId);
+        if($count == 0) {
+            return $this->render('view', [
+                'model' => $model,
+                'user' => $user,
+                'commentCount' => $count,
+                'formComment' => $formComment,
+            ]);
+        }
+
+//получаем комменты
+        $offset = Comment::COMMENT_FOR_PAGE * ($pageNum - 1);
+        $modelComment = Comment::getCommentForNews($offset, $postId);
+        $pagin = new Pagination($pageNum, $count, Comment::COMMENT_FOR_PAGE);
+        $users = Comment::getListUsers($modelComment);
+
         return $this->render('view', [
             'model' => $model,
             'user' => $user,
+            'commentCount' => $count,
+            'formComment' => $formComment,
+            'modelComment' => $modelComment,
+            'pagin' => $pagin,
+            'users' => $users,
         ]);
+
+
     }
 
     /**

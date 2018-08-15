@@ -59,7 +59,7 @@ $this->title = 'Новости';
         </div>
     </div>
 
-
+<!--список новостей-->
     <div class="body-content text-center">
         <?php foreach ($news as $newsItem): ?>
             <div class='row list-user'>
@@ -93,29 +93,13 @@ $this->title = 'Новости';
                             </p>
 <!--          like-dislike                  -->
                             <?php if ($newsItem->user_id != Yii::$app->user->id): ?>
-<!--                                --><?php //if (News::isRateLike($newsItem->id)): ?>
                                 <a class='btn btn-sm  btn-default button-like' href="#" data-id='<?= $newsItem->id;?>'><span class="like-count"><?= $newsItem->count_like;?></span> + </a>
-<!--                                --><?php //endif; ?>
-<!--                                --><?php //if (News::isRateDislike($newsItem->id)): ?>
                                 <a class='btn btn-sm  btn-default button-dislike' href="#" data-id='<?= $newsItem->id;?>'> - <span class="dislike-count"><?= $newsItem->count_dislike;?></span></a>
-<!--                                --><?php //endif; ?>
                             <?php else :?>
                                 <span class='circle-btn'><?= $newsItem->count_like;?> + </span>
                                 <span class='circle-btn'> - <?= $newsItem->count_dislike;?></span>
-
-<!--                                <a class='btn btn-sm  btn-default' href='/news/edit/post_id=-->
-<!--                                --><?php
-//                                echo $newsItem->id;
-//                                ?>
-<!--                                '>редактировать</a>-->
-
-<!--                                <a class='btn btn-sm  btn-default' href='/news/delete/post_id=-->
-<!--                                --><?php
-//                                    echo $newsItem->id;
-//                                  ?>
-<!--                                '>удалить</a>-->
-
                             <?php endif; ?>
+                            <span class='circle-btn'>всего <?= ($newsItem->comment_count == 0)  ? 0 : $newsItem->comment_count;?> комментариев</span>
 <!--            like-dislike-end                -->
                         </div>
                     </div>

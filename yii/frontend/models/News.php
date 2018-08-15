@@ -60,13 +60,13 @@ class News extends \yii\db\ActiveRecord
     public static function count($ids = null)
     {
         if ($ids == null) {
-            $countNews = News::find()
+            $countNews = self::find()
                 ->select(['count(*)'])
                 ->where(['=', 'status', '10'])
                 ->asArray()
                 ->one();
         }else {
-            $countNews = News::find()
+            $countNews = self::find()
                 ->select(['count(*)'])
                 ->where("user_id IN ($ids)")
                 ->andWhere(['=','status', '10'])
@@ -85,19 +85,19 @@ class News extends \yii\db\ActiveRecord
     public static function findNews($offset, $ids = null)
     {
         if ($ids == null) {
-            $news = News::find()
-                ->select(['id', 'user_id', 'date', 'heading', 'preview', 'like', 'dislike', 'count_like', 'count_dislike'])
+            $news = self::find()
+                ->select(['id', 'user_id', 'date', 'heading', 'preview', 'like', 'dislike', 'count_like', 'count_dislike', 'comment_count'])
                 ->where(['=','status', '10'])
-                ->limit(News::NEWS_FOR_PAGE)
+                ->limit(self::NEWS_FOR_PAGE)
                 ->offset($offset)
                 ->orderBy(['id' => SORT_DESC])
                 ->all();
         }else {
-            $news = News::find()
-                ->select(['id', 'user_id', 'date', 'heading', 'preview', 'like', 'dislike', 'count_like', 'count_dislike'])
+            $news = self::find()
+                ->select(['id', 'user_id', 'date', 'heading', 'preview', 'like', 'dislike', 'count_like', 'count_dislike', 'comment_count'])
                 ->where("user_id IN ($ids)")
                 ->andWhere(['=', 'status', '10'])
-                ->limit(News::NEWS_FOR_PAGE)
+                ->limit(self::NEWS_FOR_PAGE)
                 ->offset($offset)
                 ->orderBy(['id' => SORT_DESC])
                 ->all();
@@ -111,8 +111,8 @@ class News extends \yii\db\ActiveRecord
      */
     public static function findFullNews($news_id)
     {
-        $news = News::find()
-                ->select(['id', 'user_id', 'tags', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'status'])
+        $news = self::find()
+                ->select(['id', 'user_id', 'tags', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'status', 'comment_count'])
                 ->where(['id' => $news_id])
                 ->one();
         return $news;
@@ -125,10 +125,10 @@ class News extends \yii\db\ActiveRecord
      */
     public static function getAllNewsForProfile($offset, $id)
     {
-        $news = News::find()
+        $news = self::find()
             ->select(['id', 'user_id', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'status'])
             ->where(['user_id' => $id])
-            ->limit(News::NEWS_FOR_PROFILE)
+            ->limit(self::NEWS_FOR_PROFILE)
             ->offset($offset)
             ->orderBy(['id' => SORT_DESC])
             ->all();
@@ -142,11 +142,11 @@ class News extends \yii\db\ActiveRecord
      */
     public static function getNewsForProfile($offset, $id)
     {
-            $news = News::find()
+            $news = self::find()
                 ->select(['id', 'user_id', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'status'])
                 ->where(['user_id' => $id])
                 ->andWhere(['=', 'status', '10'])
-                ->limit(News::NEWS_FOR_PROFILE)
+                ->limit(self::NEWS_FOR_PROFILE)
                 ->offset($offset)
                 ->orderBy(['id' => SORT_DESC])
                 ->all();
@@ -208,7 +208,6 @@ class News extends \yii\db\ActiveRecord
         $this->date = time();
         $this->preview = substr($this->text, 0,200);
         $this->preview = substr($this->text, 0,strrpos ($this->preview, ' ')) . '...';
-//        $this->status = 10;
         return true;
     }
 
@@ -219,7 +218,7 @@ class News extends \yii\db\ActiveRecord
      */
     public static function showNews($postId, $userId)
     {
-        $news = News::find()->where(['id' => $postId])->andWhere(['user_id' => $userId])->one();
+        $news = self::find()->where(['id' => $postId])->andWhere(['user_id' => $userId])->one();
         $news->status = 10;
 
         $news->save();
@@ -234,7 +233,7 @@ class News extends \yii\db\ActiveRecord
      */
     public static function hideNews($postId, $userId)
     {
-        $news = News::find()->where(['id' => $postId])->andWhere(['user_id' => $userId])->one();
+        $news = self::find()->where(['id' => $postId])->andWhere(['user_id' => $userId])->one();
         $news->status = 0;
 
         $news->save();
@@ -251,7 +250,7 @@ class News extends \yii\db\ActiveRecord
      */
     public static function deleteNews($postId, $userId)
     {
-        $news = News::find()->where(['id' => $postId])->andWhere(['user_id' => $userId])->one();
+        $news = self::find()->where(['id' => $postId])->andWhere(['user_id' => $userId])->one();
         $news->delete();
 
         return true;
@@ -321,12 +320,21 @@ class News extends \yii\db\ActiveRecord
      */
     public static function getLikeDislikeNews($news_id)
     {
-        $news = News::find()
+        $news = self::find()
             ->select(['id', 'like', 'dislike', 'count_like', 'count_dislike'])
             ->where(['id' => $news_id])
             ->andWhere(['status' => '10'])
             ->one();
         return $news;
+    }
+
+    public static function updateCommentCount($news_id, $countComment){
+        $news = self::find()->where(['id' => $news_id])->one();
+        $news->comment_count = $countComment;
+        if ($news->save(false)){
+            return true;
+        }
+        return false;
     }
 
 }

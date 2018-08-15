@@ -71,10 +71,14 @@ return [
                 'profile/<userId:\d+>/p-<pageNum:\d+>' => 'profile/index',
                 'profile/<userId:\d+>' => 'profile/index',
 
+//                'comment/edit/n-<commentId:\d+>' => 'comment/edit',
+                'comment/delete/n-<commentId:\d+>' => 'comment/delete',
+
                 'news/edit/n-<postId:\d+>' => 'news/edit',
                 'news/show/n-<postId:\d+>' => 'news/show',
                 'news/hide/n-<postId:\d+>' => 'news/hide',
                 'news/delete/n-<postId:\d+>' => 'news/delete',
+                'news/view/post-<postId:\d+>/p-<pageNum:\d+>' => 'news/view',
                 'news/view/post-<postId:\d+>' => 'news/view',
                 'news/index/p-<pageNum:\d+>' => 'news/index',
                 'news/index' => 'news/index',
