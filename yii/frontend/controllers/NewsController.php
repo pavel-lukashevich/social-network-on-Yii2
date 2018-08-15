@@ -6,32 +6,27 @@ use common\models\User;
 use frontend\models\Friends;
 use Yii;
 use frontend\models\News;
-use yii\data\ActiveDataProvider;
 use common\models\Pagination;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use yii\web\Response;
 
-/**
- * NewsController implements the CRUD actions for News model.
- */
+
 class NewsController extends Controller
 {
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
+//    public function behaviors()
+//    {
+//        return [
+//            'verbs' => [
+//                'class' => VerbFilter::className(),
+//                'actions' => [
+//                    'delete' => ['POST'],
+//                ],
+//            ],
+//        ];
+//    }
 
 
     /**
@@ -88,8 +83,17 @@ class NewsController extends Controller
      */
     public function actionView($postId)
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect('/site');
+        }
+
         $model = News::findFullNews($postId);
-        $user = User::find()->select(['id', 'username', 'avatar'])->where(['id' => $model->user_id])->one();
+        if (!$model || $model == 'null') return $this->redirect('/news');
+
+        if ($model->status == 10 || $model->user_id == Yii::$app->user->id){
+            $user = User::find()->select(['id', 'username', 'avatar'])->where(['id' => $model->user_id])->one();
+        }else return $this->redirect('/news');
+
         return $this->render('view', [
             'model' => $model,
             'user' => $user,
@@ -103,6 +107,10 @@ class NewsController extends Controller
      */
     public function actionCreate()
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect('/site');
+        }
+
         $model = new News();
 
         if ($model->load(Yii::$app->request->post(), 'News')) {
@@ -115,13 +123,18 @@ class NewsController extends Controller
     }
 
 
+    /**
+     * @return array|Response
+     */
     public function actionLike()
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect('/site');
+        }
+
         $postId = Yii::$app->request->post('id');
         $models = new News();
         $model = $models->isRateLike($postId, Yii::$app->user->id);
-
-//echo "<pre>"; var_dump($model->save(false)); die;
 
         Yii::$app->response->format = Response::FORMAT_JSON;
         if($model->save(false)) {
@@ -137,8 +150,15 @@ class NewsController extends Controller
         ];
     }
 
+    /**
+     * @return array|Response
+     */
     public function actionDislike()
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect('/site');
+        }
+
         $postId = Yii::$app->request->post('id');
         $models = new News();
         $model = $models->isRateDislike($postId, Yii::$app->user->id);
@@ -157,53 +177,76 @@ class NewsController extends Controller
         ];
     }
 
-    /**
-     * Updates an existing News model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+    /**
+     * @return Response
+     */
+    public function actionEdit()
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect('/site');
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
+        $model = News::findOne(Yii::$app->request->post()['News']['id']);
 
-    /**
-     * Deletes an existing News model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the News model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return News the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = News::findOne($id)) !== null) {
-            return $model;
+        if ($model->load(Yii::$app->request->post(), 'News')) {
+            if ($model->editNews() && $model->save()){
+             return $this->redirect(Yii::$app->request->referrer);
+            }
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        return $this->redirect(['/news']);
     }
+
+
+    /**
+     * @param $postId
+     * @return Response
+     */
+    public function actionShow($postId)
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect('/site');
+        }
+        if (News::showNews($postId, Yii::$app->user->id)){
+            return $this->redirect(Yii::$app->request->referrer);
+        }
+
+        return $this->redirect(['/news']);
+    }
+
+    /**
+     * @param $postId
+     * @return Response
+     */
+    public function actionHide($postId)
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect('/site');
+        }
+        if (News::hideNews($postId, Yii::$app->user->id)){
+            return $this->redirect(Yii::$app->request->referrer);
+        }
+
+        return $this->redirect(['/news']);
+    }
+
+    /**
+     * @param $postId
+     * @return Response
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionDelete($postId)
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect('/site');
+        }
+        if (News::deleteNews($postId, Yii::$app->user->id)){
+            return $this->redirect(['/profile']);
+        }
+
+        return $this->redirect(['/news']);
+    }
+
 }

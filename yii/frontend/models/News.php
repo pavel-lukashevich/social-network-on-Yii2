@@ -26,7 +26,7 @@ class News extends \yii\db\ActiveRecord
 //    public $text;
 
     const NEWS_FOR_PAGE = 20;
-    const NEWS_FOR_PROFILE = 10;
+    const NEWS_FOR_PROFILE = 5;
 
     /**
      * {@inheritdoc}
@@ -62,14 +62,14 @@ class News extends \yii\db\ActiveRecord
         if ($ids == null) {
             $countNews = News::find()
                 ->select(['count(*)'])
-                ->where(['=', 'status', '1'])
+                ->where(['=', 'status', '10'])
                 ->asArray()
                 ->one();
         }else {
             $countNews = News::find()
                 ->select(['count(*)'])
                 ->where("user_id IN ($ids)")
-                ->andWhere(['=','status', '1'])
+                ->andWhere(['=','status', '10'])
                 ->asArray()
                 ->one();
         }
@@ -87,7 +87,7 @@ class News extends \yii\db\ActiveRecord
         if ($ids == null) {
             $news = News::find()
                 ->select(['id', 'user_id', 'date', 'heading', 'preview', 'like', 'dislike', 'count_like', 'count_dislike'])
-                ->where(['=','status', '1'])
+                ->where(['=','status', '10'])
                 ->limit(News::NEWS_FOR_PAGE)
                 ->offset($offset)
                 ->orderBy(['id' => SORT_DESC])
@@ -96,7 +96,7 @@ class News extends \yii\db\ActiveRecord
             $news = News::find()
                 ->select(['id', 'user_id', 'date', 'heading', 'preview', 'like', 'dislike', 'count_like', 'count_dislike'])
                 ->where("user_id IN ($ids)")
-                ->andWhere(['=', 'status', '1'])
+                ->andWhere(['=', 'status', '10'])
                 ->limit(News::NEWS_FOR_PAGE)
                 ->offset($offset)
                 ->orderBy(['id' => SORT_DESC])
@@ -105,22 +105,47 @@ class News extends \yii\db\ActiveRecord
         return $news;
     }
 
+    /**
+     * @param $news_id
+     * @return array|null|\yii\db\ActiveRecord
+     */
     public static function findFullNews($news_id)
     {
         $news = News::find()
-                ->select(['id', 'user_id', 'tags', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike'])
+                ->select(['id', 'user_id', 'tags', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'status'])
                 ->where(['id' => $news_id])
-                ->andWhere(['status' => '1'])
                 ->one();
         return $news;
     }
 
+    /**
+     * @param $offset
+     * @param $id
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public static function getAllNewsForProfile($offset, $id)
+    {
+        $news = News::find()
+            ->select(['id', 'user_id', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'status'])
+            ->where(['user_id' => $id])
+            ->limit(News::NEWS_FOR_PROFILE)
+            ->offset($offset)
+            ->orderBy(['id' => SORT_DESC])
+            ->all();
+        return $news;
+    }
+
+    /**
+     * @param $offset
+     * @param $id
+     * @return array|\yii\db\ActiveRecord[]
+     */
     public static function getNewsForProfile($offset, $id)
     {
             $news = News::find()
-                ->select(['id', 'user_id', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike'])
+                ->select(['id', 'user_id', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'status'])
                 ->where(['user_id' => $id])
-                ->andWhere(['=', 'status', '1'])
+                ->andWhere(['=', 'status', '10'])
                 ->limit(News::NEWS_FOR_PROFILE)
                 ->offset($offset)
                 ->orderBy(['id' => SORT_DESC])
@@ -165,44 +190,94 @@ class News extends \yii\db\ActiveRecord
         $this->date = time();
         $this->preview = substr($this->text, 0,200);
         $this->preview = substr($this->text, 0,strrpos ($this->preview, ' ')) . '...';
-        $this->status = 1;
+        $this->status = 10;
 
         return true;
     }
 
-    public static function getLikeDislikeNews($news_id)
+    /**
+     * @return bool|null
+     */
+    public function editNews()
     {
-        $news = News::find()
-            ->select(['id', 'like', 'dislike', 'count_like', 'count_dislike'])
-            ->where(['id' => $news_id])
-            ->andWhere(['status' => '1'])
-            ->one();
-        return $news;
+        if (!$this->validate()) {
+            return null;
+        }
+
+        $this->user_id = Yii::$app->user->id;
+        $this->date = time();
+        $this->preview = substr($this->text, 0,200);
+        $this->preview = substr($this->text, 0,strrpos ($this->preview, ' ')) . '...';
+//        $this->status = 10;
+        return true;
     }
 
+    /**
+     * @param $postId
+     * @param $userId
+     * @return bool
+     */
+    public static function showNews($postId, $userId)
+    {
+        $news = News::find()->where(['id' => $postId])->andWhere(['user_id' => $userId])->one();
+        $news->status = 10;
+
+        $news->save();
+
+        return true;
+    }
+
+    /**
+     * @param $postId
+     * @param $userId
+     * @return bool
+     */
+    public static function hideNews($postId, $userId)
+    {
+        $news = News::find()->where(['id' => $postId])->andWhere(['user_id' => $userId])->one();
+        $news->status = 0;
+
+        $news->save();
+
+        return true;
+    }
+
+    /**
+     * @param $postId
+     * @param $userId
+     * @return bool
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public static function deleteNews($postId, $userId)
+    {
+        $news = News::find()->where(['id' => $postId])->andWhere(['user_id' => $userId])->one();
+        $news->delete();
+
+        return true;
+    }
 
     /**
      * @param $news_id
      * @param $user_id
-     * @return bool
+     * @return array|null|\yii\db\ActiveRecord
      */
     public function isRateLike($news_id, $user_id){
 
         $news = self::getLikeDislikeNews($news_id);
         // получаем массив лайков и дизлайков
-        if ($news->like || $news->like != 'null') {
+        if ($news->like && $news->like != 'null') {
             $like = json_decode($news->like, true);
-        } else $like = [];
+        };
 
-        if ($news->dislike || $news->dislike != 'null') {
-            $like = json_decode($news->dislike, true);
-        } else $dislike = [];
-        // добавляем одно, и удалЯем другое
+        if ($news->dislike && $news->dislike != 'null') {
+            $dislike = json_decode($news->dislike, true);
+        };
+        // добавляем одно, и удаляем другое
         $like[$user_id] = 1;
         unset($dislike[$user_id]);
 
         // считаем колличество и преобразуем json
-//        $news->id = $news_id;
         $news->count_like = count($like);
         $news->count_dislike = count($dislike);
         $news->like = json_encode($like);
@@ -211,29 +286,46 @@ class News extends \yii\db\ActiveRecord
         return $news;
     }
 
-
+    /**
+     * @param $news_id
+     * @param $user_id
+     * @return array|null|\yii\db\ActiveRecord
+     */
     public static function isRateDislike($news_id, $user_id){
 
         $news = self::getLikeDislikeNews($news_id);
         // получаем массив лайков и дизлайков
-        if ($news->like || $news->like != 'null') {
+        if ($news->like && $news->like != 'null') {
             $like = json_decode($news->like, true);
         } else $like = [];
 
-        if ($news->dislike || $news->dislike != 'null') {
-            $like = json_decode($news->dislike, true);
+        if ($news->dislike && $news->dislike != 'null') {
+            $dislike = json_decode($news->dislike, true);
         } else $dislike = [];
-        // добавляем одно, и удалЯем другое
+        // добавляем одно, и удаляем другое
         $dislike[$user_id] = 1;
         unset($like[$user_id]);
 
         // считаем колличество и преобразуем json
-//        $news->id = $news_id;
         $news->count_like = count($like);
         $news->count_dislike = count($dislike);
         $news->like = json_encode($like);
         $news->dislike = json_encode($dislike);
 
+        return $news;
+    }
+
+    /**
+     * @param $news_id
+     * @return array|null|\yii\db\ActiveRecord
+     */
+    public static function getLikeDislikeNews($news_id)
+    {
+        $news = News::find()
+            ->select(['id', 'like', 'dislike', 'count_like', 'count_dislike'])
+            ->where(['id' => $news_id])
+            ->andWhere(['status' => '10'])
+            ->one();
         return $news;
     }
 

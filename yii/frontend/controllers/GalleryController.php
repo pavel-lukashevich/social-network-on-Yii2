@@ -4,7 +4,6 @@ namespace frontend\controllers;
 
 use Yii;
 use frontend\models\Gallery;
-use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -17,17 +16,17 @@ class GalleryController extends Controller
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
+//    public function behaviors()
+//    {
+//        return [
+//            'verbs' => [
+//                'class' => VerbFilter::className(),
+//                'actions' => [
+//                    'delete' => ['POST'],
+//                ],
+//            ],
+//        ];
+//    }
 
     /**
      * Lists all Gallery models.
@@ -41,21 +40,6 @@ class GalleryController extends Controller
         return $this->render('index', [
             'model' => $model,
         ]);
-
-        ////////////////////////////////////////////////////////////////////
-        ///  из гии
-        ///
-        $dataProvider = new ActiveDataProvider([
-            'query' => Gallery::find(),
-        ]);
-
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
-        ///
-        ///   из гии
-        ////////////////////////////////////////////////////////////////////
-
     }
 
     /**
@@ -64,12 +48,12 @@ class GalleryController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
+//    public function actionView($id)
+//    {
+//        return $this->render('view', [
+//            'model' => $this->findModel($id),
+//        ]);
+//    }
 
     /**
      * Creates a new Gallery model.
@@ -96,18 +80,18 @@ class GalleryController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
+//    public function actionUpdate($id)
+//    {
+//        $model = $this->findModel($id);
+//
+//        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//            return $this->redirect(['view', 'id' => $model->id]);
+//        }
+//
+//        return $this->render('update', [
+//            'model' => $model,
+//        ]);
+//    }
 
     /**
      * Deletes an existing Gallery model.
@@ -116,12 +100,12 @@ class GalleryController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
+//    public function actionDelete($id)
+//    {
+//        $this->findModel($id)->delete();
+//
+//        return $this->redirect(['index']);
+//    }
 
     /**
      * Finds the Gallery model based on its primary key value.
@@ -130,12 +114,13 @@ class GalleryController extends Controller
      * @return Gallery the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
-    {
-        if (($model = Gallery::findOne($id)) !== null) {
-            return $model;
-        }
+//    protected function findModel($id)
+//    {
+//        if (($model = Gallery::findOne($id)) !== null) {
+//            return $model;
+//        }
+//
+//        throw new NotFoundHttpException('The requested page does not exist.');
+//    }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
-    }
 }

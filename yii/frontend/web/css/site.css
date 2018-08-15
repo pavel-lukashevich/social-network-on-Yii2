@@ -157,7 +157,7 @@ a.desc:after {
 .list-user {
     border-radius: 0 0 50px 50px ;
     border-width: 1px;
-    border-top-width: 0px;
+    border-top-width: 0;
     border-style: dashed;
     /*border-top-style: none;*/
     border-color: rgb(35, 20, 70);
@@ -169,7 +169,7 @@ a.desc:after {
      margin: 0 2px 0 0;
      border-radius: 0 0 20px 20px ;
      border-width: 1px;
-     border-top-width: 0px;
+     border-top-width: 0;
      border-style: dashed;
 }
 
@@ -189,7 +189,7 @@ a.desc:after {
 }
 
 .fileinput-button {
-    color: #333;
+    /*color: #333;*/
     background-color: #fff;
     border-color: #ccc;
     color: #53006e;
@@ -228,3 +228,18 @@ a.desc:after {
 }
 /* галерея*/
 
+.circle-btn{
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 45%;
+
+}

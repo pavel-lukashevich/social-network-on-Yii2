@@ -6,11 +6,9 @@
 /* @var $users \common\models\User */
 
 use yii\helpers\Html;
-use frontend\models\News;
 use yii\bootstrap\ActiveForm;
 
 $this->title = 'Новости';
-//$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="news-index">
 
@@ -102,14 +100,19 @@ $this->title = 'Новости';
                                 <a class='btn btn-sm  btn-default button-dislike' href="#" data-id='<?= $newsItem->id;?>'> - <span class="dislike-count"><?= $newsItem->count_dislike;?></span></a>
 <!--                                --><?php //endif; ?>
                             <?php else :?>
-                                <span class='btn btn-sm  btn-default'><?= $newsItem->count_like;?> + </span>
-                                <span class='btn btn-sm  btn-default'> - <?= $newsItem->count_dislike;?></span>
-                                <a class='btn btn-sm  btn-default' href='/news/edit/post_id=<?= $newsItem->id;?>'>редактировать</a>
+                                <span class='circle-btn'><?= $newsItem->count_like;?> + </span>
+                                <span class='circle-btn'> - <?= $newsItem->count_dislike;?></span>
+
+<!--                                <a class='btn btn-sm  btn-default' href='/news/edit/post_id=-->
+<!--                                --><?php
+//                                echo $newsItem->id;
+//                                ?>
+<!--                                '>редактировать</a>-->
 
 <!--                                <a class='btn btn-sm  btn-default' href='/news/delete/post_id=-->
 <!--                                --><?php
 //                                    echo $newsItem->id;
-//                                ?>
+//                                  ?>
 <!--                                '>удалить</a>-->
 
                             <?php endif; ?>
@@ -124,11 +127,6 @@ $this->title = 'Новости';
 
 <?php if (!empty($pagin))echo $pagin->get();?>
 
-<!--//////////////////////////////////////////////-->
-<?php //echo"<pre>"; var_dump($users)?>
-<?php //echo"<pre><hr>"; var_dump($news);?>
-<!-- --><?php //die;?>
-<!--//////////////////////////////////////////////-->
 
 <?php
     $this->registerJsFile('/js/likes.js', [

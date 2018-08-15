@@ -71,13 +71,16 @@ return [
                 'profile/<userId:\d+>/p-<pageNum:\d+>' => 'profile/index',
                 'profile/<userId:\d+>' => 'profile/index',
 
-//                'news/dislike/post_id=<postId:\d+>' => 'news/dislike',
-//                'news/like/post_id=<postId:\d+>' => 'news/like',
+                'news/edit/n-<postId:\d+>' => 'news/edit',
+                'news/show/n-<postId:\d+>' => 'news/show',
+                'news/hide/n-<postId:\d+>' => 'news/hide',
+                'news/delete/n-<postId:\d+>' => 'news/delete',
                 'news/view/post-<postId:\d+>' => 'news/view',
                 'news/index/p-<pageNum:\d+>' => 'news/index',
                 'news/index' => 'news/index',
                 'news/<typeList:friends>/p-<pageNum:\d+>' => 'news/index',
                 'news/<typeList:friends>' => 'news/index',
+                'news' => 'news/index',
             ],
         ],
         'storage' => [

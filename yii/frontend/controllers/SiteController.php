@@ -12,7 +12,6 @@ use common\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
-use frontend\models\ContactForm;
 use common\models\User;
 
 /**
@@ -83,7 +82,7 @@ class SiteController extends Controller
                 'count' => $count,
             ]);
         } else {
-            return $this->redirect('/news');
+            return $this->redirect('/news/index');
         }
     }
 

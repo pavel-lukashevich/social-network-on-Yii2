@@ -53,6 +53,7 @@ class Friends extends \yii\db\ActiveRecord
     }
 
     /**
+     * decode json
      * @return array|mixed
      */
     public function getMySubscribersList()
@@ -64,6 +65,7 @@ class Friends extends \yii\db\ActiveRecord
     }
 
     /**
+     * decode json
      * @return array|mixed
      */
     public function getMyFollowerList()

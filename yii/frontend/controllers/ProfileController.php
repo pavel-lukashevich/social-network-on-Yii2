@@ -11,21 +11,8 @@ use yii\web\Response;
 use frontend\models\ImageLoader;
 use frontend\models\Gallery as GalleryList;
 use frontend\models\News;
-use frontend\models\UploadForm;
+//use frontend\models\UploadForm;
 use common\models\Pagination;
-
-use frontend\assets\AppAsset;
-use yii\web\BadRequestHttpException;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
-use common\models\LoginForm;
-use frontend\models\PasswordResetRequestForm;
-use frontend\models\ResetPasswordForm;
-use frontend\models\SignupForm;
-use frontend\models\ContactForm;
-
-//use yii\filters\VerbFilter;
-//use yii\filters\AccessControl;
 
 /**
  * Site controller
@@ -54,10 +41,14 @@ class ProfileController extends Controller
         }
 
         $offset = News::NEWS_FOR_PROFILE * ($pageNum - 1);
-        $news = News::getNewsForProfile($offset, $userId);
+
+        if ($userId == Yii::$app->user->id) {
+            $news = News::getAllNewsForProfile($offset, $userId);
+        }else {
+            $news = News::getNewsForProfile($offset, $userId);
+        }
         $count = News::count($userId);
         $pagin = new Pagination($pageNum, $count, News::NEWS_FOR_PROFILE);
-//echo "<pre>";var_dump($news); die;
         $model = new News();
 
         return $this->render('index', [
@@ -122,7 +113,6 @@ class ProfileController extends Controller
 
             $gallery = new GalleryList();
             if ($user->save(false, ['avatar']) && $gallery->addPicture($user->avatar)) {
-//            if ($user->save(false, ['avatar'])) {
                 return [
                     'success' => true,
                     'pictureUri' => Yii::$app->storage->getFile($user->avatar),

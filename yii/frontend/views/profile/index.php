@@ -4,6 +4,7 @@
 /* @var $modelImage frontend\models\ImageLoader */
 /* @var $picture frontend\models\ImageLoader */
 /* @var $user frontend\models\Friends */
+/* @var $news frontend\models\News */
 /* @var $user \common\models\User*/
 
 use yii\helpers\Html;
@@ -11,7 +12,6 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\HtmlPurifier;
 use dosamigos\fileupload\FileUpload;
 use frontend\models\Friends;
-use frontend\models\News;
 
 $this->title = 'Просмотр профиля ' . Html::encode($user->username);
 ?>
@@ -33,8 +33,8 @@ $this->title = 'Просмотр профиля ' . Html::encode($user->username
                 <img src="<?= $user->getPicture(); ?>" class="img-rounded"  id="profile-picture"/>
 
                 <p>
-                <!-- если на своей странице, то показываем кнопки-->
-                <?php if (Yii::$app->user->id == $user->id): ?>
+                    <!-- если на своей странице, то показываем кнопки-->
+                    <?php if (Yii::$app->user->id == $user->id): ?>
                     <?= FileUpload::widget([
                         'model' => $modelImage,
                         'attribute' => 'picture',
@@ -58,11 +58,10 @@ $this->title = 'Просмотр профиля ' . Html::encode($user->username
                              }',
                         ],
                     ]); ?>
+                    <?php endif; ?>
 
-                <?php endif; ?>
-
-                <div class="alert alert-success display-none" id="profile-image-success">фото успешно обновлено</div>
-                <div class="alert alert-danger display-none" id="profile-image-fail"></div>
+                    <div class="alert alert-success display-none" id="profile-image-success">фото успешно обновлено</div>
+                    <div class="alert alert-danger display-none" id="profile-image-fail"></div>
                 </p>
 
                 <?php if ($user->id != Yii::$app->user->id): ?>
@@ -177,12 +176,13 @@ $this->title = 'Просмотр профиля ' . Html::encode($user->username
             <?php foreach ($news as $newsItem): ?>
             <div class="list-user">
                 <div class='row'>
-                    <div class='col-md-6'>
+                    <div class='col-md-8'>
                         <p>
-                            <?= Html::encode($newsItem->heading); ?>
+                            <?php if ($newsItem->status == 0)echo "<div class='circle-btn'>скрыта</div>";?>
+                            <a class='btn-link' href='/news/view/post-<?= $newsItem->id;?>'><?= Html::encode($newsItem->heading); ?></a>
                         </p>
                     </div>
-                    <div class='col-md-6'>
+                    <div class='col-md-4'>
                         <p>
                             <?= date('d-m-Y / H:i', $newsItem->date); ?>
                         </p>
@@ -195,6 +195,25 @@ $this->title = 'Просмотр профиля ' . Html::encode($user->username
                         </p>
                     </div>
                 </div>
+                <!--          like-dislike                  -->
+                <?php if ($newsItem->user_id != Yii::$app->user->id): ?>
+                    <a class='btn btn-sm  btn-default button-like' href="#" data-id='<?= $newsItem->id;?>'><span class="like-count"><?= $newsItem->count_like;?></span> + </a>
+                    <a class='btn btn-sm  btn-default button-dislike' href="#" data-id='<?= $newsItem->id;?>'> - <span class="dislike-count"><?= $newsItem->count_dislike;?></span></a>
+                <?php else :?>
+
+                    <span class='circle-btn'><?= $newsItem->count_like;?> + </span>
+                    <span class='circle-btn'> - <?= $newsItem->count_dislike;?></span>
+
+                    <a class='btn btn-sm btn-default' href='/news/view/post-<?= $newsItem->id;?>'>просмотр и редактирование</a>
+
+                    <?php if ($newsItem->status == 10): ?>
+                        <a class='btn btn-sm  btn-default' href='/news/hide/n-<?php echo $newsItem->id;?>'>скрыть</a>
+                    <?php elseif ($newsItem->status == 0): ?>
+                        <a class='btn btn-sm  btn-default' href='/news/show/n-<?php echo $newsItem->id;?>'>показать</a>
+                    <?php endif;?>
+
+                <?php endif; ?>
+                <!--          like-dislike-end                -->
             </div>
             <?php endforeach; ?>
 
@@ -205,7 +224,7 @@ $this->title = 'Просмотр профиля ' . Html::encode($user->username
 
 
     <?php if (Yii::$app->user->id == $user->id): ?>
-    <!-- Модальное окно -->
+    <!-- Модальное окно добавление новости-->
     <div class="modal fade" id="addNews" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -245,3 +264,10 @@ $this->title = 'Просмотр профиля ' . Html::encode($user->username
 
 
 </div>
+
+
+<?php
+$this->registerJsFile('/js/likes.js', [
+    'depends' => \yii\web\JqueryAsset::className(),
+]);
+?>
