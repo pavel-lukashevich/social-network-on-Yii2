@@ -62,6 +62,7 @@ $(document).ready(function () {
     $('button.edit-comment').click(function(){
         var commentId = $(this).attr('data-id');
         var commentText = $(this).siblings('.comment-text').text();
+        commentText = $.trim(commentText);
 
         $('#comment-id').val(commentId);
         $('#editComment').find('#comment-comment').text(commentText);

@@ -43,6 +43,8 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'gallery/index/id=<userId:\d+>' => 'gallery/index',
+
                 'friends/delete-subscribe/follow_id=<follower_id:\d+>' => 'friends/delete-subscribe',
                 'friends/add-subscribe/follow_id=<follower_id:\d+>' => 'friends/add-subscribe',
                 'friends/all/p-<pageNum:\d+>' => 'friends/all',
@@ -71,7 +73,6 @@ return [
                 'profile/<userId:\d+>/p-<pageNum:\d+>' => 'profile/index',
                 'profile/<userId:\d+>' => 'profile/index',
 
-//                'comment/edit/n-<commentId:\d+>' => 'comment/edit',
                 'comment/delete/n-<commentId:\d+>' => 'comment/delete',
 
                 'news/edit/n-<postId:\d+>' => 'news/edit',

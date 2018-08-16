@@ -86,7 +86,7 @@ class News extends \yii\db\ActiveRecord
     {
         if ($ids == null) {
             $news = self::find()
-                ->select(['id', 'user_id', 'date', 'heading', 'preview', 'like', 'dislike', 'count_like', 'count_dislike', 'comment_count'])
+                ->select(['id', 'user_id', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'comment_count'])
                 ->where(['=','status', '10'])
                 ->limit(self::NEWS_FOR_PAGE)
                 ->offset($offset)
@@ -94,7 +94,7 @@ class News extends \yii\db\ActiveRecord
                 ->all();
         }else {
             $news = self::find()
-                ->select(['id', 'user_id', 'date', 'heading', 'preview', 'like', 'dislike', 'count_like', 'count_dislike', 'comment_count'])
+                ->select(['id', 'user_id', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'comment_count'])
                 ->where("user_id IN ($ids)")
                 ->andWhere(['=', 'status', '10'])
                 ->limit(self::NEWS_FOR_PAGE)
@@ -328,6 +328,11 @@ class News extends \yii\db\ActiveRecord
         return $news;
     }
 
+    /**
+     * @param $news_id
+     * @param $countComment
+     * @return bool
+     */
     public static function updateCommentCount($news_id, $countComment){
         $news = self::find()->where(['id' => $news_id])->one();
         $news->comment_count = $countComment;
@@ -335,6 +340,14 @@ class News extends \yii\db\ActiveRecord
             return true;
         }
         return false;
+    }
+
+    public static function textOrHtml($string)
+    {
+        if($string == strip_tags($string)) {
+            $string = nl2br($string);
+        }
+        return $string;
     }
 
 }

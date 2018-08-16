@@ -25,7 +25,7 @@ $this->title = Html::encode($model->heading);
         <div class='col-md-4 col-xs-4'>
             <a href='/profile/<?= $model->user_id; ?>' class='btn'>
                 <p>
-                    <img src='<?= $user->getPicture(); ?>' class='img-rounded' width='70px'/>
+                    <img src='<?= $user->getPicture(); ?>' class='img-rounded' width='150px'/>
                 </p>
                 <p>
                     <?= Html::encode($user->username); ?>
@@ -47,9 +47,9 @@ $this->title = Html::encode($model->heading);
             </div>
             <div class='row'>
                 <div class='col-md-12'>
-                    <p>
-                        <?= Html::encode($model->text); ?>
-                    </p>
+                    <div  class='row'>
+                        <?= HtmlPurifier::process(\frontend\models\News::textOrHtml($model->text)); ?>
+                    </div>
 
                     <!--          like-dislike                  -->
                     <?php if ($model->user_id != Yii::$app->user->id): ?>
@@ -98,9 +98,9 @@ $this->title = Html::encode($model->heading);
                                     <a href='/profile/<?= $comments->user_id; ?>' class='btn'><?= Html::encode($users[$comments->user_id]['username']); ?></a>
                                 </div>
                             </div>
-                            <p class="comment-text">
-                                <?php echo HtmlPurifier::process($comments->comment); ?>
-                            </p>
+                            <div class="comment-text">
+                                <?php echo HtmlPurifier::process(\frontend\models\News::textOrHtml($comments->comment)); ?>
+                            </div>
                             <!--          like-dislike                  -->
                             <?php if ($comments->user_id != Yii::$app->user->id): ?>
                                 <a class='btn btn-sm btn-default button-com-like' href="#" data-id='<?= $comments->id;?>'><span class="like-count"><?= $comments->count_like;?></span> + </a>
@@ -121,7 +121,7 @@ $this->title = Html::encode($model->heading);
                         <div class='col-md-3 col-xs-3'>
                         <a href='/profile/<?= $comments->user_id; ?>' class='btn'>
                             <p>
-                                <img src='<?= $users[$comments->user_id]->getPicture(); ?>' class='img-rounded' width='70px'/>
+                                <img src='<?= $users[$comments->user_id]->getPicture(); ?>' class='img-rounded' width='100px'/>
                             </p>
                         </a>
                     </div>

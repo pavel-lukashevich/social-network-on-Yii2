@@ -6,7 +6,9 @@
 /* @var $users \common\models\User */
 
 use yii\helpers\Html;
+use frontend\models\News;
 use yii\bootstrap\ActiveForm;
+use yii\helpers\HtmlPurifier;
 
 $this->title = 'Новости';
 ?>
@@ -66,7 +68,7 @@ $this->title = 'Новости';
                 <div class='col-md-4 col-xs-4'>
                     <a href='/profile/<?= $newsItem->user_id; ?>' class='btn'>
                        <p>
-                           <img src='<?= $users[$newsItem->user_id]->getPicture(); ?>' class='img-rounded' width='70px'/>
+                           <img src='<?= $users[$newsItem->user_id]->getPicture(); ?>' class='img-rounded' width='150px'/>
                        </p>
                         <p>
                            <?= Html::encode($users[$newsItem->user_id]['username']); ?>
@@ -88,9 +90,9 @@ $this->title = 'Новости';
                     </div>
                     <div class='row'>
                         <div class='col-md-12'>
-                            <p>
-                                <?= Html::encode($newsItem->preview); ?>
-                            </p>
+                            <div class='user-text'>
+                                <?= HtmlPurifier::process(News::textOrHtml($newsItem->text)); ?>
+                            </div>
 <!--          like-dislike                  -->
                             <?php if ($newsItem->user_id != Yii::$app->user->id): ?>
                                 <a class='btn btn-sm  btn-default button-like' href="#" data-id='<?= $newsItem->id;?>'><span class="like-count"><?= $newsItem->count_like;?></span> + </a>

@@ -32,10 +32,15 @@ class GalleryController extends Controller
      * Lists all Gallery models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($userId = null)
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect('/site');
+        }
 
-        $model = Gallery::find()->where(['user_id' => Yii::$app->user->id])->all();
+        $userId = ($userId !== null) ? $userId : Yii::$app->user->id;
+
+        $model = Gallery::find()->where(['user_id' => $userId])->all();
 
         return $this->render('index', [
             'model' => $model,

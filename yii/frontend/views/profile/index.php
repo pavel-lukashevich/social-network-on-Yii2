@@ -86,6 +86,11 @@ $this->title = 'Просмотр профиля ' . Html::encode($user->username
                 <br><br>
             </div>
 
+            <div class="text-center">
+                <a class="btn btn-md btn-default"
+                   href="/gallery/index/id=<?= $user->id; ?>">смотреть галерею</a>
+            </div>
+
             <div class="body-content text-center">
 
                 <h3>информация</h3>
@@ -188,11 +193,11 @@ $this->title = 'Просмотр профиля ' . Html::encode($user->username
                         </p>
                     </div>
                 </div>
-                <div class='row'>
+                <div class='row clear'>
                     <div class='col-md-12'>
-                        <p>
-                            <?= HtmlPurifier::process($newsItem->text); ?>
-                        </p>
+                        <div class='user-text-for-profile'>
+                            <?php echo HtmlPurifier::process(\frontend\models\News::textOrHtml($newsItem->text)); ?>
+                        </div>
                     </div>
                 </div>
                 <!--          like-dislike                  -->

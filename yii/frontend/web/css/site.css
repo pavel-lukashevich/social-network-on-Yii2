@@ -159,7 +159,6 @@ a.desc:after {
     border-width: 1px;
     border-top-width: 0;
     border-style: dashed;
-    /*border-top-style: none;*/
     border-color: rgb(35, 20, 70);
     margin: 10px;
 }
@@ -243,3 +242,42 @@ a.desc:after {
     border-radius: 45%;
 
 }
+
+.user-text, .comment-text {
+    overflow-y: scroll;
+    overflow-x:hidden;
+    padding-left: 10px;
+    padding-right: 10px;
+    max-height: 300px;
+    border-top-style: none;
+}
+
+.user-text-for-profile {
+    overflow-y: scroll;
+    overflow-x:hidden;
+    padding-left: 10px;
+    padding-right: 10px;
+    max-height: 500px;
+    border-top-style: none;
+}
+
+body::-webkit-scrollbar{ width: 7px;}
+body::-webkit-scrollbar:horizontal{ height: 7px;}
+body::-webkit-scrollbar-button {background: #466d84;}
+body::-webkit-scrollbar-track {background: #596180;}
+body::-webkit-scrollbar-track-piece { background: #ccbfcd;}
+body::-webkit-scrollbar-thumb {background: #466d84; border-radius: 5px; -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.3);}
+
+div::-webkit-scrollbar{ width: 4px; /* 1 - вертикальный скроллбар */}
+div::-webkit-scrollbar:horizontal{ height: 4px; /* 1 - горизонтальный скроллбар */}
+div::-webkit-scrollbar-button {background: rgba(128, 96, 119, 0); /* 2 - кнопка */}
+div::-webkit-scrollbar-track {background: #596180;/* 3 - трек */}
+div::-webkit-scrollbar-track-piece { background: rgb(247, 245, 247); /* 4 – видимая часть трека */ }
+div::-webkit-scrollbar-thumb {background: rgba(74, 113, 128, 0.57); border-radius: 5px; -webkit-box-shadow: inset 0 0 3px rgba(0, 0, 0, 0); /* 5 - ползунок */}
+
+textarea::-webkit-scrollbar{ width: 4px; /* 1 - вертикальный скроллбар */}
+textarea::-webkit-scrollbar:horizontal{ height: 4px; /* 1 - горизонтальный скроллбар */}
+textarea::-webkit-scrollbar-button {background: rgba(128, 96, 119, 0); /* 2 - кнопка */}
+textarea::-webkit-scrollbar-track {background: #596180;/* 3 - трек */}
+textarea::-webkit-scrollbar-track-piece { background: rgb(247, 245, 247); /* 4 – видимая часть трека */ }
+textarea::-webkit-scrollbar-thumb {background: rgba(74, 113, 128, 0.57); border-radius: 5px; -webkit-box-shadow: inset 0 0 3px rgba(0, 0, 0, 0); /* 5 - ползунок */}
