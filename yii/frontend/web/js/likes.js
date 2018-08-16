@@ -59,12 +59,14 @@ $(document).ready(function () {
         return false;
     });
 
-    // $('button.edit-comment').click(function(){
-    //     var hidden = $(this).siblings('.row').children('p');
-    //     var params = {
-    //         'id': $(this).attr('data-id')
-    //     }
-    // });
+    $('button.edit-comment').click(function(){
+        var commentId = $(this).attr('data-id');
+        var commentText = $(this).siblings('.comment-text').text();
+
+        $('#comment-id').val(commentId);
+        $('#editComment').find('#comment-comment').text(commentText);
+
+    });
 
 
 });

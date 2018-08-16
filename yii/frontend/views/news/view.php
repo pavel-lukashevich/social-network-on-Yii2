@@ -98,7 +98,7 @@ $this->title = Html::encode($model->heading);
                                     <a href='/profile/<?= $comments->user_id; ?>' class='btn'><?= Html::encode($users[$comments->user_id]['username']); ?></a>
                                 </div>
                             </div>
-                            <p>
+                            <p class="comment-text">
                                 <?php echo HtmlPurifier::process($comments->comment); ?>
                             </p>
                             <!--          like-dislike                  -->
