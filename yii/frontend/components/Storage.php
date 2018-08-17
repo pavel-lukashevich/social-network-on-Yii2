@@ -20,9 +20,10 @@ class Storage extends Component implements StorageInterface
     /**
      * Save given UploadedFile instance to disk
      * @param UploadedFile $file
-     * @width integer, default 800
-     * @height integer, default 600
-     * @return string|null
+     * @param int $width
+     * @param int $height
+     * @return mixed|false
+     * @throws \yii\base\Exception
      */
     public function saveUploadedFile(UploadedFile $file, $width = 800, $height = 600)
     {
@@ -30,11 +31,11 @@ class Storage extends Component implements StorageInterface
 
         if ($path && $file->saveAs($path)) {
             // масштабируем изображение до размера 800х600 пикселей, и пересохраняем его в темп
-//           echo $patchToResize = $this->getFile($path);
             if (self::resizeAndCropImage($path, $path, $width, $height)) {
                 return $this->fileName;
             }
         }
+        return false;
     }
 
 
@@ -43,6 +44,9 @@ class Storage extends Component implements StorageInterface
      * Prepare path to save uploaded file
      * @param UploadedFile $file
      * @return string|null
+     * @param UploadedFile $file
+     * @return string|false
+     * @throws \yii\base\Exception
      */
     protected function preparePath(UploadedFile $file)
     {
@@ -56,13 +60,14 @@ class Storage extends Component implements StorageInterface
         if (FileHelper::createDirectory(dirname($path))) {
             return $path;
         }
+        return false;
     }
 
     /**
      * @param UploadedFile $file
      * @return string
      */
-    protected function getFilename(UploadedFile $file)
+    protected function getFileName(UploadedFile $file)
     {
         // $file->tempname   -   /tmp/qio93kf
 

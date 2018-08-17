@@ -48,30 +48,33 @@ return [
                 'friends/delete-subscribe/follow_id=<follower_id:\d+>' => 'friends/delete-subscribe',
                 'friends/add-subscribe/follow_id=<follower_id:\d+>' => 'friends/add-subscribe',
                 'friends/all/p-<pageNum:\d+>' => 'friends/all',
-                'friends/all' => 'friends/all',
-
                 'friends/common/<type:\w+>/id=<userId:\d+>/p-<pageNum:\d+>' => 'friends/common',
                 'friends/common/<type:\w+>/id=<userId:\d+>' => 'friends/common',
 
                 'friends/mutuality/p-<pageNum:\d+>' => 'friends/mutuality',
-                'friends/mutuality' => 'friends/mutuality',
 
                 'friends/follower/p-<pageNum:\d+>' => 'friends/follower',
                 'friends/follower/id=<userId:\d+>/p-<pageNum:\d+>' => 'friends/follower',
                 'friends/follower/id=<userId:\d+>' => 'friends/follower',
-                'friends/follower' => 'friends/follower',
 
                 'friends/subscribe/p-<pageNum:\d+>' => 'friends/subscribe',
                 'friends/subscribe/id=<userId:\d+>/p-<pageNum:\d+>' => 'friends/subscribe',
                 'friends/subscribe/id=<userId:\d+>' => 'friends/subscribe',
-                'friends/subscribe' => 'friends/subscribe',
 
                 'profile/edit/id=<userId:\d+>' => 'profile/edit',
-                'profile/edit' => 'profile/edit',
-                'profile/upload' => 'profile/upload',
                 'profile/p-<pageNum:\d+>' => 'profile/index',
                 'profile/<userId:\d+>/p-<pageNum:\d+>' => 'profile/index',
                 'profile/<userId:\d+>' => 'profile/index',
+
+                'gallery/view/img-<imgId:\d+>/p-<pageNum:\d+>' => 'gallery/view',
+                'gallery/view/img-<imgId:\d+>' => 'gallery/view',
+                'gallery/hide/n-<imgId:\d+>' => 'gallery/hide',
+                'gallery/show/n-<imgId:\d+>' => 'gallery/show',
+                'gallery/delete/n-<imgId:\d+>' => 'gallery/delete',
+                'gallery/index/id=<userId:\d+>/p-<pageNum:\d+>' => 'gallery/index',
+                'gallery/index/p-<pageNum:\d+>' => 'gallery/index',
+                'gallery/p-<pageNum:\d+>' => 'gallery/index',
+                'gallery' => 'gallery/index',
 
                 'comment/delete/n-<commentId:\d+>' => 'comment/delete',
 
@@ -82,7 +85,7 @@ return [
                 'news/view/post-<postId:\d+>/p-<pageNum:\d+>' => 'news/view',
                 'news/view/post-<postId:\d+>' => 'news/view',
                 'news/index/p-<pageNum:\d+>' => 'news/index',
-                'news/index' => 'news/index',
+//                'news/index' => 'news/index',
                 'news/<typeList:friends>/p-<pageNum:\d+>' => 'news/index',
                 'news/<typeList:friends>' => 'news/index',
                 'news' => 'news/index',

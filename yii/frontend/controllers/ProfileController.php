@@ -6,12 +6,9 @@ use Yii;
 use yii\web\Controller;
 use common\models\User;
 use frontend\models\EditProfileForm;
-use yii\web\UploadedFile;
 use yii\web\Response;
 use frontend\models\ImageLoader;
-use frontend\models\Gallery as GalleryList;
 use frontend\models\News;
-//use frontend\models\UploadForm;
 use common\models\Pagination;
 
 /**
@@ -95,30 +92,4 @@ class ProfileController extends Controller
         ]);
     }
 
-
-    /**
-     * @return array
-     */
-    public function actionUploadPicture()
-    {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $model = new ImageLoader();
-        $model->picture = UploadedFile::getInstance($model, "picture");
-
-        if ($model->validate()) {
-            $user = User::find()->where(["id" => Yii::$app->user->id])->one();
-            $user->avatar = Yii::$app->storage->saveUploadedFile($model->picture, 800, 600);
-            // 15/27/30/379e706840f951d22de02458a4788eb55f.jpg
-
-            $gallery = new GalleryList();
-            if ($user->save(false, ['avatar']) && $gallery->addPicture($user->avatar)) {
-                return [
-                    'success' => true,
-                    'pictureUri' => Yii::$app->storage->getFile($user->avatar),
-                ];
-            }
-        }
-        return ['success' => false, 'errors' => $model->getErrors()];
-    }
 }

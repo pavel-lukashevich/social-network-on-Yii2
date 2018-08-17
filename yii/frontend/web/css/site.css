@@ -219,8 +219,18 @@ a.desc:after {
     padding:5px;
 }
 .thumb img:hover {
-    filter: gray; /* IE6-9 */
+    filter: sepia(60%);
+    -webkit-filter: sepia(60%);
+}
+
+.hide-thumb img {
+    transform: rotate(-7deg);
+    filter: sepia(60%);
     -webkit-filter: grayscale(1);
+}
+
+.hide-thumb img:hover {
+    transform: rotate(0deg);
 }
 .thumb {
     padding:5px;
@@ -245,11 +255,21 @@ a.desc:after {
 
 .user-text, .comment-text {
     overflow-y: scroll;
-    overflow-x:hidden;
+    overflow-x: hidden;
     padding-left: 10px;
     padding-right: 10px;
     max-height: 300px;
     border-top-style: none;
+    text-align: left;
+}
+
+.comment-text {
+     white-space: pre-wrap;
+     text-align: left;
+}
+
+.news-text {
+    text-align: left;
 }
 
 .user-text-for-profile {
@@ -259,6 +279,18 @@ a.desc:after {
     padding-right: 10px;
     max-height: 500px;
     border-top-style: none;
+    text-align: left;
+}
+
+.image-background {
+    background: #fff;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid rgba(142, 142, 142, 0.44);
+}
+
+.img-rounded{
+    border-radius: 15%;
 }
 
 body::-webkit-scrollbar{ width: 7px;}

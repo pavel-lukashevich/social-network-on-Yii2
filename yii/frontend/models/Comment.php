@@ -4,7 +4,6 @@ namespace frontend\models;
 
 use Yii;
 use common\models\User;
-use frontend\models\News;
 
 /**
  * This is the model class for table "comment".
@@ -23,6 +22,10 @@ use frontend\models\News;
 class Comment extends \yii\db\ActiveRecord
 {
     const COMMENT_FOR_PAGE = 10;
+    const TYPE_ALL = 0;
+    const TYPE_TEXT = 1;
+    const TYPE_HTML = 2;
+    const TYPE_IMAGE = 3;
 
     /**
      * {@inheritdoc}
@@ -50,12 +53,12 @@ class Comment extends \yii\db\ActiveRecord
      * @param $postId
      * @return mixed
      */
-    public static function count($postId)
+    public static function count($postId, $type = self::TYPE_TEXT)
     {
         $countComment = Comment::find()
             ->select(['count(*)'])
-            ->where(["news_id" => $postId])
-            ->andWhere(['=','status', '10'])
+            ->where(['news_id' => $postId])
+//            ->andWhere(['type' => $type])
             ->asArray()
             ->one();
 
@@ -118,6 +121,11 @@ class Comment extends \yii\db\ActiveRecord
         } else return new User();
     }
 
+    /**
+     * @param $comment_id
+     * @param $user_id
+     * @return array|null|\yii\db\ActiveRecord
+     */
     public function isRateLike($comment_id, $user_id){
 
         $comment = self::getLikeDislikeNews($comment_id);
@@ -172,7 +180,7 @@ class Comment extends \yii\db\ActiveRecord
     }
 
     /**
-     * @param $news_id
+     * @param $comment_id
      * @return array|null|\yii\db\ActiveRecord
      */
     public static function getLikeDislikeNews($comment_id)

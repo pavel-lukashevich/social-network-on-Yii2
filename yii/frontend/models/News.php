@@ -47,7 +47,7 @@ class News extends \yii\db\ActiveRecord
             [['user_id', 'date', 'status'], 'integer'],
             [['like', 'dislike'], 'string'],
             [['heading'], 'string', 'max' => 150],
-            [['tags', 'preview'], 'string', 'max' => 255],
+            [['tags'], 'string', 'max' => 255],
             [['text'], 'string', 'max' => 5000],
         ];
     }
@@ -86,7 +86,7 @@ class News extends \yii\db\ActiveRecord
     {
         if ($ids == null) {
             $news = self::find()
-                ->select(['id', 'user_id', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'comment_count'])
+//                ->select(['id', 'user_id', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'comment_count'])
                 ->where(['=','status', '10'])
                 ->limit(self::NEWS_FOR_PAGE)
                 ->offset($offset)
@@ -94,7 +94,7 @@ class News extends \yii\db\ActiveRecord
                 ->all();
         }else {
             $news = self::find()
-                ->select(['id', 'user_id', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'comment_count'])
+//                ->select(['id', 'user_id', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'comment_count'])
                 ->where("user_id IN ($ids)")
                 ->andWhere(['=', 'status', '10'])
                 ->limit(self::NEWS_FOR_PAGE)
@@ -112,7 +112,7 @@ class News extends \yii\db\ActiveRecord
     public static function findFullNews($news_id)
     {
         $news = self::find()
-                ->select(['id', 'user_id', 'tags', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'status', 'comment_count'])
+//                ->select(['id', 'user_id', 'tags', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'status', 'comment_count'])
                 ->where(['id' => $news_id])
                 ->one();
         return $news;
@@ -126,7 +126,7 @@ class News extends \yii\db\ActiveRecord
     public static function getAllNewsForProfile($offset, $id)
     {
         $news = self::find()
-            ->select(['id', 'user_id', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'status'])
+//            ->select(['id', 'user_id', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'status'])
             ->where(['user_id' => $id])
             ->limit(self::NEWS_FOR_PROFILE)
             ->offset($offset)
@@ -143,7 +143,7 @@ class News extends \yii\db\ActiveRecord
     public static function getNewsForProfile($offset, $id)
     {
             $news = self::find()
-                ->select(['id', 'user_id', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'status'])
+//                ->select(['id', 'user_id', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'status'])
                 ->where(['user_id' => $id])
                 ->andWhere(['=', 'status', '10'])
                 ->limit(self::NEWS_FOR_PROFILE)
@@ -188,8 +188,8 @@ class News extends \yii\db\ActiveRecord
 
         $this->user_id = Yii::$app->user->id;
         $this->date = time();
-        $this->preview = substr($this->text, 0,200);
-        $this->preview = substr($this->text, 0,strrpos ($this->preview, ' ')) . '...';
+//        $this->preview = substr($this->text, 0,200);
+//        $this->preview = substr($this->text, 0,strrpos ($this->preview, ' ')) . '...';
         $this->status = 10;
 
         return true;
@@ -206,8 +206,8 @@ class News extends \yii\db\ActiveRecord
 
         $this->user_id = Yii::$app->user->id;
         $this->date = time();
-        $this->preview = substr($this->text, 0,200);
-        $this->preview = substr($this->text, 0,strrpos ($this->preview, ' ')) . '...';
+//        $this->preview = substr($this->text, 0,200);
+//        $this->preview = substr($this->text, 0,strrpos ($this->preview, ' ')) . '...';
         return true;
     }
 
@@ -323,7 +323,6 @@ class News extends \yii\db\ActiveRecord
         $news = self::find()
             ->select(['id', 'like', 'dislike', 'count_like', 'count_dislike'])
             ->where(['id' => $news_id])
-            ->andWhere(['status' => '10'])
             ->one();
         return $news;
     }

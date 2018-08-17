@@ -47,10 +47,9 @@ $this->title = Html::encode($model->heading);
             </div>
             <div class='row'>
                 <div class='col-md-12'>
-                    <div  class='row'>
+                    <div class='news-text'>
                         <?= HtmlPurifier::process(\frontend\models\News::textOrHtml($model->text)); ?>
                     </div>
-
                     <!--          like-dislike                  -->
                     <?php if ($model->user_id != Yii::$app->user->id): ?>
                         <a class='btn btn-sm  btn-default button-like' href="#" data-id='<?= $model->id;?>'><span class="like-count"><?= $model->count_like;?></span> + </a>
@@ -78,8 +77,9 @@ $this->title = Html::encode($model->heading);
 
 
 <div  class='container'>
-    <a class='btn btn-default pull-left' href = '/news' >перейти к новостям</a>
-    <button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#addComment">добавить комментарий</button>
+    <a class='btn btn-default pull-left' href = '/news' >к новостям</a>
+    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addComment">добавить комментарий</button>
+    <a class='btn btn-default pull-right' href = '/gallery/index/id=<?= $model->user_id; ?>' >к галерее</a>
 </div>
 
 
@@ -139,6 +139,8 @@ $this->title = Html::encode($model->heading);
 
 </div>
 
+<?php if(!is_a($model, 'frontend\models\Gallery')) :?>
+<!--если картинка то не редактируем-->
     <!-- Модальное окно редактирование новости-->
     <div class="modal fade" id="editNews" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
@@ -173,7 +175,7 @@ $this->title = Html::encode($model->heading);
             </div>
         </div>
     </div>
-
+<?php endif;?>
 
     <!-- Модальное окно добавление комментария-->
     <div class="modal fade" id="addComment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"

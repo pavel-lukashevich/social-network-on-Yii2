@@ -38,7 +38,7 @@ $this->title = 'Просмотр профиля ' . Html::encode($user->username
                     <?= FileUpload::widget([
                         'model' => $modelImage,
                         'attribute' => 'picture',
-                        'url' => ['profile/upload-picture'], // your url, this is just for demo purposes,
+                        'url' => ['gallery/upload-avatar',],
                         'options' => ['accept' => 'image/*'],
                         'clientOptions' => [
     //                        'maxFileSize' => 2000000
