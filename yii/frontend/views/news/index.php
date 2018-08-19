@@ -4,6 +4,7 @@
 /* @var $list string */
 /* @var $news \frontend\controllers\NewsController */
 /* @var $users \common\models\User */
+/* @var $modelAdd \frontend\models\UploadForm */
 
 use yii\helpers\Html;
 use frontend\models\News;
@@ -27,39 +28,7 @@ $this->title = 'Новости';
     </div>
 <br>
 
-    <!-- Модальное окно -->
-    <div class="modal fade" id="addNews" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <div class="text-center">
-                        <h4 class="modal-title" id="myModalLabel">добавить новость</h4>
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <div class="text-center">
 
-                        <?php $form = ActiveForm::begin(['id' => 'addNews', 'action' => '/news/create']); ?>
-
-                        <?= $form->field($model, 'heading')->textInput()->label('заголовок') ?>
-                        <?= $form->field($model, 'tags')->textInput()->label('тэги') ?>
-                        <?= $form->field($model, 'text')->label('новость')->textarea(['rows' => '8']) ?>
-
-                        <div class="form-group">
-                            <?= Html::submitButton('добавить новость', ['class' => 'btn btn-default',]) ?>
-                        </div>
-
-                        <?php ActiveForm::end(); ?>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
 <!--список новостей-->
     <div class="body-content text-center">
@@ -90,9 +59,20 @@ $this->title = 'Новости';
                     </div>
                     <div class='row'>
                         <div class='col-md-12'>
-                            <div class='user-text'>
-                                <?= HtmlPurifier::process(News::textOrHtml($newsItem->text)); ?>
-                            </div>
+                            <?php if($newsItem->type == News::TYPE_IMAGE):?>
+                                <div  class="fancyimage">
+                                    <a href="/gallery/index/id=<?= $newsItem->tags;?>" class="fancyimage">
+                                        <img class="img-responsive" src="<?= $newsItem->text;?>" alt="<?= Html::encode($newsItem->heading); ?>">
+                                    </a>
+
+                                </div>
+                            <?php elseif($newsItem->type == News::TYPE_HTML):?>
+                                <div class='user-text'>
+                                    <?= HtmlPurifier::process($newsItem->text); ?>
+                                </div>
+                            <?php elseif($newsItem->type == News::TYPE_TEXT):?>
+                                <div class='user-text news-text'><?= Html::encode($newsItem->text); ?></div>
+                            <?php endif;?>
 <!--          like-dislike                  -->
                             <?php if ($newsItem->user_id != Yii::$app->user->id): ?>
                                 <a class='btn btn-sm  btn-default button-like' href="#" data-id='<?= $newsItem->id;?>'><span class="like-count"><?= $newsItem->count_like;?></span> + </a>
@@ -101,7 +81,9 @@ $this->title = 'Новости';
                                 <span class='circle-btn'><?= $newsItem->count_like;?> + </span>
                                 <span class='circle-btn'> - <?= $newsItem->count_dislike;?></span>
                             <?php endif; ?>
-                            <span class='circle-btn'>всего <?= ($newsItem->comment_count == 0)  ? 0 : $newsItem->comment_count;?> комментариев</span>
+                            <a class='btn-link' href='/news/view/post-<?= $newsItem->id;?>'>
+                                <span class='circle-btn'>всего <?= ($newsItem->comment_count == 0)  ? 0 : $newsItem->comment_count;?> комментариев</span>
+                            </a>
 <!--            like-dislike-end                -->
                         </div>
                     </div>
@@ -113,6 +95,45 @@ $this->title = 'Новости';
 
 <?php if (!empty($pagin))echo $pagin->get();?>
 
+
+    <!-- Модальное окно добавление новости -->
+    <div class="modal fade" id="addNews" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="text-center">
+                        <h4 class="modal-title" id="myModalLabel">добавить новость</h4>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center row">
+
+                        <?php $form = ActiveForm::begin(['id' => 'addNews', 'action' => '/news/create']); ?>
+                        <div class="col-sm-12">
+
+                            <?= $form->field( $model, 'type' )->radioList( ['1' => 'текст', '2' => 'html',] )->label('формат новости');?>
+
+
+                            <?= $form->field($model, 'heading')->textInput(['required' => true,'aria-invalid' => true])->label('заголовок') ?>
+                            <?= $form->field($model, 'tags')->textInput()->label('тэги') ?>
+                            <?= $form->field($model, 'text')->label('новость')->textarea(['rows' => '8']) ?>
+
+                            <div class="form-group">
+                                <?= Html::submitButton('добавить новость', ['class' => 'btn btn-default',]) ?>
+                            </div>
+
+                        </div>
+                        <?php ActiveForm::end(); ?>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <?php
     $this->registerJsFile('/js/likes.js', [

@@ -16,7 +16,7 @@ use common\models\User;
 class Friends extends \yii\db\ActiveRecord
 {
 
-    const FRIEND_FOR_PAGE = 10;
+    const FRIEND_FOR_PAGE = 20;
 
     /**
      * {@inheritdoc}
@@ -53,7 +53,6 @@ class Friends extends \yii\db\ActiveRecord
     }
 
     /**
-     * decode json
      * @return array|mixed
      */
     public function getMySubscribersList()
@@ -91,7 +90,7 @@ class Friends extends \yii\db\ActiveRecord
 
         $subscribe = User::find()->select(['id', 'username', 'avatar'])
             ->where("id IN($users)")
-            ->limit(Friends::FRIEND_FOR_PAGE)
+            ->limit(self::FRIEND_FOR_PAGE)
             ->offset($offset)
             ->orderBy(['id' => SORT_DESC])
             ->all();
@@ -113,7 +112,7 @@ class Friends extends \yii\db\ActiveRecord
 
         $follower = User::find()->select(['id', 'username', 'avatar'])
             ->where("id IN($users)")
-            ->limit(Friends::FRIEND_FOR_PAGE)
+            ->limit(self::FRIEND_FOR_PAGE)
             ->offset($offset)
             ->orderBy(['id' => SORT_DESC])
             ->all();
@@ -138,7 +137,7 @@ class Friends extends \yii\db\ActiveRecord
 
         $subscribe = User::find()->select(['id', 'username', 'avatar'])
             ->where("id IN($users)")
-            ->limit(Friends::FRIEND_FOR_PAGE)
+            ->limit(self::FRIEND_FOR_PAGE)
             ->offset($offset)
             ->orderBy(['id' => SORT_DESC])
             ->all();
@@ -169,7 +168,7 @@ class Friends extends \yii\db\ActiveRecord
      */
     public function addFollower($follower_id)
     {
-        $follower = Friends::find()->where(['user_id' => $follower_id])->one();
+        $follower = self::find()->where(['user_id' => $follower_id])->one();
         if ($follower == null) {
             $follower = new Friends();
             $follower->user_id = $follower_id;
@@ -207,7 +206,7 @@ class Friends extends \yii\db\ActiveRecord
      */
     public function deleteFollower($follower_id)
     {
-        $follower = Friends::find()->where(['user_id' => $follower_id])->one();
+        $follower = self::find()->where(['user_id' => $follower_id])->one();
         $f_arr = $follower->getMyFollowerList();
 
         unset($f_arr[Yii::$app->user->id]);
@@ -225,7 +224,7 @@ class Friends extends \yii\db\ActiveRecord
      */
     public static function isSubscribe($user_id)
     {
-        $user = Friends::find()->where(['user_id' => Yii::$app->user->id])->one();
+        $user = self::find()->where(['user_id' => Yii::$app->user->id])->one();
         if ($user == null) return false;
 
         $s_arr = $user->getMySubscribersList();

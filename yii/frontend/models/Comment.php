@@ -21,11 +21,11 @@ use common\models\User;
  */
 class Comment extends \yii\db\ActiveRecord
 {
-    const COMMENT_FOR_PAGE = 10;
-    const TYPE_ALL = 0;
-    const TYPE_TEXT = 1;
-    const TYPE_HTML = 2;
-    const TYPE_IMAGE = 3;
+    const COMMENT_FOR_PAGE = 20;
+
+    // status: 10-комменты для новосстей, 20-для картинок
+    const COMMENT_NEWS = 10;
+    const COMMENT_IMAGE = 20;
 
     /**
      * {@inheritdoc}
@@ -49,16 +49,22 @@ class Comment extends \yii\db\ActiveRecord
         ];
     }
 
+    public function __construct(array $config = [])
+    {
+        $this->status = self::COMMENT_NEWS;
+        parent::__construct($config);
+    }
+
     /**
      * @param $postId
      * @return mixed
      */
-    public static function count($postId, $type = self::TYPE_TEXT)
+    public static function count($postId, $status = self::COMMENT_NEWS)
     {
         $countComment = Comment::find()
             ->select(['count(*)'])
             ->where(['news_id' => $postId])
-//            ->andWhere(['type' => $type])
+            ->andWhere(['status' => $status])
             ->asArray()
             ->one();
 
@@ -85,12 +91,12 @@ class Comment extends \yii\db\ActiveRecord
      * @param $newsId
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getCommentForNews($offset, $newsId)
+    public static function getCommentForNews($offset, $newsId, $status = self::COMMENT_NEWS)
     {
             $comment = Comment::find()
                 ->select(['id', 'news_id', 'user_id', 'date', 'comment', 'count_like', 'count_dislike'])
                 ->where(["news_id" => $newsId])
-                ->andWhere(['=','status', '10'])
+                ->andWhere(['status' => $status])
                 ->limit(self::COMMENT_FOR_PAGE)
                 ->offset($offset)
                 ->orderBy(['id' => SORT_DESC])
