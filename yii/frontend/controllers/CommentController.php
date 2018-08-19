@@ -2,19 +2,14 @@
 
 namespace frontend\controllers;
 
-use common\models\User;
+use frontend\models\Gallery;
 use Yii;
 use frontend\models\Comment;
 use frontend\models\News;
-use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\Response;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
-/**
- * CommentController implements the CRUD actions for Comment model.
- */
+
 class CommentController extends Controller
 {
     /**
@@ -45,8 +40,13 @@ class CommentController extends Controller
         if ($comment->load(Yii::$app->request->post(), 'Comment')) {
 
             if ($comment->addComment() && $comment->save()){
-                $countComment = Comment::count($comment->news_id);
-                News::updateCommentCount($comment->news_id, $countComment);
+                if ($comment->status == Comment::COMMENT_NEWS) {
+                    $countComment = Comment::count($comment->news_id);
+                    News::updateCommentCount($comment->news_id, $countComment);
+                }elseif ($comment->status == Comment::COMMENT_IMAGE) {
+                    $countComment = Comment::count($comment->news_id, $comment->status);
+                    Gallery::updateCommentCount($comment->news_id, $countComment);
+                }
                 return $this->redirect(Yii::$app->request->referrer);
             }
         }

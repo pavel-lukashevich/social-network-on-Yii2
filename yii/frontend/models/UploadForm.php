@@ -14,29 +14,36 @@ class UploadForm extends Model
      */
     public $imageFiles;
     public $description;
+//    public $heading;
+//    public $tags;
+
 
     public function rules()
     {
         return [
             [['imageFiles'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg', 'maxFiles' => 10],
+//            [['heading', 'tags'], 'trim'],
         ];
     }
 
     /**
      * @param $userId
      * @param string $description
-     * @return bool
+     * @return array|bool
      */
     public function upload($userId, $description = '')
     {
         if ($this->validate()) {
-
+            $img = array();
             foreach ($this->imageFiles as $file) {
                 $patch = Yii::$app->storage->saveUploadedFile($file, 800, 600);
                 $gallery = new Gallery();
-                if (!$gallery->addPicture($patch, $userId, $description)) return false; ;
+//                $img[] = $gallery->addPicture($patch, $userId, $description)
+                if ($gallery->addPicture($patch, $userId, $description)){
+                    $img[] = $patch;
+                }else return false;
             }
-            return true;
+            return $img;
         } else {
             return false;
         }

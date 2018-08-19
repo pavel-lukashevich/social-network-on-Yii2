@@ -6,7 +6,8 @@ use yii\helpers\HtmlPurifier;
 
 /* @var $formComment \frontend\models\Comment */
 /* @var $modelComment array \frontend\models\Comment */
-/* @var $model frontend\models\News */
+/* @var $model frontend\models\Gallery */
+/* @var $modelNews frontend\models\News */
 /* @var $users array \common\models\User */
 /* @var $user \common\models\User */
 /* @var $commentCount \frontend\controllers\NewsController */
@@ -54,7 +55,6 @@ $this->title = Html::encode($model->heading);
                         <?php endif;?>
                                             </div>
 
-                        <!--          like-dislike                  -->
                         <?php if ($model->user_id != Yii::$app->user->id): ?>
                             <a class='btn btn-sm  btn-default button-like' href="#" data-id='<?= $model->id;?>'><span class="like-count"><?= $model->count_like;?></span> + </a>
                             <a class='btn btn-sm  btn-default button-dislike' href="#" data-id='<?= $model->id;?>'> - <span class="dislike-count"><?= $model->count_dislike;?></span></a>
@@ -63,16 +63,17 @@ $this->title = Html::encode($model->heading);
                             <span class='circle-btn'><?= $model->count_like;?> + </span>
                             <span class='circle-btn'> - <?= $model->count_dislike;?></span>
 
-                            <button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-target="#editNews">редактировать</button>
                             <?php if ($model->status == 10): ?>
-                                <a class='btn btn-sm  btn-default' href='/news/hide/n-<?php echo $model->id;?>'>скрыть</a>
+                                <a class='btn btn-sm  btn-default' href='/gallery/hide/n-<?php echo $model->id;?>'>скрыть</a>
                             <?php elseif ($model->status == 0): ?>
-                                <a class='btn btn-sm  btn-default' href='/news/show/n-<?php echo $model->id;?>'>показать</a>
+                                <a class='btn btn-sm  btn-default' href='/gallery/show/n-<?php echo $model->id;?>'>показать</a>
                             <?php endif;?>
-                            <a class='btn btn-sm  btn-default' href='/news/delete/n-<?php echo $model->id;?>'>удалить</a>
+                            <a class='btn btn-sm  btn-default' href='/gallery/delete/n-<?php echo $model->id;?>'>удалить</a>
 
                         <?php endif; ?>
-                        <!--            like-dislike-end                -->
+                        <?php if ($model->status == \frontend\models\Gallery::IMAGE_SHOW): ?>
+                            <button type="button" class="btn btn-sm btn-default" data-id="<?= $model->user_id;?>" data-toggle="modal" data-target="#addNews">рассказать</button>
+                        <?php endif;?>
                     </div>
                 </div>
             </div>
@@ -81,9 +82,8 @@ $this->title = Html::encode($model->heading);
 
 
         <div  class='container'>
-            <a class='btn btn-default pull-left' href = '/news' >к новостям</a>
-            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addComment">добавить комментарий</button>
-            <a class='btn btn-default pull-right' href = '/gallery/index/id=<?= $model->user_id; ?>' >к галерее</a>
+            <a class='btn btn-default pull-left' href = '/gallery/index/id=<?= $model->user_id; ?>' >к галерее</a>
+            <button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#addComment">добавить комментарий</button>
         </div>
 
 
@@ -143,6 +143,46 @@ $this->title = Html::encode($model->heading);
 
     </div>
 
+    <!-- Модальное окно добавление новости -->
+    <div class="modal fade" id="addNews" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="text-center">
+                        <h4 class="modal-title" id="myModalLabel">добавить новость</h4>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center row">
+
+                        <?php $form = ActiveForm::begin(['id' => 'addNews', 'action' => '/news/create']); ?>
+
+                        <div class="col-sm-12">
+                            <?= $form->field($modelNews, 'heading')->textInput(['required' => true,'aria-invalid' => true])->label('заголовок') ?>
+
+                            <?= Html::activeHiddenInput($modelNews, 'type') ?>
+                            <?= Html::activeHiddenInput($modelNews, 'tags') ?>
+                            <?= Html::activeHiddenInput($modelNews, 'text') ?>
+                            <img class="img-responsive" id="image-news" src="<?= $model->getPicture();?>">
+
+
+                            <div class="form-group">
+                                <?= Html::submitButton('добавить новость', ['class' => 'btn btn-sm btn-default',]) ?>
+                            </div>
+
+                        </div>
+                        <?php ActiveForm::end(); ?>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 <?php if(!is_a($model, 'frontend\models\Gallery')) :?>
     <!--если картинка то не редактируем-->
     <!-- Модальное окно редактирование новости-->
@@ -200,6 +240,7 @@ $this->title = Html::encode($model->heading);
                         <?php $form = ActiveForm::begin(['id' => 'addComment', 'action' => '/comment/add']); ?>
 
                         <?= Html::activeHiddenInput($formComment, 'news_id') ?>
+                        <?= Html::activeHiddenInput($formComment, 'status') ?>
                         <?= Html::activeHiddenInput($formComment, 'user_id') ?>
                         <?= $form->field($formComment, 'comment')->label('комментарий')->textarea(['rows' => '8']) ?>
 

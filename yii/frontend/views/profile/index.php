@@ -12,6 +12,7 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\HtmlPurifier;
 use dosamigos\fileupload\FileUpload;
 use frontend\models\Friends;
+use frontend\models\News;
 
 $this->title = 'Просмотр профиля ' . Html::encode($user->username);
 ?>
@@ -25,14 +26,13 @@ $this->title = 'Просмотр профиля ' . Html::encode($user->username
     <div class="row">
         <div class="col-md-5">
             <center>
-
                 <?php if (Yii::$app->user->id == $user->id): ?>
                     <a class="btn btn-sm btn-default" href="/profile/edit">Редактировать мой профиль</a><br>
                 <?php endif; ?>
 
                 <img src="<?= $user->getPicture(); ?>" class="img-rounded"  id="profile-picture"/>
 
-                <p>
+                <div>
                     <!-- если на своей странице, то показываем кнопки-->
                     <?php if (Yii::$app->user->id == $user->id): ?>
                     <?= FileUpload::widget([
@@ -62,7 +62,7 @@ $this->title = 'Просмотр профиля ' . Html::encode($user->username
 
                     <div class="alert alert-success display-none" id="profile-image-success">фото успешно обновлено</div>
                     <div class="alert alert-danger display-none" id="profile-image-fail"></div>
-                </p>
+                </div>
 
                 <?php if ($user->id != Yii::$app->user->id): ?>
                     <?php if (Friends::isSubscribe($user->id)): ?>
@@ -195,31 +195,43 @@ $this->title = 'Просмотр профиля ' . Html::encode($user->username
                 </div>
                 <div class='row clear'>
                     <div class='col-md-12'>
-                        <div class='user-text-for-profile'>
-                            <?php echo HtmlPurifier::process(\frontend\models\News::textOrHtml($newsItem->text)); ?>
-                        </div>
+                        <?php if($newsItem->type == News::TYPE_IMAGE):?>
+                            <div  class="fancyimage"><center>
+                                    <a href="http://social/gallery/index/id=<?= $newsItem->tags;?>" class="fancyimage">
+                                        <img class="img-responsive" src="<?= $newsItem->text;?>" alt="<?= Html::encode($newsItem->heading); ?>">
+                                    </a></center>
+                            </div>
+                        <?php elseif($newsItem->type == News::TYPE_HTML):?>
+                            <div class='col-sm-12'>
+                                <?= HtmlPurifier::process($newsItem->text); ?>
+                            </div>
+                        <?php elseif($newsItem->type == News::TYPE_TEXT):?>
+                            <div class='user-text news-text'><?= Html::encode($newsItem->text); ?></div>
+                        <?php endif;?>
+
+                        <?php if ($newsItem->user_id != Yii::$app->user->id): ?>
+                            <a class='btn btn-sm  btn-default button-like' href="#" data-id='<?= $newsItem->id;?>'><span class="like-count"><?= $newsItem->count_like;?></span> + </a>
+                            <a class='btn btn-sm  btn-default button-dislike' href="#" data-id='<?= $newsItem->id;?>'> - <span class="dislike-count"><?= $newsItem->count_dislike;?></span></a>
+                        <?php else :?>
+
+                            <span class='circle-btn'><?= $newsItem->count_like;?> + </span>
+                            <span class='circle-btn'> - <?= $newsItem->count_dislike;?></span>
+
+                            <?php if($newsItem->type != News::TYPE_IMAGE):?>
+                                <a class='btn btn-sm btn-default' href='/news/view/post-<?= $newsItem->id;?>'>просмотр и редактирование</a>
+                            <?php endif;?>
+
+                            <?php if ($newsItem->status == 10): ?>
+                                <a class='btn btn-sm  btn-default' href='/news/hide/n-<?php echo $newsItem->id;?>'>скрыть</a>
+                            <?php elseif ($newsItem->status == 0): ?>
+                                <a class='btn btn-sm  btn-default' href='/news/show/n-<?php echo $newsItem->id;?>'>показать</a>
+                            <?php endif;?>
+                            <a class='btn btn-sm  btn-default' href='/news/delete/n-<?php echo $newsItem->id;?>'>удалить</a>
+
+                        <?php endif; ?>
                     </div>
                 </div>
-                <!--          like-dislike                  -->
-                <?php if ($newsItem->user_id != Yii::$app->user->id): ?>
-                    <a class='btn btn-sm  btn-default button-like' href="#" data-id='<?= $newsItem->id;?>'><span class="like-count"><?= $newsItem->count_like;?></span> + </a>
-                    <a class='btn btn-sm  btn-default button-dislike' href="#" data-id='<?= $newsItem->id;?>'> - <span class="dislike-count"><?= $newsItem->count_dislike;?></span></a>
-                <?php else :?>
-
-                    <span class='circle-btn'><?= $newsItem->count_like;?> + </span>
-                    <span class='circle-btn'> - <?= $newsItem->count_dislike;?></span>
-
-                    <a class='btn btn-sm btn-default' href='/news/view/post-<?= $newsItem->id;?>'>просмотр и редактирование</a>
-
-                    <?php if ($newsItem->status == 10): ?>
-                        <a class='btn btn-sm  btn-default' href='/news/hide/n-<?php echo $newsItem->id;?>'>скрыть</a>
-                    <?php elseif ($newsItem->status == 0): ?>
-                        <a class='btn btn-sm  btn-default' href='/news/show/n-<?php echo $newsItem->id;?>'>показать</a>
-                    <?php endif;?>
-
-                <?php endif; ?>
-                <!--          like-dislike-end                -->
-            </div>
+             </div>
             <?php endforeach; ?>
 
             <?php if (!empty($pagin))echo $pagin->get();?>

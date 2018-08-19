@@ -19,7 +19,8 @@ use Yii;
  */
 class Gallery extends \yii\db\ActiveRecord
 {
-    const IMAGE_FOR_PAGE = 12;
+    const IMAGE_FOR_PAGE = 24;
+
     const IMAGE_HIDE = 0;
     const IMAGE_SHOW = 10;
 
@@ -65,20 +66,25 @@ class Gallery extends \yii\db\ActiveRecord
 
 
     /**
-     * @param $avatar
+     * @param $image
+     * @param $userId
+     * @param string $description
      * @return bool
      */
     public function addPicture($image, $userId, $description = '')
     {
 
-        $description = trim($description);
-        $description = ($description != '') ? $description : 'image';
+        if (!$this->heading){
+            $description = trim($description);
+            $description = ($description != '') ? $description : 'image';
+            $poz = stripos($description, ' ');
+            $poz = $poz == 0 ? strlen($description) : $poz;
+            $this->heading = substr($description, 0, $poz) . ' ' . date('Y-m-d', $this->date);
+            $this->tags = $description;
+        }
+
         $this->user_id = $userId;
         $this->date = time();
-        $poz = stripos($description, ' ');
-        $poz = $poz == 0 ? strlen($description) : $poz;
-        $this->heading = substr($description, 0, $poz) . ' ' . date('Y-m-d', $this->date);
-        $this->tags = $description;
         $this->image = $image;
 
         if($this->save(false)){
@@ -87,11 +93,21 @@ class Gallery extends \yii\db\ActiveRecord
         return false;
     }
 
+    /**
+     * @param $imgId
+     * @return array|null|\yii\db\ActiveRecord
+     */
     public static function findOneImg($imgId)
     {
         return self::find()->where(['id' => $imgId])->one();
     }
 
+    /**
+     * @param $offset
+     * @param $userId
+     * @param int $status
+     * @return array|\yii\db\ActiveRecord[]
+     */
     public static function findImg($offset, $userId, $status = self::IMAGE_SHOW)
     {
         if ($status == self::IMAGE_HIDE) {
@@ -113,6 +129,11 @@ class Gallery extends \yii\db\ActiveRecord
         return $img;
     }
 
+    /**
+     * @param $userId
+     * @param int $status
+     * @return mixed
+     */
     public static function count($userId, $status = self::IMAGE_SHOW)
     {
         if ($status == self::IMAGE_HIDE){
@@ -134,7 +155,7 @@ class Gallery extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return string
+     * @return mixed
      */
     public function getPicture()
     {
@@ -223,11 +244,11 @@ class Gallery extends \yii\db\ActiveRecord
      */
     public static function getLikeDislikeImg($img_id)
     {
-        $news = self::find()
+        $img = self::find()
             ->select(['id', 'like', 'dislike', 'count_like', 'count_dislike'])
             ->where(['id' => $img_id])
             ->one();
-        return $news;
+        return $img;
     }
 
     /**
@@ -295,6 +316,20 @@ class Gallery extends \yii\db\ActiveRecord
         }
         return false;
 
+    }
+
+    /**
+     * @param $id
+     * @param $countComment
+     * @return bool
+     */
+    public static function updateCommentCount($id, $countComment){
+        $img = self::find()->where(['id' => $id])->one();
+        $img->comment_count = $countComment;
+        if ($img->save(false)){
+            return true;
+        }
+        return false;
     }
 
 }

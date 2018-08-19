@@ -10,6 +10,7 @@ use frontend\models\News;
 use common\models\Pagination;
 use yii\web\Controller;
 use yii\web\Response;
+use frontend\models\UploadForm;
 
 
 class NewsController extends Controller
@@ -59,6 +60,8 @@ class NewsController extends Controller
 
         }else $typeList = 'all';
 
+        $modelAdd = new UploadForm();
+
         $count = News::count($users_id);
 
         $news = News::findNews($offset, $users_id);
@@ -74,13 +77,15 @@ class NewsController extends Controller
             'users' => $users,
             'pagin' => $pagin,
             'model' => $model,
+            'modelAdd' => $modelAdd,
         ]);
 
     }
 
     /**
      * @param $postId
-     * @return string
+     * @param int $pageNum
+     * @return string|Response
      */
     public function actionView($postId, $pageNum = 1)
     {
@@ -126,13 +131,10 @@ class NewsController extends Controller
             'users' => $users,
         ]);
 
-
     }
 
     /**
-     * Creates a new News model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
+     * @return Response
      */
     public function actionCreate()
     {
@@ -150,7 +152,6 @@ class NewsController extends Controller
 
         return $this->redirect(Yii::$app->request->referrer);
     }
-
 
     /**
      * @return array|Response

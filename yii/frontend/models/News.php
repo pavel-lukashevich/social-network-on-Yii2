@@ -26,7 +26,13 @@ class News extends \yii\db\ActiveRecord
 //    public $text;
 
     const NEWS_FOR_PAGE = 20;
-    const NEWS_FOR_PROFILE = 5;
+    const NEWS_FOR_PROFILE = 10;
+
+    const TYPE_TEXT = 1;
+    const TYPE_HTML = 2;
+    const TYPE_IMAGE = 3;
+
+
 
     /**
      * {@inheritdoc}
@@ -34,6 +40,12 @@ class News extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'news';
+    }
+
+    public function __construct(array $config = [])
+    {
+        parent::__construct($config);
+        $this->type = self::TYPE_HTML;
     }
 
     /**
@@ -44,6 +56,7 @@ class News extends \yii\db\ActiveRecord
         return [
             [['heading','text'], 'required'],
 //            [['user_id', 'date', 'heading', 'preview', 'text'], 'required'],
+            [['type'], 'integer', 'max' => 5000],
             [['user_id', 'date', 'status'], 'integer'],
             [['like', 'dislike'], 'string'],
             [['heading'], 'string', 'max' => 150],
@@ -86,7 +99,6 @@ class News extends \yii\db\ActiveRecord
     {
         if ($ids == null) {
             $news = self::find()
-//                ->select(['id', 'user_id', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'comment_count'])
                 ->where(['=','status', '10'])
                 ->limit(self::NEWS_FOR_PAGE)
                 ->offset($offset)
@@ -94,7 +106,6 @@ class News extends \yii\db\ActiveRecord
                 ->all();
         }else {
             $news = self::find()
-//                ->select(['id', 'user_id', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'comment_count'])
                 ->where("user_id IN ($ids)")
                 ->andWhere(['=', 'status', '10'])
                 ->limit(self::NEWS_FOR_PAGE)
@@ -112,7 +123,6 @@ class News extends \yii\db\ActiveRecord
     public static function findFullNews($news_id)
     {
         $news = self::find()
-//                ->select(['id', 'user_id', 'tags', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'status', 'comment_count'])
                 ->where(['id' => $news_id])
                 ->one();
         return $news;
@@ -126,7 +136,6 @@ class News extends \yii\db\ActiveRecord
     public static function getAllNewsForProfile($offset, $id)
     {
         $news = self::find()
-//            ->select(['id', 'user_id', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'status'])
             ->where(['user_id' => $id])
             ->limit(self::NEWS_FOR_PROFILE)
             ->offset($offset)
@@ -143,7 +152,6 @@ class News extends \yii\db\ActiveRecord
     public static function getNewsForProfile($offset, $id)
     {
             $news = self::find()
-//                ->select(['id', 'user_id', 'date', 'heading', 'text', 'like', 'dislike', 'count_like', 'count_dislike', 'status'])
                 ->where(['user_id' => $id])
                 ->andWhere(['=', 'status', '10'])
                 ->limit(self::NEWS_FOR_PROFILE)
@@ -186,14 +194,27 @@ class News extends \yii\db\ActiveRecord
             return null;
         }
 
+        if ($this->type == 0) $this->type = self::TYPE_HTML;
+
         $this->user_id = Yii::$app->user->id;
         $this->date = time();
-//        $this->preview = substr($this->text, 0,200);
-//        $this->preview = substr($this->text, 0,strrpos ($this->preview, ' ')) . '...';
-        $this->status = 10;
 
         return true;
     }
+
+//    public function addImage()
+//    {
+//        if (!$this->validate()) {
+//            return null;
+//        }
+//
+//        $this->user_id = Yii::$app->user->id;
+//        $this->date = time();
+//        $this->status = self::TYPE_IMAGE;
+
+//
+//        return true;
+//    }
 
     /**
      * @return bool|null
@@ -206,8 +227,6 @@ class News extends \yii\db\ActiveRecord
 
         $this->user_id = Yii::$app->user->id;
         $this->date = time();
-//        $this->preview = substr($this->text, 0,200);
-//        $this->preview = substr($this->text, 0,strrpos ($this->preview, ' ')) . '...';
         return true;
     }
 

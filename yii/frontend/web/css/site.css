@@ -9,7 +9,7 @@ body {
     color: #53006e;
 }
 a, .btn {
-    color: #53006e;
+    color: #200988;
 }
 
 .wrap {
@@ -263,6 +263,10 @@ a.desc:after {
     text-align: left;
 }
 
+.user-text {
+    min-height: 3em;
+}
+
 .comment-text {
      white-space: pre-wrap;
      text-align: left;
@@ -270,6 +274,7 @@ a.desc:after {
 
 .news-text {
     text-align: left;
+    white-space: pre-wrap;
 }
 
 .user-text-for-profile {
@@ -287,6 +292,14 @@ a.desc:after {
     text-align: center;
     border-radius: 5px;
     border: 1px solid rgba(142, 142, 142, 0.44);
+}
+.fancyimage{
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.fancyimage:hover{
+    filter: sepia(40%);
 }
 
 .img-rounded{

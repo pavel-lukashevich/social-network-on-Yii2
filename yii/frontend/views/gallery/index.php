@@ -6,6 +6,7 @@ use frontend\models\Gallery;
 
 /* @var $this yii\web\View */
 /* @var $user \common\models\User */
+/* @var $modelNews \frontend\models\News */
 /* @var $model \frontend\models\Gallery */
 /* @var $modelAdd \frontend\models\UploadForm */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -47,14 +48,15 @@ $this->title = 'Галерея';
                 <div class="col-md-3 col-sm-4 col-xs-6 thumb <?= $img->status == Gallery::IMAGE_HIDE ? ' hide-thumb' : '';?>">
                     <div class="image-background">
                         <?= date('d-m-Y / H:i', $img->date); ?>
-<!--                    счётчик комментов    -->
-                        <span class='circle-btn'>comment: <?php // echo ($img->comment_count == 0)  ? 0 : $img->comment_count;?></span>
+                        <a class="fancyimage" rel="group" href="/gallery/view/img-<?= $img->id;?>">
+                            <span class='circle-btn'>comment: <?php  echo ($img->comment_count == 0)  ? 0 : $img->comment_count;?></span>
+                        </a>
                         <a class="fancyimage" rel="group" href="/gallery/view/img-<?= $img->id;?>">
                             <img class="img-responsive" src="<?= $img->getPicture();?>" alt="<?=$img->heading ?>" />
                         </a>
                         <div>
                         <?php if ($img->status == Gallery::IMAGE_SHOW): ?>
-                            <a class='btn btn-sm  btn-default' href='/new-s/dele-te/n-<?php echo $img->id;?>'>рассказать</a>
+                            <button type="button" class="btn btn-sm btn-default add-image-news" data-id="<?= $img->user_id;?>" data-toggle="modal" data-target="#addNews">рассказать</button>
                         <?php endif;?>
                         <?php if($user->id != Yii::$app->user->id):?>
                             <a class='btn btn-sm  btn-default button-gal-like' href="#" data-id='<?= $img->id;?>'><span class="like-count"><?= $img->count_like;?></span> + </a>
@@ -85,6 +87,49 @@ $this->title = 'Галерея';
 
 
 </div>
+
+    <!-- Модальное окно добавление новости -->
+    <div class="modal fade" id="addNews" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="text-center">
+                        <h4 class="modal-title" id="myModalLabel">добавить новость</h4>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center row">
+
+                        <?php $form = ActiveForm::begin(['id' => 'addNews', 'action' => '/news/create']); ?>
+
+                        <div class="col-sm-12">
+                            <?= $form->field($modelNews, 'heading')->textInput(['required' => true,'aria-invalid' => true])->label('заголовок') ?>
+<!--                            --><?//= $form->field($modelNews, 'tags')->textInput()->label('тэги') ?>
+
+                            <?= Html::activeHiddenInput($modelNews, 'type') ?>
+                            <?= Html::activeHiddenInput($modelNews, 'tags') ?>
+                            <?= Html::activeHiddenInput($modelNews, 'text') ?>
+                            <img class="img-responsive" id="image-news" src="">
+<!--                            --><?//= $form->field($modelNews, 'text')->label('новость')->textarea(['rows' => '8']) ?>
+
+                            <div class="form-group">
+                                <?= Html::submitButton('добавить новость', ['class' => 'btn btn-sm btn-default',]) ?>
+                            </div>
+
+                        </div>
+                        <?php ActiveForm::end(); ?>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 
 <?php

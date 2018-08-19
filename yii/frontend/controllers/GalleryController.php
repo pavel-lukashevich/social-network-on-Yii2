@@ -5,6 +5,7 @@ namespace frontend\controllers;
 use common\models\User;
 use frontend\models\Comment;
 use frontend\models\ImageLoader;
+use frontend\models\News;
 use frontend\models\UploadForm;
 use Yii;
 use frontend\models\Gallery;
@@ -13,9 +14,7 @@ use yii\web\Response;
 use yii\web\UploadedFile;
 use common\models\Pagination;
 
-/**
- * GalleryController implements the CRUD actions for Gallery model.
- */
+
 class GalleryController extends Controller
 {
     /**
@@ -34,8 +33,9 @@ class GalleryController extends Controller
 //    }
 
     /**
-     * Lists all Gallery models.
-     * @return mixed
+     * @param int $pageNum
+     * @param null $userId
+     * @return string|Response
      */
     public function actionIndex($pageNum = 1, $userId = null)
     {
@@ -55,21 +55,30 @@ class GalleryController extends Controller
         } else {
             $model = Gallery::findImg($offset, $userId, Gallery::IMAGE_SHOW);
         }
-//        $model = Gallery::find()->where(['user_id' => $userId])->andWhere(['status' => Gallery::IMAGE_SHOW])->orderBy(['id' => SORT_DESC])->all();
 
         $status = ($userId == Yii::$app->user->id) ? Gallery::IMAGE_HIDE : Gallery::IMAGE_SHOW;
         $count = Gallery::count($userId, $status);
         $pagin = new Pagination($pageNum, $count, Gallery::IMAGE_FOR_PAGE);
+
+        $modelNews = new News();
+        $modelNews->type = News::TYPE_IMAGE;
+
 
         return $this->render('index', [
             'user' => $user,
             'model' => $model,
             'modelImage' => $modelImage,
             'modelAdd' => $modelAdd,
+            'modelNews' => $modelNews,
             'pagin' => $pagin,
         ]);
     }
 
+    /**
+     * @param $imgId
+     * @param int $pageNum
+     * @return string|Response
+     */
     public function actionView($imgId, $pageNum = 1 )
     {
         if (Yii::$app->user->isGuest) {
@@ -89,19 +98,26 @@ class GalleryController extends Controller
         $formComment = new Comment();
         $formComment->news_id = $imgId;
         $formComment->user_id = Yii::$app->user->id;
+        $formComment->status = Comment::COMMENT_IMAGE;
 
-        $count = Comment::count($imgId, Comment::TYPE_IMAGE);
+        $modelNews = new News();
+        $modelNews->type = News::TYPE_IMAGE;
+        $modelNews->tags = $model->user_id;
+        $modelNews->text = $model->getPicture();
+
+        $count = Comment::count($imgId, Comment::COMMENT_IMAGE);
         if($count == 0) {
             return $this->render('/gallery/view', [
                 'model' => $model,
                 'user' => $user,
                 'commentCount' => $count,
                 'formComment' => $formComment,
+                'modelNews' => $modelNews,
             ]);
         }
         //получаем комменты
         $offset = Comment::COMMENT_FOR_PAGE * ($pageNum - 1);
-        $modelComment = Comment::getCommentForNews($offset, $imgId);
+        $modelComment = Comment::getCommentForNews($offset, $imgId, Comment::COMMENT_IMAGE);
         $pagin = new Pagination($pageNum, $count, Comment::COMMENT_FOR_PAGE);
         $users = Comment::getListUsers($modelComment);
 
@@ -113,6 +129,7 @@ class GalleryController extends Controller
             'modelComment' => $modelComment,
             'pagin' => $pagin,
             'users' => $users,
+            'modelNews' => $modelNews,
         ]);
     }
 
