@@ -58,7 +58,7 @@ $this->title = Html::encode($model->heading);
         <div class='col-md-12'>
             <?php if($model->type == News::TYPE_IMAGE):?>
                 <div  class="fancyimage"><center>
-                    <a href="http://social/gallery/index/id=<?= $model->tags;?>" class="fancyimage">
+                    <a href="/gallery/index/id=<?= $model->tags;?>" class="fancyimage">
                         <img class="img-responsive" src="<?= $model->text;?>" alt="<?= Html::encode($model->heading); ?>">
                     </a></center>
                 </div>

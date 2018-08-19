@@ -197,7 +197,7 @@ $this->title = 'Просмотр профиля ' . Html::encode($user->username
                     <div class='col-md-12'>
                         <?php if($newsItem->type == News::TYPE_IMAGE):?>
                             <div  class="fancyimage"><center>
-                                    <a href="http://social/gallery/index/id=<?= $newsItem->tags;?>" class="fancyimage">
+                                    <a href="/gallery/index/id=<?= $newsItem->tags;?>" class="fancyimage">
                                         <img class="img-responsive" src="<?= $newsItem->text;?>" alt="<?= Html::encode($newsItem->heading); ?>">
                                     </a></center>
                             </div>

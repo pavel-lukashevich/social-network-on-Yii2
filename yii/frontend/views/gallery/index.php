@@ -108,13 +108,11 @@ $this->title = 'Галерея';
 
                         <div class="col-sm-12">
                             <?= $form->field($modelNews, 'heading')->textInput(['required' => true,'aria-invalid' => true])->label('заголовок') ?>
-<!--                            --><?//= $form->field($modelNews, 'tags')->textInput()->label('тэги') ?>
 
                             <?= Html::activeHiddenInput($modelNews, 'type') ?>
                             <?= Html::activeHiddenInput($modelNews, 'tags') ?>
                             <?= Html::activeHiddenInput($modelNews, 'text') ?>
                             <img class="img-responsive" id="image-news" src="">
-<!--                            --><?//= $form->field($modelNews, 'text')->label('новость')->textarea(['rows' => '8']) ?>
 
                             <div class="form-group">
                                 <?= Html::submitButton('добавить новость', ['class' => 'btn btn-sm btn-default',]) ?>
